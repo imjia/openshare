@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7F56B44272DA09B93742B3E9872C372A30A0D34B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "7F56B44272DA09B93742B3E9872C372A30A0D34B" : 0,
+    "2E589543E376BF77D7DC0C38DFEA82577CB38A64" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "1E00B621-6E6C-4470-AE52-89A4D0E72499",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "7F56B44272DA09B93742B3E9872C372A30A0D34B" : "OpenShare_2\/",
+    "2E589543E376BF77D7DC0C38DFEA82577CB38A64" : "OpenShare_2\/Vendor\/TCKit\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "OpenShare_2",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "OpenShare_2.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/git.oschina.net\/dake\/TCKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2E589543E376BF77D7DC0C38DFEA82577CB38A64"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/git.coding.net\/iamjia\/openshare2.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7F56B44272DA09B93742B3E9872C372A30A0D34B"
+    }
+  ]
+}

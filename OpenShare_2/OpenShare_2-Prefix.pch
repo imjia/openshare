@@ -1,0 +1,66 @@
+//
+//  OpenShare_2-Prefix.pch
+//  OpenShare_2
+//
+//  Created by jia on 16/3/21.
+//  Copyright © 2016年 Jia. All rights reserved.
+//
+
+#ifndef OpenShare_2_Prefix_pch
+#define OpenShare_2_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <Availability.h>
+
+#ifdef __OBJC__
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "TCDebug.h"
+#import "TCKit.h"
+
+//#import "BlocksKit+MessageUI.h"
+//#import "BlocksKit+QuickLook.h"
+
+#endif
+
+
+
+//#define NO_ASSERT
+
+#ifdef NO_ASSERT
+
+#ifdef NSCAssert
+#undef NSCAssert
+#endif
+
+#define NSCAssert(...) ;
+
+#endif
+
+//-------------------------------------------------------
+// !!!: should never move this above the headers.
+
+
+//#define TC_IOS_GOD_MODE
+
+#ifdef TC_IOS_GOD_MODE
+
+#ifdef TC_IOS_DEBUG
+#undef TC_IOS_DEBUG
+#endif
+
+#endif
+
+
+#ifndef TC_IOS_DEBUG
+#define TC_IOS_RELEASE
+#endif
+
+//-------------------------------------------------------//
+
+#define SDY_POINT_ENABLE // 积分功能开关
+
+#endif
