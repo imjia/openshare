@@ -18,10 +18,32 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>OpenShare</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>openshare</string>
+				<string>wxd930ea5d5a258f4f</string>
+				<string>tencent1103194207</string>
+				<string>tencent1103194207.content</string>
+				<string>QQ41C1685F</string>
+				<string>wb402180334</string>
+				<string>renrenshare228525</string>
+				<string>fb776442542471056</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>iconfont.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -42,28 +64,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>OpenShare</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>openshare</string>
-				<string>wxd930ea5d5a258f4f</string>
-				<string>tencent1103194207</string>
-				<string>tencent1103194207.content</string>
-				<string>QQ41C1685F</string>
-				<string>wb402180334</string>
-				<string>renrenshare228525</string>
-				<string>fb776442542471056</string>
-			</array>
-		</dict>
-	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>iconfont.ttf</string>
 	</array>
 </dict>
 </plist>

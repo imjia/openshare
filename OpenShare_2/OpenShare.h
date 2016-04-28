@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OSDataItem.h"
+#import "OSAppItem.h"
 
 typedef NS_ENUM(NSInteger, OSMultimediaType) {
     OSMultimediaTypeUnknown,
@@ -21,29 +23,13 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 
 @interface OSMessage : NSObject
 
-@property (nonatomic, strong) NSDictionary *dataDic;
+@property (nonatomic, strong) OSAppItem *appItem;
+@property (nonatomic, strong) OSDataItem *dataItem;
 @property (nonatomic, assign) OSMultimediaType multimediaType;
 @property (nonatomic, copy) NSString *appScheme;
 
-//for 微信
-@property (nonatomic, copy) NSString *extInfo;
-@property (nonatomic, copy) NSString *mediaDataUrl;
-@property (nonatomic, copy) NSString *fileExt;
-@property (nonatomic, strong) NSData *file;   /// 微信分享gif/文件
-
-- (NSString *)title;
-- (NSString *)desc;
-- (NSString *)link;
-- (UIImage *)image;
-- (UIImage *)thumbImage;
-
-- (NSData *)imageData;
-- (NSData *)thumbnailData;
-
-- (NSData *)wxFileData;
-- (NSString *)wxExtInfo;
-- (NSString *)wxFileExt;
-- (void)setupObject:(id)object forKey:(NSString *)key forApp:(NSString *)app;
+- (void)configDataItem:(void(^)(OSDataItem *item))config forApp:(NSString *)app;
+- (void)configAppItem:(void(^)(OSAppItem *item))config forApp:(NSString *)app;
 
 @end
 
@@ -53,7 +39,7 @@ typedef NS_ENUM(NSInteger, OSPasteboardEncoding){
     kOSPasteboardEncodingPropertyListSerialization
 };
 
-typedef void(^OSShareCompletionHandle)(BOOL success, NSError *error);
+typedef void(^OSShareCompletionHandle)(NSError *error);
 
 @interface OpenShare : NSObject
 
@@ -71,6 +57,7 @@ typedef void(^OSShareCompletionHandle)(BOOL success, NSError *error);
 
 + (void)setGeneralPasteboardData:(NSDictionary *)value forKey:(NSString *)key encoding:(OSPasteboardEncoding)encoding;
 + (NSDictionary *)generalPasteboardDataForKey:(NSString *)key encoding:(OSPasteboardEncoding)encoding;
++ (void)clearGeneralPasteboardDataForKey:(NSString *)key;
 
 @end
 

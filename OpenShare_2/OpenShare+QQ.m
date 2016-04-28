@@ -8,6 +8,7 @@
 
 #import "OpenShare+QQ.h"
 #import "OpenShare+Helper.h"
+#import "OSQQParameter.h"
 
 NSString *const kQQScheme = @"QQ";
 static NSString *const kQQPasteboardKey = @"com.tencent.mqq.api.apiLargeData";
@@ -52,58 +53,55 @@ enum {
 }
 
 // Data
-static NSMutableDictionary *s_openUrlParameters = nil;
+static OSQQParameter *s_qqParam = nil;
 
-+ (NSMutableDictionary *)qqOpenUrlParameters
++ (OSQQParameter *)qqParameter
 {
-    if (nil == s_openUrlParameters) {
-        s_openUrlParameters = @{@"thirdAppDisplayName" : [OpenShare base64EncodedString:TCAppInfo.displayName],
-                                @"version" : @"1",
-                                @"callback_type" : @"scheme",
-                                @"callback_name" : self.callBackName,
-                                @"generalpastboard" : @"1",
-                                @"src_type" : @"app",
-                                @"shareType" : @"0"}.mutableCopy;
+    if (nil == s_qqParam) {
+        s_qqParam = [[OSQQParameter alloc] init];
+        s_qqParam.thirdAppDisplayName = [OpenShare base64EncodedString:TCAppInfo.displayName];
+        s_qqParam.version = @"1";
+        s_qqParam.callback_type = @"scheme";
+        s_qqParam.callback_name = self.callBackName;
+        s_qqParam.generalpastboard = @"1";
+        s_qqParam.src_type = @"app";
+        s_qqParam.shareType = @"0";
     }
-    return s_openUrlParameters;
+    return s_qqParam;
 }
 
 + (NSURL *)urlWithMessage:(OSMessage *)msg flag:(NSInteger)flag
 {
-    NSMutableDictionary *parameters = self.qqOpenUrlParameters;
     msg.appScheme = kQQScheme;
+    OSDataItem *data = msg.dataItem;
+
+    OSQQParameter *qqParam = self.qqParameter.copy;
+    if (nil != msg.appItem.callBackName) {
+        qqParam.callback_name = msg.appItem.callBackName;
+    }
     
-    parameters[@"cflag"] = @(flag);
+    qqParam.cflag = flag;
     
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
-            parameters[@"file_type"] = @"text";
-            if (nil != msg.title) {
-                parameters[@"file_data"] = [OpenShare base64AndURLEncodedString:msg.title];
-            }
+            qqParam.file_type = @"text";
+            qqParam.file_data = [OpenShare base64AndURLEncodedString:data.title];
             break;
         }
         case OSMultimediaTypeImage: {
-            
-            NSAssert(nil != msg.imageData, @"图片不能为空");
-            
-            parameters[@"file_type"] = @"img";
-            parameters[@"objectlocation"] = @"pasteboard";
-            if (nil != msg.title) {
-                parameters[@"title"] = msg.title;
-            }
-            if (nil != msg.desc) {
-                parameters[@"description"] = msg.desc;
-            }
+        
+            qqParam.file_type = @"img";
+            qqParam.objectlocation = @"pasteboard";
+            qqParam.title = data.title;
+            qqParam.desc = data.desc;
             
             NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
-            if (nil != msg.imageData) {
-                pbData[@"file_data"] = msg.imageData;
+            if (nil != data.imageData) {
+                pbData[@"file_data"] = data.imageData;
             }
-            if (nil != msg.thumbnailData) {
-                pbData[@"previewimagedata"] = msg.thumbnailData;
+            if (nil != data.thumbnailData) {
+                pbData[@"previewimagedata"] = data.thumbnailData;
             }
-            
             [self setGeneralPasteboardData:pbData
                                     forKey:kQQPasteboardKey
                                   encoding:kOSPasteboardEncodingKeyedArchiver];
@@ -113,29 +111,20 @@ static NSMutableDictionary *s_openUrlParameters = nil;
         case OSMultimediaTypeAudio:
         case OSMultimediaTypeVideo: {
             if (msg.multimediaType == OSMultimediaTypeNews) {
-                parameters[@"file_type"] = @"news";
+                qqParam.file_type = @"news";
             } else if (msg.multimediaType == OSMultimediaTypeAudio) {
-                parameters[@"file_type"] = @"audio";
+                qqParam.file_type = @"audio";
             } else if (msg.multimediaType == OSMultimediaTypeVideo) {
-                parameters[@"file_type"] = @"video";
+                qqParam.file_type = @"video";
             }
-            parameters[@"objectlocation"] = @"pasteboard";
-            
-            if (nil != msg.title) {
-                parameters[@"title"] = [OpenShare base64AndURLEncodedString:msg.title];
-            }
-            
-            if (nil != msg.desc) {
-                parameters[@"description"] = [OpenShare base64AndURLEncodedString:msg.desc];
-            }
-            
-            if (nil != msg.link) {
-                parameters[@"url"] = [OpenShare base64AndURLEncodedString:msg.link];
-            }
+            qqParam.objectlocation = @"pasteboard";
+            qqParam.title = [OpenShare base64AndURLEncodedString:data.title];
+            qqParam.desc = [OpenShare base64AndURLEncodedString:data.desc];
+            qqParam.url = [OpenShare base64AndURLEncodedString:data.link];
             
             NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
-            if (nil != msg.thumbnailData) {
-                pbData[@"previewimagedata"] = msg.thumbnailData;
+            if (nil != data.thumbnailData) {
+                pbData[@"previewimagedata"] = data.thumbnailData;
             }
             [self setGeneralPasteboardData:pbData
                                     forKey:kQQPasteboardKey
@@ -146,33 +135,28 @@ static NSMutableDictionary *s_openUrlParameters = nil;
             break;
     }
     
-    NSString *urlStr = [kQQShareApi stringByAppendingFormat:@"?%@", [OpenShare urlStr:parameters]];
+    NSString *urlStr = [kQQShareApi stringByAppendingFormat:@"?%@", [OpenShare urlStr:qqParam.tc_JSONObject]];
     return [NSURL URLWithString:urlStr];
 }
 
 + (BOOL)QQ_handleOpenURL:(NSURL *)url
 {
+    BOOL canHandle = [url.scheme hasPrefix:@"QQ"];
     //分享
-    if ([url.scheme hasPrefix:@"QQ"]) {
-        NSDictionary *parametersDic = [self parametersOfURL:url];
-        if (nil != parametersDic[@"error_description"]) {
-            [parametersDic setValue:[self base64DecodedString:parametersDic[@"error_description"]] forKey:@"error_description"];
-        }
-        
-        BOOL success = nil == parametersDic[@"error"];
-        NSError *error = nil;
-        if (!success) {
-            error = [NSError errorWithDomain:@"response_from_qq" code:[parametersDic[@"error"] intValue] userInfo:parametersDic];
-        }
+    if (canHandle) {
+        [self clearGeneralPasteboardDataForKey:kQQPasteboardKey];
+        OSQQResponse *response = [OSQQResponse tc_mappingWithDictionary:[self parametersOfURL:url]];
         if (nil != self.shareCompletionHandle) {
-            self.shareCompletionHandle(success, error);
+            self.shareCompletionHandle(response.error);
         }
+    }
+    return canHandle;
+}
 
-        return YES;
-    }
-    else {
-        return NO;
-    }
+- (NSDictionary *)configWithAppId:(NSString *)appId
+{
+    return @{@"appid": appId,
+             @"callback_name": [NSString stringWithFormat: @"QQ%02llx", appId.longLongValue]};
 }
 
 @end

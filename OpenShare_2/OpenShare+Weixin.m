@@ -8,8 +8,11 @@
 
 #import "OpenShare+Weixin.h"
 #import "OpenShare+Helper.h"
+#import "OSWXParameter.h"
 
 NSString *const kWXScheme = @"Weixin";
+static NSString *const kWXPasterBoardKey = @"content";
+
 static NSString *const kWXShareApi = @"mqqapi://share/to_fri";
 
 static NSString *const kWXSDKVersion = @"1.5";
@@ -57,48 +60,50 @@ typedef NS_ENUM(NSInteger, WXObjectType) {
 }
 
 // Data
-static NSMutableDictionary *s_openUrlParameters = nil;
+static OSWXParameter *s_wxParam = nil;
 
-+ (NSMutableDictionary *)wxOpenUrlParameters
++ (OSWXParameter *)wxParameter
 {
-    if (nil == s_openUrlParameters) {
-        s_openUrlParameters = @{@"result": @"1",
-                                @"returnFromApp": @"0",
-                                @"sdkver": kWXSDKVersion,
-                                @"command": @"1010"}.mutableCopy;
+    if (nil == s_wxParam) {
+        s_wxParam = [[OSWXParameter alloc] init];
+        s_wxParam.result = @"1";
+        s_wxParam.returnFromApp = @"0";
+        s_wxParam.sdkver = kWXSDKVersion;
+        s_wxParam.command = @"1010";
     }
-    return s_openUrlParameters;
+    return s_wxParam;
 }
 
 + (NSURL *)wxurlWithMessage:(OSMessage *)msg flag:(NSInteger)flag
 {
-    NSMutableDictionary *parameters = self.wxOpenUrlParameters;
     msg.appScheme = kWXScheme;
-
+    OSDataItem *data = msg.dataItem;
+    
+    OSWXParameter *wxParam = self.wxParameter;
     // 朋友圈/朋友
-    parameters[@"scene"] = @(flag);
-    if (nil != msg.title) {
-        parameters[@"title"] = msg.title;
-    }
-    if (nil != msg.desc) {
-        parameters[@"description"] = msg.desc;
-    }
+    wxParam.scene = flag;
+    wxParam.title = data.title;
+    wxParam.desc = data.desc;
     
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
-            parameters[@"command"] = @"1020";
+            wxParam.command = @"1020";
             break;
         }
         case OSMultimediaTypeImage: {
-            parameters[@"command"] = @"1010";
-            
+            wxParam.command = @"1010";
+
             // gif or not gif
-            BOOL isGif = nil != msg.wxFileData;
-            NSData *data = isGif ? msg.wxFileData : msg.imageData;
-            if (nil != data) {
-                parameters[@"fileData"] = data;
-                parameters[@"thumbData"] = data;
-                parameters[@"objectType"] = isGif ? @(kWXObjectTypeGif) : @(kWXObjectTypeImage);
+            BOOL isGif = nil != data.wxFileData;
+            if (isGif) {
+                wxParam.fileData = data.wxFileData;
+            }
+            
+            NSData *imgData = isGif ? data.wxFileData : data.imageData;
+            if (nil != imgData) {
+                wxParam.fileData = imgData;
+                wxParam.thumbData = imgData;
+                wxParam.objectType = isGif ? kWXObjectTypeGif : kWXObjectTypeImage;
             }
             break;
         }
@@ -106,115 +111,97 @@ static NSMutableDictionary *s_openUrlParameters = nil;
         case OSMultimediaTypeVideo:
         {
             //music
-            parameters[@"command"] = @"1010";
-            if (nil != msg.thumbnailData) {
-                parameters[@"thumbData"] = msg.thumbnailData;
-            }
-            if (nil != msg.link) {
-                parameters[@"mediaUrl"] = msg.link;
-            }
-            if (nil != msg.mediaDataUrl) {
-                parameters[@"mediaDataUrl"] = msg.mediaDataUrl;
-            }
-            parameters[@"objectType"] = msg.multimediaType == OSMultimediaTypeAudio ? @(kWXObjectTypeAudio) : @(kWXObjectTypeVideo);
+            wxParam.command = @"1010";
+            wxParam.thumbData = data.thumbnailData;
+            wxParam.mediaUrl = data.link;
+            wxParam.mediaDataUrl = data.mediaDataUrl;
+            wxParam.objectType = msg.multimediaType == OSMultimediaTypeAudio ? kWXObjectTypeAudio : kWXObjectTypeVideo;
+            
             break;
         }
         case OSMultimediaTypeNews: {
-            parameters[@"command"] = @"1010";
-            if (nil != msg.thumbnailData) {
-                parameters[@"thumbData"] = msg.thumbnailData;
-            }
-            if (nil != msg.link) {
-                parameters[@"mediaUrl"] = msg.link;
-            }
-            parameters[@"objectType"] = @(kWXObjectTypeNews);
+            wxParam.command = @"1010";
+            wxParam.thumbData = data.thumbnailData;
+            wxParam.mediaUrl = data.link;
+            wxParam.objectType = kWXObjectTypeNews;
             break;
         }
         case OSMultimediaTypeFile: {
             //file
-            parameters[@"command"] = @"1010";
-            if (nil != msg.wxFileData) {
-                parameters[@"fileData"] = msg.wxFileData;
-            }
-            if (nil != msg.wxFileExt) {
-                parameters[@"fileExt"] = msg.wxFileExt;
-            }
-
-            if (nil != msg.thumbnailData) {
-                parameters[@"thumbData"] = msg.thumbnailData;
-            }
-            parameters[@"objectType"] = @(kWXObjectTypeFile);
+            wxParam.command = @"1010";
+            wxParam.fileData = data.wxFileData;
+            wxParam.fileExt = data.wxFileExt;
+            wxParam.thumbData = data.thumbnailData;
+            wxParam.objectType = kWXObjectTypeFile;
             break;
         }
         case OSMultimediaTypeApp: {
             //app
-            NSString *extInfo = msg.extInfo;
-            if (nil != extInfo) {
-                parameters[@"extInfo"] = extInfo;
-            }
-            parameters[@"command"] = @"1010";
-            if (nil != msg.imageData) {
-                parameters[@"fileData"] = msg.imageData;
-            }
-            if (nil != msg.thumbnailData) {
-                parameters[@"thumbData"] = msg.thumbnailData;
-            }
-            if (nil != msg.link) {
-                parameters[@"mediaUrl"] = msg.link;
-            }
-
-            parameters[@"objectType"] = @(kWXObjectTypeApp);
+            wxParam.command = @"1010";
+            wxParam.extInfo = data.extInfo;
+            wxParam.fileExt = data.wxFileExt;
+            wxParam.fileData = data.imageData;
+            wxParam.thumbData = data.thumbnailData;
+            wxParam.mediaUrl = data.link;
+            wxParam.objectType = kWXObjectTypeApp;
             break;
         }
        
         default:
             break;
     }
-    
-    NSData *output = [NSPropertyListSerialization dataWithPropertyList:@{[self dataForRegistedScheme:kWXScheme][@"appid"]: parameters}
+
+    NSData *output = [NSPropertyListSerialization dataWithPropertyList:@{[self dataForRegistedScheme:kWXScheme][@"appid"]: wxParam.tc_JSONObject}
                                                                 format:NSPropertyListBinaryFormat_v1_0 options:0
                                                                  error:nil];
-    [[UIPasteboard generalPasteboard] setData:output forPasteboardType:@"content"];
-    NSString *urlStr = [NSString stringWithFormat:@"weixin://app/%@/sendreq/?", [self dataForRegistedScheme:kWXScheme][@"appid"]];
+    [[UIPasteboard generalPasteboard] setData:output forPasteboardType:kWXPasterBoardKey];
+
+    NSString *appId = msg.appItem.appId;
+    if (nil == appId) {
+        appId = [self dataForRegistedScheme:kWXScheme][@"appid"];
+    }
+    
+    NSString *urlStr = [NSString stringWithFormat:@"weixin://app/%@/sendreq/?", appId];
     return [NSURL URLWithString:urlStr];
 }
 
 
 + (BOOL)Weixin_handleOpenURL:(NSURL *)url
 {
-    if ([url.scheme hasPrefix:@"wx"]) {
+    BOOL canHandle = [url.scheme hasPrefix:@"wx"];
+    if (canHandle) {
+        
         NSData *content = [[UIPasteboard generalPasteboard] dataForPasteboardType:@"content"];
         if (nil == content) {
-            return YES;
+            return canHandle;
         }
         
         NSString *appId = [self dataForRegistedScheme:kWXScheme][@"appid"];
-        NSDictionary *responseDic = [NSPropertyListSerialization propertyListWithData:content options:0 format:0 error:nil][appId];
+        NSDictionary *contentDic = [NSPropertyListSerialization propertyListWithData:content
+                                                                             options:0
+                                                                              format:0 error:nil][appId];
+
+        /* 登录、支付 暂时没写这功能
+        NSString *urlStr = url.absoluteString;
+        if ([urlStr rangeOfString:@"://oauth"].location != NSNotFound) {
         
-        if ([url.absoluteString rangeOfString:@"://oauth"].location != NSNotFound) {
-        
-        } else if([url.absoluteString rangeOfString:@"://pay/"].location != NSNotFound) {
+        } else if([urlStr rangeOfString:@"://pay/"].location != NSNotFound) {
     
         } else {
-            if (responseDic[@"state"] && [responseDic[@"state"] isEqualToString:@"Weixinauth"] && [responseDic[@"result"] intValue] != 0) {
-                // 登录失败
-                return YES;
-            }
-            
-            BOOL success = ![responseDic[@"result"] boolValue];
-            
-            NSError *error = nil;
-            if (!success) {
-                error = [NSError errorWithDomain:@"weixin_share" code:[responseDic[@"result"] intValue] userInfo:responseDic];
-            }
-            if (nil != self.shareCompletionHandle) {
-                self.shareCompletionHandle(success, error);
-            }
+         */
+        
+        OSWXResponse *response = [OSWXResponse tc_mappingWithDictionary:contentDic];
+        if (nil != response.state && [response.state isEqualToString:@"Weixinauth"] && response.result != 0) {
+            // 登录失败
+            return canHandle;
         }
-        return YES;
-    } else {
-        return NO;
+        
+        if (nil != self.shareCompletionHandle) {
+            self.shareCompletionHandle(response.error);
+        }
     }
+
+    return canHandle;
 }
 
 @end

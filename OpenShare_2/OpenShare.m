@@ -9,7 +9,7 @@
 #import "OpenShare.h"
 #import <objc/runtime.h>
 
-static NSString *const kDefaultKey = @"defaultData";
+static NSString *const kDefaultData = @"defaultData";
 
 @implementation OpenShare
 
@@ -123,6 +123,13 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
     return dic;
 }
 
++ (void)clearGeneralPasteboardDataForKey:(NSString *)key
+{
+    if (nil != key) {
+        [[UIPasteboard generalPasteboard] setValue:@"" forPasteboardType:key];
+    }
+}
+
 + (BOOL)handleOpenURL:(NSURL *)url
 {
     for (NSString *scheme in s_registedSchemes) {
@@ -151,94 +158,67 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
 @end
 
 @interface OSMessage () {
-    NSMutableDictionary<NSString */*app scheme*/, NSDictionary *> *_dic;
+    NSMutableDictionary<NSString */*app scheme*/, OSDataItem *> *_dataDic; // 分享内容
+    NSMutableDictionary<NSString */*app scheme*/, OSAppItem *> *_appDic; // 分享内容
 }
 
 @end
 
 @implementation OSMessage
 
-- (void)setDataDic:(NSDictionary *)dataDic
+- (void)setDataItem:(OSDataItem *)dataItem
 {
-    if (nil != dataDic) {
-        if (nil == _dic) {
-            _dic = [[NSMutableDictionary alloc] init];
+    if (nil != dataItem) {
+        if (nil == _dataDic) {
+            _dataDic = [[NSMutableDictionary alloc] init];
         }
-        _dic[kDefaultKey] = dataDic;
+        _dataDic[kDefaultData] = dataItem;
     }
 }
 
-- (void)setupObject:(id)object forKey:(NSString *)key forApp:(NSString *)app
+- (void)configDataItem:(void (^)(OSDataItem *))config forApp:(NSString *)app
 {
-    if (nil == object) {
-        return;
+    OSDataItem *dataItem = _dataDic[app];
+    if (nil == dataItem) {
+        OSDataItem *defaultData = _dataDic[kDefaultData];
+        dataItem = [[OSDataItem alloc] init];
+        dataItem.title = defaultData.title;
+        dataItem.desc = defaultData.desc;
+        dataItem.link = defaultData.link;
+        dataItem.imageData = defaultData.imageData;
+        _dataDic[app] = dataItem;
+    }
+
+    if (nil != config) {
+        config(dataItem);
+    }
+}
+
+- (void)configAppItem:(void (^)(OSAppItem *))config forApp:(NSString *)app
+{
+    OSAppItem *appItem = _appDic[app];
+    if (nil == appItem) {
+        appItem = [[OSAppItem alloc] init];
+        _appDic[app] = appItem;
     }
     
-    NSMutableDictionary *dataDic = _dic[app];
-    if (nil == dataDic) {
-        dataDic = [[NSMutableDictionary alloc] init];
-        _dic[app] = dataDic;
+    if (nil != config) {
+        config(appItem);
     }
-    dataDic[key] = object;
 }
 
-- (id)objectForKey:(NSString *)key
+- (OSDataItem *)dataItem
 {
-    NSString *obj = _dic[_appScheme][key];
-    if (nil == obj) {
-        obj = _dic[kDefaultKey][key];
+    OSDataItem *dataItem = _dataDic[_appScheme];
+    if (nil == dataItem) {
+        dataItem = _dataDic[kDefaultData];
     }
-    return obj;
+    return dataItem;
 }
 
-- (NSString *)title
+- (OSAppItem *)appItem
 {
-    return [self objectForKey:@"title"];
-}
-
-- (NSString *)desc
-{
-    return [self objectForKey:@"desc"];
-}
-
-- (NSString *)link
-{
-    return [self objectForKey:@"link"];
-}
-
-- (NSData *)imageData
-{
-    id img = [self objectForKey:@"image"];
-    if ([img isKindOfClass:[NSData class]]) {
-        return img;
-    } else if ([img isKindOfClass:[UIImage class]]){
-        return UIImageJPEGRepresentation(img, 0.6);
-    }
-    return img;
-}
-
-// TODO: 
-- (NSData *)thumbnailData
-{
-    return self.imageData;
-}
-
-
-#pragma mark - 微信方法
-
-- (NSData *)wxFileData
-{
-    return [self objectForKey:@"gif"];
-}
-
-- (NSString *)wxExtInfo
-{
-    return [self objectForKey:@"extInfo"];
-}
-
-- (NSString *)wxFileExt
-{
-    return [self objectForKey:@"fileExt"];
+    return _appDic[_appScheme];
 }
 
 @end

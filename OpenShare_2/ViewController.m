@@ -12,6 +12,7 @@
 #import "OpenShare+Weixin.h"
 #import "OpenShare+SinaWeibo.h"
 #import "OpenShare.h"
+#import "OSDataItem.h"
 
 @interface ViewController ()
 
@@ -103,14 +104,16 @@
         [panel addSubview:view];
     }
     
-    
+    OSDataItem *dataItem = [[OSDataItem alloc] init];
+    dataItem.title = @"testTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitle";
+    dataItem.desc = @"testDes";
+    dataItem.link = @"http://www.baidu.com";
+    dataItem.imageData = UIImageJPEGRepresentation([UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_pet000@2x" ofType:@"jpg"]], 0.8);
     _message = [[OSMessage alloc] init];
-    _message.dataDic = @{@"title" : @"testTitle",
-                        @"desc": @"testDes",
-                        @"image": [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_pet000@2x" ofType:@"jpg"]],
-                        @"link": @"http://www.baidu.com",
-                        };
-    [_message setupObject:@"aa" forKey:@"title" forApp:kWXScheme];
+    _message.dataItem = dataItem;
+    [_message configDataItem:^(OSDataItem *item) {
+        item.title = @"wx";
+    } forApp:kWXScheme];
     
 }
 
@@ -184,7 +187,7 @@
             break;
     }
     
-    [OpenShare shareToSinaWeibo:_message completion:^(BOOL success, NSError *error) {
+    [OpenShare shareToSinaWeibo:_message completion:^(NSError *error) {
         DLog(@"新浪微博分享成功");
     }];
 }
@@ -269,7 +272,7 @@
         default:
             break;
     }
-    [OpenShare shareToQQ:_message completion:^(BOOL success, NSError *error) {
+    [OpenShare shareToQQ:_message completion:^(NSError *error) {
                 DLog(@"qq分享成功");
     }];
 }
@@ -350,7 +353,10 @@
         }
         case 30008: {
             _message.multimediaType = OSMultimediaTypeImage;
-            [_message setupObject:testGifImage forKey:@"gif" forApp:kWXScheme];
+            [_message configDataItem:^(OSDataItem *item) {
+                item.wxFileData = testGifImage;
+            } forApp:kWXScheme];
+            
             break;
         }
         default:
@@ -358,13 +364,13 @@
     }
     switch ([(UISegmentedControl*)[panel viewWithTag:3003] selectedSegmentIndex]) {
         case 1:{
-            [OpenShare shareToWeixinSession:_message completion:^(BOOL success, NSError *error) {
+            [OpenShare shareToWeixinSession:_message completion:^(NSError *error) {
                 DLog(@"微信分享成功");
             }];
             break;
         }
         case 2:{
-            [OpenShare shareToWeixinTimeLine:_message completion:^(BOOL success, NSError *error) {
+            [OpenShare shareToWeixinTimeLine:_message completion:^(NSError *error) {
                 DLog(@"微信朋友圈分享成功");
             }];
             break;
