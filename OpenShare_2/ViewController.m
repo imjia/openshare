@@ -108,7 +108,8 @@
     dataItem.title = @"testTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitle";
     dataItem.desc = @"testDes";
     dataItem.link = @"http://www.baidu.com";
-    dataItem.imageData = UIImageJPEGRepresentation([UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_pet000@2x" ofType:@"jpg"]], 0.8);
+//    dataItem.imageData = UIImageJPEGRepresentation([UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_pet000@2x" ofType:@"jpg"]], 0.6);
+    dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"ic_my_jikuaidi@2x.png"]);
     _message = [[OSMessage alloc] init];
     _message.dataItem = dataItem;
     [_message configDataItem:^(OSDataItem *item) {
@@ -142,6 +143,7 @@
 }
 
 #pragma mark 新浪微博测试
+
 -(UIView *)sinaWeiboView:(CGRect)frame
 {
     UIView *ret=[[UIView alloc] initWithFrame:frame];

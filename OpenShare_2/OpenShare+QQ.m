@@ -10,6 +10,7 @@
 #import "OpenShare+Helper.h"
 #import "OSQQParameter.h"
 
+
 NSString *const kQQScheme = @"QQ";
 static NSString *const kQQPasteboardKey = @"com.tencent.mqq.api.apiLargeData";
 static NSString *const kQQShareApi = @"mqqapi://share/to_fri";
@@ -95,12 +96,10 @@ static OSQQParameter *s_qqParam = nil;
             qqParam.title = data.title;
             qqParam.desc = data.desc;
             
+            // 不需要设置缩略图，qq自己会处理
             NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
             if (nil != data.imageData) {
                 pbData[@"file_data"] = data.imageData;
-            }
-            if (nil != data.thumbnailData) {
-                pbData[@"previewimagedata"] = data.thumbnailData;
             }
             [self setGeneralPasteboardData:pbData
                                     forKey:kQQPasteboardKey
@@ -135,7 +134,7 @@ static OSQQParameter *s_qqParam = nil;
             break;
     }
     
-    NSString *urlStr = [kQQShareApi stringByAppendingFormat:@"?%@", [OpenShare urlStr:qqParam.tc_JSONObject]];
+    NSString *urlStr = [kQQShareApi stringByAppendingFormat:@"?%@", [OpenShare urlStr:qqParam.tc_dictionary]];
     return [NSURL URLWithString:urlStr];
 }
 

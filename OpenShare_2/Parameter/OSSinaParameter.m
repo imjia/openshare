@@ -16,7 +16,7 @@
     
     if (nil == opt) {
         opt = [[TCMappingOption alloc] init];
-        opt.propertyNameJSONMapping = @{PropertySTR(desc): @"description"};
+        opt.nameDictionaryMapping = @{PropertySTR(desc): @"description"};
     }
     
     return opt;

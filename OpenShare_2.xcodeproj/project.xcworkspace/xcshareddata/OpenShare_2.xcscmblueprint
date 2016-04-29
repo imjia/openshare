@@ -1,16 +1,18 @@
 {
-  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7F56B44272DA09B93742B3E9872C372A30A0D34B",
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "FDCF8D3D454230440063CBE3E5EF4A3940FF738A",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "7F56B44272DA09B93742B3E9872C372A30A0D34B" : 0,
-    "2E589543E376BF77D7DC0C38DFEA82577CB38A64" : 0
+    "2E589543E376BF77D7DC0C38DFEA82577CB38A64" : 0,
+    "FDCF8D3D454230440063CBE3E5EF4A3940FF738A" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "1E00B621-6E6C-4470-AE52-89A4D0E72499",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "7F56B44272DA09B93742B3E9872C372A30A0D34B" : "OpenShare_2\/",
-    "2E589543E376BF77D7DC0C38DFEA82577CB38A64" : "OpenShare_2\/Vendor\/TCKit\/"
+    "2E589543E376BF77D7DC0C38DFEA82577CB38A64" : "OpenShare_2\/Vendor\/TCKit\/",
+    "FDCF8D3D454230440063CBE3E5EF4A3940FF738A" : "openshare\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "OpenShare_2",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -25,6 +27,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/git.coding.net\/iamjia\/openshare2.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7F56B44272DA09B93742B3E9872C372A30A0D34B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/imjia\/openshare.git\/",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "FDCF8D3D454230440063CBE3E5EF4A3940FF738A"
     }
   ]
 }

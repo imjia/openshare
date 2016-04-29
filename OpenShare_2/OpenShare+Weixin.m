@@ -102,7 +102,7 @@ static OSWXParameter *s_wxParam = nil;
             NSData *imgData = isGif ? data.wxFileData : data.imageData;
             if (nil != imgData) {
                 wxParam.fileData = imgData;
-                wxParam.thumbData = imgData;
+//                wxParam.thumbData = imgData;
                 wxParam.objectType = isGif ? kWXObjectTypeGif : kWXObjectTypeImage;
             }
             break;
@@ -151,15 +151,18 @@ static OSWXParameter *s_wxParam = nil;
             break;
     }
 
-    NSData *output = [NSPropertyListSerialization dataWithPropertyList:@{[self dataForRegistedScheme:kWXScheme][@"appid"]: wxParam.tc_JSONObject}
-                                                                format:NSPropertyListBinaryFormat_v1_0 options:0
-                                                                 error:nil];
-    [[UIPasteboard generalPasteboard] setData:output forPasteboardType:kWXPasterBoardKey];
-
     NSString *appId = msg.appItem.appId;
     if (nil == appId) {
         appId = [self dataForRegistedScheme:kWXScheme][@"appid"];
     }
+    
+    // FIXME: tc_Dictionary
+    NSData *output = [NSPropertyListSerialization dataWithPropertyList:@{appId: wxParam.tc_dictionary}
+                                                                format:NSPropertyListBinaryFormat_v1_0 options:0
+                                                                 error:nil];
+    [[UIPasteboard generalPasteboard] setData:output forPasteboardType:kWXPasterBoardKey];
+
+
     
     NSString *urlStr = [NSString stringWithFormat:@"weixin://app/%@/sendreq/?", appId];
     return [NSURL URLWithString:urlStr];

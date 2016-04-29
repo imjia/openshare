@@ -16,7 +16,7 @@
     
     if (nil == opt) {
         opt = [[TCMappingOption alloc] init];
-        opt.propertyNameJSONMapping = @{PropertySTR(desc): @"description"};
+        opt.nameDictionaryMapping = @{PropertySTR(desc): @"description"};
     }
     
     return opt;
@@ -24,9 +24,9 @@
 
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
-    return self;
+    return self.tc_copy;
 }
 
 @end
@@ -39,7 +39,7 @@
     
     if (nil == opt) {
         opt = [[TCMappingOption alloc] init];
-        opt.propertyNameMapping = @{PropertySTR(errorCode): @"error"};
+        opt.nameDictionaryMapping = @{PropertySTR(errorCode): @"error"};
     }
     
     return opt;

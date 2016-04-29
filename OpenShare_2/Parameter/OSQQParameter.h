@@ -19,7 +19,7 @@
 @property (nonatomic, copy) NSString *shareType;
 @property (nonatomic, assign) NSInteger cflag;
 @property (nonatomic, copy) NSString *file_type;
-@property (nonatomic, strong) id file_data;
+@property (nonatomic, copy) NSString *file_data;
 @property (nonatomic, copy) NSString *objectlocation;
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *desc;

@@ -20,7 +20,7 @@
 #import <Foundation/Foundation.h>
 #import "TCDebug.h"
 #import "TCKit.h"
-
+#import "NSObject+TCDictionaryMapping.h"
 //#import "BlocksKit+MessageUI.h"
 //#import "BlocksKit+QuickLook.h"
 

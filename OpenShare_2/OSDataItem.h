@@ -13,7 +13,6 @@
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *desc;
 @property (nonatomic, copy) NSString *link;
-@property (nonatomic, strong) id thumbnail;
 @property (nonatomic, strong) NSData *imageData;
 @property (nonatomic, strong) NSData *thumbnailData;
 
