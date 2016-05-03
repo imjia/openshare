@@ -59,5 +59,9 @@ typedef void(^OSShareCompletionHandle)(NSError *error);
 + (NSDictionary *)generalPasteboardDataForKey:(NSString *)key encoding:(OSPasteboardEncoding)encoding;
 + (void)clearGeneralPasteboardDataForKey:(NSString *)key;
 
+// 分享方法
++ (void)shareMsg:(OSMessage *)msg inController:(UIViewController *)ctrler defaultIconValid:(BOOL)defaultIconValid sns:(NSArray<NSNumber *> *)sns;
+
 @end
+
 

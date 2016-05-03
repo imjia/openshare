@@ -9,5 +9,11 @@
 #ifndef OpenShareHeader_h
 #define OpenShareHeader_h
 
+#import "OpenShare.h"
+#import "OpenShare+QQ.h"
+#import "OpenShare+Weixin.h"
+#import "OpenShare+SinaWeibo.h"
+#import "OpenShare+Mail.h"
+#import "OpenShare+Sms.h"
 
 #endif /* OpenShareHeader_h */

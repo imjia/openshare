@@ -13,8 +13,10 @@
 #import "OpenShare+SinaWeibo.h"
 #import "OpenShare.h"
 #import "OSDataItem.h"
+#import "OpenShareManager.h"
+#import <MessageUI/MessageUI.h>
 
-@interface ViewController ()
+@interface ViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @end
 
@@ -108,14 +110,23 @@
     dataItem.title = @"testTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitle";
     dataItem.desc = @"testDes";
     dataItem.link = @"http://www.baidu.com";
+    
+
+
 //    dataItem.imageData = UIImageJPEGRepresentation([UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_pet000@2x" ofType:@"jpg"]], 0.6);
-    dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"ic_my_jikuaidi@2x.png"]);
+    dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"logo.png"]);
+    dataItem.thumbnailData = UIImagePNGRepresentation([UIImage imageNamed:@"2.png"]);
+    
     _message = [[OSMessage alloc] init];
     _message.dataItem = dataItem;
     [_message configDataItem:^(OSDataItem *item) {
         item.title = @"wx";
     } forApp:kWXScheme];
-    
+
+    [_message configAppItem:^(OSAppItem *item) {
+        item.appId = @"1104480569";
+        item.callBackName = [NSString stringWithFormat: @"QQ%02llx", @(1104480569).longLongValue];
+    } forApp:kQQScheme];
 }
 
 - (UIButton *)button:(NSString *)title WithCenter:(CGPoint)center
@@ -324,62 +335,65 @@
 
 - (void)weixinViewHandler:(UIButton *)btn
 {
-    switch (btn.tag) {
-        case 30001: {
-            _message.multimediaType = OSMultimediaTypeText;
-            break;
-        }
-        case 30002: {
-            _message.multimediaType = OSMultimediaTypeImage;
-            break;
-        }
-        case 30003: {
-            _message.multimediaType = OSMultimediaTypeNews;
-            break;
-        }
-        case 30004: {
-            _message.multimediaType = OSMultimediaTypeAudio;
-            break;
-        }
-        case 30005: {
-            _message.multimediaType = OSMultimediaTypeVideo;
-            break;
-        }
-        case 30006: {
-            _message.multimediaType = OSMultimediaTypeApp;
-            break;
-        }
-        case 30007: {
-            _message.multimediaType = OSMultimediaTypeFile;
-            break;
-        }
-        case 30008: {
-            _message.multimediaType = OSMultimediaTypeImage;
-            [_message configDataItem:^(OSDataItem *item) {
-                item.wxFileData = testGifImage;
-            } forApp:kWXScheme];
-            
-            break;
-        }
-        default:
-            break;
-    }
-    switch ([(UISegmentedControl*)[panel viewWithTag:3003] selectedSegmentIndex]) {
-        case 1:{
-            [OpenShare shareToWeixinSession:_message completion:^(NSError *error) {
-                DLog(@"微信分享成功");
-            }];
-            break;
-        }
-        case 2:{
-            [OpenShare shareToWeixinTimeLine:_message completion:^(NSError *error) {
-                DLog(@"微信朋友圈分享成功");
-            }];
-            break;
-        }
-        default:
-            break;
-    }
+    _message.multimediaType = OSMultimediaTypeText;
+    [[OpenShareManager defaultManager] shareMsg:_message inController:self defaultIconValid:NO sns:@[@(kOSAppQQ), @(kOSAppQQZone), @(kOSAppWXSession), @(kOSAppWXTimeLine), @(kOSAppSms), @(kOSAppEmail)]];
+    
+//    switch (btn.tag) {
+//        case 30001: {
+//            _message.multimediaType = OSMultimediaTypeText;
+//            break;
+//        }
+//        case 30002: {
+//            _message.multimediaType = OSMultimediaTypeImage;
+//            break;
+//        }
+//        case 30003: {
+//            _message.multimediaType = OSMultimediaTypeNews;
+//            break;
+//        }
+//        case 30004: {
+//            _message.multimediaType = OSMultimediaTypeAudio;
+//            break;
+//        }
+//        case 30005: {
+//            _message.multimediaType = OSMultimediaTypeVideo;
+//            break;
+//        }
+//        case 30006: {
+//            _message.multimediaType = OSMultimediaTypeApp;
+//            break;
+//        }
+//        case 30007: {
+//            _message.multimediaType = OSMultimediaTypeFile;
+//            break;
+//        }
+//        case 30008: {
+//            _message.multimediaType = OSMultimediaTypeImage;
+//            [_message configDataItem:^(OSDataItem *item) {
+//                item.wxFileData = testGifImage;
+//            } forApp:kWXScheme];
+//            
+//            break;
+//        }
+//        default:
+//            break;
+//    }
+//    switch ([(UISegmentedControl*)[panel viewWithTag:3003] selectedSegmentIndex]) {
+//        case 1:{
+//            [OpenShare shareToWeixinSession:_message completion:^(NSError *error) {
+//                DLog(@"微信分享成功");
+//            }];
+//            break;
+//        }
+//        case 2:{
+//            [OpenShare shareToWeixinTimeLine:_message completion:^(NSError *error) {
+//                DLog(@"微信朋友圈分享成功");
+//            }];
+//            break;
+//        }
+//        default:
+//            break;
+//    }
 
 }
 
@@ -407,6 +421,17 @@
     UIGraphicsEndImageContext();
     
     return image;
+}
+
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

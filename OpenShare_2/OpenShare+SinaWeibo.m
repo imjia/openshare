@@ -71,7 +71,7 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
     
     OSSinaTransferObject *tfObj = [[OSSinaTransferObject alloc] init];
     tfObj.__class = @"WBSendMessageToWeiboRequest";
-    tfObj.message = sinaParam.tc_JSONObject;
+    tfObj.message = sinaParam.tc_dictionary;
     tfObj.requestID = TCAppInfo.uuidForDevice;
     
     NSString *appId = msg.appItem.appId;
@@ -83,8 +83,8 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
     app.appKey = appId;
     app.bundleID = TCAppInfo.bundleIdentifier;
     
-    NSData *transferObjectData = [NSKeyedArchiver archivedDataWithRootObject:tfObj.tc_JSONObject];
-    NSData *appData = [NSKeyedArchiver archivedDataWithRootObject:app.tc_JSONObject];
+    NSData *transferObjectData = [NSKeyedArchiver archivedDataWithRootObject:tfObj.tc_dictionary];
+    NSData *appData = [NSKeyedArchiver archivedDataWithRootObject:app.tc_dictionary];
     [UIPasteboard generalPasteboard].items = @[@{@"transferObject": transferObjectData},
                                                @{@"userInfo": [NSKeyedArchiver archivedDataWithRootObject:@{}]},
                                                @{@"app": appData}];

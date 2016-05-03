@@ -10,4 +10,28 @@
 
 @implementation OSDataItem
 
+
+#pragma mark - NSCopying
+
+- (instancetype)copyWithZone:(NSZone *)zone
+{
+    return self.tc_copy;
+}
+
+- (NSString *)msgBody
+{
+    if (nil == _msgBody) {
+        return _title;
+    }
+    return _msgBody;
+}
+
+- (NSString *)emailBody
+{
+    if (nil == _emailBody) {
+        return _title;
+    }
+    return _emailBody;
+}
+
 @end

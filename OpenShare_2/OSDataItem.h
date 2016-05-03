@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OSDataItem : NSObject
+@interface OSDataItem : NSObject<NSCopying>
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *desc;
@@ -28,4 +28,10 @@
 @property (nonatomic, copy) NSString *wxExtInfo;
 @property (nonatomic, copy) NSString *wxFileExt;
 
+@property (nonatomic, copy) NSString *msgBody;
+
+@property (nonatomic, copy) NSString *emailBody;
+@property (nonatomic, copy) NSString *emailSubject;
+@property (nonatomic, copy) NSString *emailBody;
+@property (nonatomic, copy) NSString *emailBody;
 @end

@@ -8,8 +8,13 @@
 
 #import "OpenShare.h"
 #import <objc/runtime.h>
+#import "OSSnsItemView.h"
 
 static NSString *const kDefaultData = @"defaultData";
+
+@interface OpenShare () <OSSnsItemViewDelegate>
+
+@end
 
 @implementation OpenShare
 
@@ -159,33 +164,42 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
 
 @interface OSMessage () {
     NSMutableDictionary<NSString */*app scheme*/, OSDataItem *> *_dataDic; // 分享内容
-    NSMutableDictionary<NSString */*app scheme*/, OSAppItem *> *_appDic; // 分享内容
+    NSMutableDictionary<NSString */*app scheme*/, OSAppItem *> *_appDic; // app配置
 }
 
 @end
 
 @implementation OSMessage
 
+- (NSMutableDictionary *)dataDic
+{
+    if (nil == _dataDic) {
+        _dataDic = [[NSMutableDictionary alloc] init];
+    }
+    return _dataDic;
+}
+
+- (NSMutableDictionary *)appDic
+{
+    if (nil == _appDic) {
+        _appDic = [[NSMutableDictionary alloc] init];
+    }
+    return _appDic;
+}
+
 - (void)setDataItem:(OSDataItem *)dataItem
 {
     if (nil != dataItem) {
-        if (nil == _dataDic) {
-            _dataDic = [[NSMutableDictionary alloc] init];
-        }
-        _dataDic[kDefaultData] = dataItem;
+        self.dataDic[kDefaultData] = dataItem;
     }
 }
 
 - (void)configDataItem:(void (^)(OSDataItem *))config forApp:(NSString *)app
 {
-    OSDataItem *dataItem = _dataDic[app];
+    OSDataItem *dataItem = self.dataDic[app];
     if (nil == dataItem) {
         OSDataItem *defaultData = _dataDic[kDefaultData];
-        dataItem = [[OSDataItem alloc] init];
-        dataItem.title = defaultData.title;
-        dataItem.desc = defaultData.desc;
-        dataItem.link = defaultData.link;
-        dataItem.imageData = defaultData.imageData;
+        dataItem = defaultData.copy;
         _dataDic[app] = dataItem;
     }
 
@@ -196,7 +210,7 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
 
 - (void)configAppItem:(void (^)(OSAppItem *))config forApp:(NSString *)app
 {
-    OSAppItem *appItem = _appDic[app];
+    OSAppItem *appItem = self.appDic[app];
     if (nil == appItem) {
         appItem = [[OSAppItem alloc] init];
         _appDic[app] = appItem;
@@ -209,7 +223,7 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
 
 - (OSDataItem *)dataItem
 {
-    OSDataItem *dataItem = _dataDic[_appScheme];
+    OSDataItem *dataItem = self.dataDic[_appScheme];
     if (nil == dataItem) {
         dataItem = _dataDic[kDefaultData];
     }
@@ -218,7 +232,7 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
 
 - (OSAppItem *)appItem
 {
-    return _appDic[_appScheme];
+    return self.appDic[_appScheme];
 }
 
 @end
