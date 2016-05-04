@@ -7,16 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-typedef NS_ENUM(NSInteger, OSApp) {
-    kOSAppQQ,
-    kOSAppQQZone,
-    kOSAppWXTimeLine,
-    kOSAppWXSession,
-    kOSAppSina,
-    kOSAppSms,
-    kOSAppEmail,
-};
+#import "OpenShareConfig.h"
 
 @class OSSnsItemViewConfig;
 @class OSSnsItem;

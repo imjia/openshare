@@ -51,6 +51,8 @@
 - (void)OSSnsItemView:(OSSnsItemView *)itemView didSelectSnsItem:(OSSnsItem *)sns
 {
     [self dismissSnsController];
+
+    [self downloadImageIfNeed];
     
     void (^block)(NSError *error) = ^(NSError *error){
         if (nil != _shareCompletionHandle) {
@@ -146,6 +148,15 @@
         [parentCtrler endAppearanceTransition];
         _snsCtrler = nil;
     }];
+}
+
+// FIXME: 下载图片
+- (void)downloadImageIfNeed
+{
+    if (nil != _msg.dataItem.imageUrl) {
+        
+    }
+    
 }
 
 

@@ -7,8 +7,6 @@
 //
 
 #import "OSSnsItemView.h"
-#import "Masonry.h"
-#import "TCPopupContainer.h"
 
 @interface OSSnsItemView () <UICollectionViewDataSource, UICollectionViewDelegate>
 

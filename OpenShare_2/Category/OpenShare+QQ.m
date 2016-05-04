@@ -41,15 +41,15 @@ enum {
 
 + (void)shareToQQ:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
-    if ([self shouldOpenApp:kQQScheme message:msg completionHandle:completionHandle]) {
-        [self openAppWithURL:[self urlWithMessage:msg flag:kQQ]];
+    if ([self isAppRegisted:kQQScheme]) {
+        [self openAppWithURL:[self urlWithMessage:msg flag:kQQ] completionHandle:completionHandle];
     }
 }
 
 + (void)shareToQQZone:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
-    if ([self shouldOpenApp:kQQScheme message:msg completionHandle:completionHandle]) {
-        [self openAppWithURL:[self urlWithMessage:msg flag:kQQZone]];
+    if ([self isAppRegisted:kQQScheme]) {
+        [self openAppWithURL:[self urlWithMessage:msg flag:kQQZone] completionHandle:completionHandle];
     }
 }
 
@@ -154,8 +154,10 @@ static OSQQParameter *s_qqParam = nil;
     if (canHandle) {
         [self clearGeneralPasteboardDataForKey:kQQPasteboardKey];
         OSQQResponse *response = [OSQQResponse tc_mappingWithDictionary:[self parametersOfURL:url]];
-        if (nil != self.shareCompletionHandle) {
-            self.shareCompletionHandle(response.error);
+        OSShareCompletionHandle handle = self.shareCompletionHandle;
+        if (nil != handle) {
+            handle(response.error);
+            handle = nil;
         }
     }
     return canHandle;

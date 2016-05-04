@@ -8,44 +8,6 @@
 
 #import "OSMessage.h"
 
-#pragma mark - OSDataItem
-
-@implementation OSDataItem
-
-
-#pragma mark - NSCopying
-
-- (instancetype)copyWithZone:(NSZone *)zone
-{
-    return self.tc_copy;
-}
-
-- (NSString *)msgBody
-{
-    if (nil == _msgBody) {
-        return _title;
-    }
-    return _msgBody;
-}
-
-- (NSString *)emailBody
-{
-    if (nil == _emailBody) {
-        return _title;
-    }
-    return _emailBody;
-}
-
-@end
-
-
-#pragma mark - OSAppItem
-
-@implementation OSAppItem
-
-@end
-
-
 #pragma mark - OSMessage
 
 static NSString *const kDefaultData = @"defaultData";
@@ -124,3 +86,42 @@ static NSString *const kDefaultData = @"defaultData";
 }
 
 @end
+
+
+#pragma mark - OSDataItem
+
+@implementation OSDataItem
+
+
+#pragma mark - NSCopying
+
+- (instancetype)copyWithZone:(NSZone *)zone
+{
+    return self.tc_copy;
+}
+
+- (NSString *)msgBody
+{
+    if (nil == _msgBody) {
+        return _title;
+    }
+    return _msgBody;
+}
+
+- (NSString *)emailBody
+{
+    if (nil == _emailBody) {
+        return _title;
+    }
+    return _emailBody;
+}
+
+@end
+
+
+#pragma mark - OSAppItem
+
+@implementation OSAppItem
+
+@end
+

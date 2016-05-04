@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+
 @class OSDataItem;
 @class OSAppItem;
 
@@ -27,10 +28,12 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 @interface OSMessage : NSObject
 @property (nonatomic, strong) OSAppItem *appItem; // 消息分享到的app {appid, appkey}
 @property (nonatomic, strong) OSDataItem *dataItem; // 分享的消息内容
-@property (nonatomic, assign) OSMultimediaType multimediaType;
-@property (nonatomic, copy) NSString *appScheme;
+@property (nonatomic, assign) OSMultimediaType multimediaType; // 分享的类型
+@property (nonatomic, copy) NSString *appScheme; // 当前分享的平台
 
+// 定制化数据
 - (void)configDataItem:(void(^)(OSDataItem *item))config forApp:(NSString *)app;
+// 定制化app
 - (void)configAppItem:(void(^)(OSAppItem *item))config forApp:(NSString *)app;
 
 @end
@@ -45,6 +48,8 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 @property (nonatomic, copy) NSString *link;
 @property (nonatomic, strong) NSData *imageData;
 @property (nonatomic, strong) NSData *thumbnailData;
+@property (nonatomic, copy) NSString *imageUrl; // 网络图片地址
+@property (nonatomic, copy) NSString *thumbnailUrl; // 网络缩略图地址
 
 // 微信
 @property (nonatomic, copy) NSString *mediaDataUrl;

@@ -47,15 +47,15 @@ typedef NS_ENUM(NSInteger, WXObjectType) {
 
 + (void)shareToWeixinSession:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
-    if ([self shouldOpenApp:kWXScheme message:msg completionHandle:completionHandle]) {
-        [self openAppWithURL:[self wxurlWithMessage:msg flag:kWXSession]];
+    if ([self isAppRegisted:kWXScheme]) {
+        [self openAppWithURL:[self wxurlWithMessage:msg flag:kWXSession] completionHandle:completionHandle];
     }
 }
 
 + (void)shareToWeixinTimeLine:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
-    if ([self shouldOpenApp:kWXScheme message:msg completionHandle:completionHandle]) {
-        [self openAppWithURL:[self wxurlWithMessage:msg flag:kWXTimeLine]];
+    if ([self isAppRegisted:kWXScheme]) {
+        [self openAppWithURL:[self wxurlWithMessage:msg flag:kWXTimeLine] completionHandle:completionHandle];
     }
 }
 
@@ -199,8 +199,10 @@ static OSWXParameter *s_wxParam = nil;
             return canHandle;
         }
         
-        if (nil != self.shareCompletionHandle) {
-            self.shareCompletionHandle(response.error);
+        OSShareCompletionHandle handle = self.shareCompletionHandle;
+        if (nil != handle) {
+            handle(response.error);
+            handle = nil;
         }
     }
 

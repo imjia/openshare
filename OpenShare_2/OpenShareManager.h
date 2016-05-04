@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OSSnsItemView.h"
-#import "OpenShare.h"
+#import "OpenShareHeader.h"
 
 @class OSMessage;
 @interface OpenShareManager : NSObject

@@ -15,5 +15,6 @@
 #import "OpenShare+SinaWeibo.h"
 #import "OpenShare+Mail.h"
 #import "OpenShare+Sms.h"
+#import "OpenShareConfig.h"
 
 #endif /* OpenShareHeader_h */

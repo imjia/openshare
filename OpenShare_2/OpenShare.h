@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class OSMessage;
+#import "OSMessage.h"
 
 typedef NS_ENUM(NSInteger, OSPasteboardEncoding){
     kOSPasteboardEncodingKeyedArchiver,
@@ -21,14 +21,12 @@ typedef void(^OSShareCompletionHandle)(NSError *error);
 + (OSShareCompletionHandle)shareCompletionHandle;
 
 + (BOOL)canOpenURL:(NSURL *)url;
-+ (void)openAppWithURL:(NSURL *)url;
++ (void)openAppWithURL:(NSURL *)url completionHandle:(OSShareCompletionHandle)handle;
 + (BOOL)handleOpenURL:(NSURL *)url;
 
 + (void)registAppWithScheme:(NSString *)appScheme data:(NSDictionary *)data;
 + (NSDictionary *)dataForRegistedScheme:(NSString *)appScheme;
 + (BOOL)isAppRegisted:(NSString *)appScheme;
-
-+ (BOOL)shouldOpenApp:(NSString *)appScheme message:(OSMessage *)msg completionHandle:(OSShareCompletionHandle)handle;
 
 + (void)setGeneralPasteboardData:(NSDictionary *)value forKey:(NSString *)key encoding:(OSPasteboardEncoding)encoding;
 + (NSDictionary *)generalPasteboardDataForKey:(NSString *)key encoding:(OSPasteboardEncoding)encoding;

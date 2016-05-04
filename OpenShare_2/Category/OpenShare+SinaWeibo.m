@@ -26,8 +26,8 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
 
 + (void)shareToSinaWeibo:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
-    if ([self shouldOpenApp:kSinaWbScheme message:msg completionHandle:completionHandle]) {
-        [self openAppWithURL:[self sinaUrlWithMessage:msg]];
+    if ([self isAppRegisted:kSinaWbScheme]) {
+        [self openAppWithURL:[self sinaUrlWithMessage:msg] completionHandle:completionHandle];
     }
 }
 
@@ -111,8 +111,10 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
             //auth
         }else if (response.isShare) {
             //分享回调
-            if (nil != self.shareCompletionHandle) {
-                self.shareCompletionHandle(response.error);
+            OSShareCompletionHandle handle = self.shareCompletionHandle;
+            if (nil != handle) {
+                handle(response.error);
+                handle = nil;
             }
         }
     }

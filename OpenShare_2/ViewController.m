@@ -12,11 +12,9 @@
 #import "OpenShare+Weixin.h"
 #import "OpenShare+SinaWeibo.h"
 #import "OpenShare.h"
-#import "OSDataItem.h"
 #import "OpenShareManager.h"
-#import <MessageUI/MessageUI.h>
 
-@interface ViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
+@interface ViewController ()
 
 @end
 

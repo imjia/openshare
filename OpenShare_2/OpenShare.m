@@ -42,10 +42,9 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
     return self.registedSchemes[appScheme];
 }
 
-+ (BOOL)shouldOpenApp:(NSString *)appScheme message:(OSMessage *)msg completionHandle:(OSShareCompletionHandle)handle
++ (BOOL)shouldOpenApp:(NSString *)appScheme
 {
     if ([self isAppRegisted:appScheme]) {
-        s_shareCompletionHandle = handle;
         return YES;
     }
     return NO;
@@ -61,8 +60,9 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
     return [[UIApplication sharedApplication] canOpenURL:url];
 }
 
-+ (void)openAppWithURL:(NSURL *)url
++ (void)openAppWithURL:(NSURL *)url completionHandle:(OSShareCompletionHandle)handle
 {
+    s_shareCompletionHandle = handle;
     [[UIApplication sharedApplication] openURL:url];
 }
 
@@ -117,7 +117,7 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
                 break;
         }
         if (nil != err) {
-            NSLog(@"error when NSPropertyListSerialization: %@",err);
+            DLog(@"error when NSPropertyListSerialization: %@",err);
         }
     }
     
