@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0821C2471CD06A770091C41B /* OSDataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0821C2461CD06A770091C41B /* OSDataItem.m */; };
 		0821C2581CD09BA60091C41B /* OSQQParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0821C2531CD09BA60091C41B /* OSQQParameter.m */; };
 		0821C2591CD09BA60091C41B /* OSSinaParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0821C2551CD09BA60091C41B /* OSSinaParameter.m */; };
 		0821C25A1CD09BA60091C41B /* OSWXParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0821C2571CD09BA60091C41B /* OSWXParameter.m */; };
@@ -16,7 +15,7 @@
 		083A0C7A1CAA2AF8009F2AC8 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 083A0C781CAA2AF8009F2AC8 /* logo.png */; };
 		083A0C7B1CAA2AF8009F2AC8 /* test.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 083A0C791CAA2AF8009F2AC8 /* test.pdf */; };
 		083A0C7D1CAA5CF8009F2AC8 /* logo.gif in Resources */ = {isa = PBXBuildFile; fileRef = 083A0C7C1CAA5CF8009F2AC8 /* logo.gif */; };
-		0875909B1CD1E7EF004A6AC0 /* OSAppItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0875909A1CD1E7EF004A6AC0 /* OSAppItem.m */; };
+		08976AFB1CD9D6C1006DDD8B /* OSSnsItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08976AFA1CD9D6C1006DDD8B /* OSSnsItemView.m */; };
 		08C8578E1CD87AB300C77706 /* OpenShare+Mail.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C8578D1CD87AB300C77706 /* OpenShare+Mail.m */; };
 		08C857911CD87ABE00C77706 /* OpenShare+Sms.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C857901CD87ABE00C77706 /* OpenShare+Sms.m */; };
 		08C857AF1CD8821600C77706 /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C857971CD8821600C77706 /* MASCompositeConstraint.m */; };
@@ -29,7 +28,6 @@
 		08C857B61CD8821600C77706 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C857A91CD8821600C77706 /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		08C857B71CD8821600C77706 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C857AB1CD8821600C77706 /* View+MASAdditions.m */; };
 		08C857B81CD8821600C77706 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C857AE1CD8821600C77706 /* ViewController+MASAdditions.m */; };
-		08C857C11CD88A1200C77706 /* OSSnsItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C857C01CD88A1200C77706 /* OSSnsItemView.m */; };
 		08C857C71CD88BF700C77706 /* OpenShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C857C61CD88BF700C77706 /* OpenShareManager.m */; };
 		08CF2D1E1CD2FFBE00F6E2C4 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 08CF2D1D1CD2FFBE00F6E2C4 /* 2.png */; };
 		08CF2FFC1CD3568900F6E2C4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 08CF2F5A1CD3568900F6E2C4 /* .gitignore */; };
@@ -106,6 +104,7 @@
 		08D248BB1C9FCC2F0083115C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08D248B91C9FCC2F0083115C /* LaunchScreen.storyboard */; };
 		08D2499A1C9FCD3D0083115C /* OpenShare.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D249991C9FCD3D0083115C /* OpenShare.m */; };
 		08D2499D1C9FCE300083115C /* OpenShare+QQ.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D2499C1C9FCE300083115C /* OpenShare+QQ.m */; };
+		08D38A321CD9FC760024FF60 /* OSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D38A311CD9FC760024FF60 /* OSMessage.m */; };
 		08E104F71CA289CF009C5BBD /* OpenShare+SinaWeibo.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E104F61CA289CF009C5BBD /* OpenShare+SinaWeibo.m */; };
 		08E104F91CA29984009C5BBD /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 08E104F81CA29984009C5BBD /* test.jpg */; };
 		08E104FB1CA29E2B009C5BBD /* icon_pet000@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 08E104FA1CA29E2B009C5BBD /* icon_pet000@2x.jpg */; };
@@ -115,8 +114,6 @@
 
 /* Begin PBXFileReference section */
 		08167D651CAB77CA00674B28 /* OpenShareHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenShareHeader.h; sourceTree = "<group>"; };
-		0821C2451CD06A770091C41B /* OSDataItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDataItem.h; sourceTree = "<group>"; };
-		0821C2461CD06A770091C41B /* OSDataItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDataItem.m; sourceTree = "<group>"; };
 		0821C2521CD09BA60091C41B /* OSQQParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSQQParameter.h; sourceTree = "<group>"; };
 		0821C2531CD09BA60091C41B /* OSQQParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSQQParameter.m; sourceTree = "<group>"; };
 		0821C2541CD09BA60091C41B /* OSSinaParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSinaParameter.h; sourceTree = "<group>"; };
@@ -129,8 +126,8 @@
 		083A0C781CAA2AF8009F2AC8 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		083A0C791CAA2AF8009F2AC8 /* test.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = test.pdf; sourceTree = "<group>"; };
 		083A0C7C1CAA5CF8009F2AC8 /* logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = logo.gif; sourceTree = "<group>"; };
-		087590991CD1E7EF004A6AC0 /* OSAppItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSAppItem.h; sourceTree = "<group>"; };
-		0875909A1CD1E7EF004A6AC0 /* OSAppItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSAppItem.m; sourceTree = "<group>"; };
+		08976AF91CD9D6C1006DDD8B /* OSSnsItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSnsItemView.h; sourceTree = "<group>"; };
+		08976AFA1CD9D6C1006DDD8B /* OSSnsItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSnsItemView.m; sourceTree = "<group>"; };
 		08C8578C1CD87AB300C77706 /* OpenShare+Mail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OpenShare+Mail.h"; sourceTree = "<group>"; };
 		08C8578D1CD87AB300C77706 /* OpenShare+Mail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OpenShare+Mail.m"; sourceTree = "<group>"; };
 		08C8578F1CD87ABE00C77706 /* OpenShare+Sms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OpenShare+Sms.h"; sourceTree = "<group>"; };
@@ -160,8 +157,6 @@
 		08C857AC1CD8821600C77706 /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		08C857AD1CD8821600C77706 /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+MASAdditions.h"; sourceTree = "<group>"; };
 		08C857AE1CD8821600C77706 /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MASAdditions.m"; sourceTree = "<group>"; };
-		08C857BF1CD88A1200C77706 /* OSSnsItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSnsItemView.h; sourceTree = "<group>"; };
-		08C857C01CD88A1200C77706 /* OSSnsItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSnsItemView.m; sourceTree = "<group>"; };
 		08C857C51CD88BF700C77706 /* OpenShareManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenShareManager.h; sourceTree = "<group>"; };
 		08C857C61CD88BF700C77706 /* OpenShareManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenShareManager.m; sourceTree = "<group>"; };
 		08CF2D1D1CD2FFBE00F6E2C4 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
@@ -321,6 +316,8 @@
 		08D249991C9FCD3D0083115C /* OpenShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenShare.m; sourceTree = "<group>"; };
 		08D2499B1C9FCE300083115C /* OpenShare+QQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OpenShare+QQ.h"; sourceTree = "<group>"; };
 		08D2499C1C9FCE300083115C /* OpenShare+QQ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OpenShare+QQ.m"; sourceTree = "<group>"; };
+		08D38A301CD9FC760024FF60 /* OSMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSMessage.h; sourceTree = "<group>"; };
+		08D38A311CD9FC760024FF60 /* OSMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSMessage.m; sourceTree = "<group>"; };
 		08E104F51CA289CF009C5BBD /* OpenShare+SinaWeibo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OpenShare+SinaWeibo.h"; sourceTree = "<group>"; };
 		08E104F61CA289CF009C5BBD /* OpenShare+SinaWeibo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OpenShare+SinaWeibo.m"; sourceTree = "<group>"; };
 		08E104F81CA29984009C5BBD /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpg; sourceTree = "<group>"; };
@@ -353,6 +350,15 @@
 				0821C2551CD09BA60091C41B /* OSSinaParameter.m */,
 			);
 			path = Parameter;
+			sourceTree = "<group>";
+		};
+		08976AF81CD9D6C1006DDD8B /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				08976AF91CD9D6C1006DDD8B /* OSSnsItemView.h */,
+				08976AFA1CD9D6C1006DDD8B /* OSSnsItemView.m */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		08C857951CD8821600C77706 /* Masonry */ = {
@@ -772,12 +778,9 @@
 				08D249991C9FCD3D0083115C /* OpenShare.m */,
 				08C857C51CD88BF700C77706 /* OpenShareManager.h */,
 				08C857C61CD88BF700C77706 /* OpenShareManager.m */,
-				0821C2451CD06A770091C41B /* OSDataItem.h */,
-				0821C2461CD06A770091C41B /* OSDataItem.m */,
-				087590991CD1E7EF004A6AC0 /* OSAppItem.h */,
-				0875909A1CD1E7EF004A6AC0 /* OSAppItem.m */,
-				08C857BF1CD88A1200C77706 /* OSSnsItemView.h */,
-				08C857C01CD88A1200C77706 /* OSSnsItemView.m */,
+				08D38A301CD9FC760024FF60 /* OSMessage.h */,
+				08D38A311CD9FC760024FF60 /* OSMessage.m */,
+				08976AF81CD9D6C1006DDD8B /* UI */,
 				0821C2511CD09BA60091C41B /* Parameter */,
 				08D2499B1C9FCE300083115C /* OpenShare+QQ.h */,
 				08D2499C1C9FCE300083115C /* OpenShare+QQ.m */,
@@ -834,6 +837,7 @@
 				TargetAttributes = {
 					08D248A71C9FCC2F0083115C = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = UZ37QVJJMQ;
 					};
 				};
 			};
@@ -885,19 +889,17 @@
 				08CF301A1CD3568900F6E2C4 /* TCHTTPTimerPolicy+TCHTTPRequest.m in Sources */,
 				08C857B31CD8821600C77706 /* MASViewAttribute.m in Sources */,
 				08CF30051CD3568900F6E2C4 /* TCProxyDelegate.m in Sources */,
-				08C857C11CD88A1200C77706 /* OSSnsItemView.m in Sources */,
 				08CF302B1CD3568900F6E2C4 /* NSObject+TCNSCoding.m in Sources */,
 				08C857B51CD8821600C77706 /* NSArray+MASAdditions.m in Sources */,
 				08CF30371CD3568900F6E2C4 /* UIScrollView+TCHelper.m in Sources */,
+				08D38A321CD9FC760024FF60 /* OSMessage.m in Sources */,
 				08CF30251CD3568900F6E2C4 /* TCMobileProvisioning.m in Sources */,
-				0875909B1CD1E7EF004A6AC0 /* OSAppItem.m in Sources */,
 				08CF30281CD3568900F6E2C4 /* NSObject+TCDictionaryMapping.m in Sources */,
 				08CF30301CD3568900F6E2C4 /* TCAlertViewDelegate.m in Sources */,
 				08CF30091CD3568900F6E2C4 /* NSObject+TCHelper.m in Sources */,
 				08CF30291CD3568900F6E2C4 /* NSObject+TCJSONMapping.m in Sources */,
 				08CF303C1CD3568900F6E2C4 /* UIViewController+PopBackHandler.m in Sources */,
 				0821C25A1CD09BA60091C41B /* OSWXParameter.m in Sources */,
-				0821C2471CD06A770091C41B /* OSDataItem.m in Sources */,
 				08CF30311CD3568900F6E2C4 /* UIActionSheet+TCBlocks.m in Sources */,
 				08CF301E1CD3568900F6E2C4 /* TCHTTPCacheRequest.m in Sources */,
 				08CF303A1CD3568900F6E2C4 /* UIView+TCHelper.m in Sources */,
@@ -956,6 +958,7 @@
 				08CF30131CD3568900F6E2C4 /* AFURLRequestSerialization.m in Sources */,
 				08CF30321CD3568900F6E2C4 /* UIAlertView+TCBlocks.m in Sources */,
 				08C857B01CD8821600C77706 /* MASConstraint.m in Sources */,
+				08976AFB1CD9D6C1006DDD8B /* OSSnsItemView.m in Sources */,
 				08CF30421CD35B0000F6E2C4 /* UIControl+Blocks.m in Sources */,
 				08C857AF1CD8821600C77706 /* MASCompositeConstraint.m in Sources */,
 				08CF30151CD3568900F6E2C4 /* AFURLSessionManager.m in Sources */,

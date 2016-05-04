@@ -111,10 +111,9 @@
     dataItem.desc = @"testDes";
     dataItem.link = @"http://www.baidu.com";
     
-
-
 //    dataItem.imageData = UIImageJPEGRepresentation([UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_pet000@2x" ofType:@"jpg"]], 0.6);
-    dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"logo.png"]);
+  
+    dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"logo.gif"]);
     dataItem.thumbnailData = UIImagePNGRepresentation([UIImage imageNamed:@"2.png"]);
     
     _message = [[OSMessage alloc] init];
@@ -336,7 +335,9 @@
 - (void)weixinViewHandler:(UIButton *)btn
 {
     _message.multimediaType = OSMultimediaTypeText;
-    [[OpenShareManager defaultManager] shareMsg:_message inController:self defaultIconValid:NO sns:@[@(kOSAppQQ), @(kOSAppQQZone), @(kOSAppWXSession), @(kOSAppWXTimeLine), @(kOSAppSms), @(kOSAppEmail)]];
+    [[OpenShareManager defaultManager] shareMsg:_message inController:self defaultIconValid:NO sns:@[@(kOSAppQQ), @(kOSAppQQZone), @(kOSAppWXSession), @(kOSAppWXTimeLine), @(kOSAppSms), @(kOSAppEmail)] completion:^(NSError *error) {
+        DLog(@"ERROR: %@", error);
+    }];
     
 //    switch (btn.tag) {
 //        case 30001: {
@@ -424,14 +425,5 @@
 }
 
 
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
-{
-    [controller dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
-{
-    [controller dismissViewControllerAnimated:YES completion:nil];
-}
 
 @end

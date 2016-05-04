@@ -11,6 +11,6 @@
 
 @interface OpenShare (Sms)
 
-+ (void)shareToSms:(OSMessage *)msg inController:(UIViewController<MFMessageComposeViewControllerDelegate> *)ctrler completion:(OSShareCompletionHandle)completionHandle;
++ (void)shareToSms:(OSMessage *)msg inController:(UIViewController *)ctrler  delegate:(id<MFMessageComposeViewControllerDelegate>)delegate;
 
 @end

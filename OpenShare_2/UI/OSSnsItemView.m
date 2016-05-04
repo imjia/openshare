@@ -59,9 +59,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     
-    // 计算view 高度
+    // 一行4个
     static const NSInteger kItemsOfRow = 4;
 
     static CGFloat kSpacing = 2.0f;
@@ -75,7 +74,6 @@
     layout.sectionInset = UIEdgeInsetsMake(kSpacing, kSpacing, kSpacing, kSpacing);
     layout.itemSize = (CGSize){.width = width, .height = width};
 
-    
     NSInteger row = ceil(_sns.count / (CGFloat)kItemsOfRow);
     CGFloat fitHeight = row * width + (row + 1) * kSpacing;
     
@@ -83,7 +81,6 @@
     rect.size.height = fitHeight;
     self.view.frame = rect;
     self.view.backgroundColor = [UIColor redColor];
-    
     
     _collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
     _collectionView.dataSource = self;
@@ -138,24 +135,6 @@
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
-}
-
-- (void)setupDefaultItems:(NSArray<NSNumber *> *)items
-{
-    NSMutableArray *snsItems = [NSMutableArray array];
-    for (NSNumber *num in items) {
-        OSSnsItem *snsItem = [[OSSnsItem alloc] init];
-        snsItem.name = [NSString stringWithFormat:@"item%zd", num.integerValue];
-        [snsItems addObject:snsItem];
-    }
-    
-    [self setupItems:snsItems];
-}
-
-- (void)setupItems:(NSArray<OSSnsItem *> *)items
-{
-    _sns = items;
-    [_collectionView reloadData];
 }
 
 @end

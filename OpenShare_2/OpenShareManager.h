@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "OSSnsItemView.h"
+#import "OpenShare.h"
 
 @class OSMessage;
 @interface OpenShareManager : NSObject
 
-+ (instancetype)defaultManager;
+@property (nonatomic, assign) BOOL ignoreNotInstalledApp;
 
-- (void)shareMsg:(OSMessage *)msg inController:(UIViewController *)ctrler defaultIconValid:(BOOL)defaultIconValid sns:(NSArray<NSNumber *> *)sns;
++ (instancetype)defaultManager;
+- (void)shareMsg:(OSMessage *)msg inController:(UIViewController *)ctrler defaultIconValid:(BOOL)defaultIconValid sns:(NSArray<NSNumber *> *)sns completion:(OSShareCompletionHandle)completion;
 
 @end

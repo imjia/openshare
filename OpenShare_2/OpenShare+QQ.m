@@ -96,7 +96,6 @@ static OSQQParameter *s_qqParam = nil;
             qqParam.title = [OpenShare base64AndURLEncodedString:data.title];
             qqParam.desc = [OpenShare base64AndURLEncodedString:data.desc];
             
-            
             NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
             if (nil != data.imageData) {
                 pbData[@"file_data"] = data.imageData;
@@ -124,6 +123,7 @@ static OSQQParameter *s_qqParam = nil;
             } else if (msg.multimediaType == OSMultimediaTypeVideo) {
                 qqParam.file_type = @"video";
             }
+ 
             qqParam.objectlocation = @"pasteboard";
             qqParam.title = [OpenShare base64AndURLEncodedString:data.title];
             qqParam.desc = [OpenShare base64AndURLEncodedString:data.desc];
@@ -159,12 +159,6 @@ static OSQQParameter *s_qqParam = nil;
         }
     }
     return canHandle;
-}
-
-- (NSDictionary *)configWithAppId:(NSString *)appId
-{
-    return @{@"appid": appId,
-             @"callback_name": [NSString stringWithFormat: @"QQ%02llx", appId.longLongValue]};
 }
 
 @end

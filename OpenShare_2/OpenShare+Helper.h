@@ -16,5 +16,6 @@
 + (NSString *)base64DecodedString:(NSString *)inputString;
 + (NSString *)urlEncodedString:(NSString *)inputString;
 + (NSString *)base64AndURLEncodedString:(NSString *)inputString;
++ (NSString *)contentTypeForImageData:(NSData *)data;
 
 @end

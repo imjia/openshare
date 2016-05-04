@@ -11,6 +11,6 @@
 
 @interface OpenShare (Mail)
 
-+ (void)shareToMail:(OSMessage *)msg inController:(UIViewController<MFMailComposeViewControllerDelegate> *)ctrler completion:(OSShareCompletionHandle)completionHandle;
++ (void)shareToMail:(OSMessage *)msg inController:(UIViewController *)ctrler delegate:(id<MFMailComposeViewControllerDelegate>)delegate;
 
 @end

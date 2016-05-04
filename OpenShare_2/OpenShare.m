@@ -7,12 +7,8 @@
 //
 
 #import "OpenShare.h"
-#import <objc/runtime.h>
-#import "OSSnsItemView.h"
 
-static NSString *const kDefaultData = @"defaultData";
-
-@interface OpenShare () <OSSnsItemViewDelegate>
+@interface OpenShare ()
 
 @end
 
@@ -162,77 +158,3 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
 
 @end
 
-@interface OSMessage () {
-    NSMutableDictionary<NSString */*app scheme*/, OSDataItem *> *_dataDic; // 分享内容
-    NSMutableDictionary<NSString */*app scheme*/, OSAppItem *> *_appDic; // app配置
-}
-
-@end
-
-@implementation OSMessage
-
-- (NSMutableDictionary *)dataDic
-{
-    if (nil == _dataDic) {
-        _dataDic = [[NSMutableDictionary alloc] init];
-    }
-    return _dataDic;
-}
-
-- (NSMutableDictionary *)appDic
-{
-    if (nil == _appDic) {
-        _appDic = [[NSMutableDictionary alloc] init];
-    }
-    return _appDic;
-}
-
-- (void)setDataItem:(OSDataItem *)dataItem
-{
-    if (nil != dataItem) {
-        self.dataDic[kDefaultData] = dataItem;
-    }
-}
-
-- (void)configDataItem:(void (^)(OSDataItem *))config forApp:(NSString *)app
-{
-    OSDataItem *dataItem = self.dataDic[app];
-    if (nil == dataItem) {
-        OSDataItem *defaultData = _dataDic[kDefaultData];
-        dataItem = defaultData.copy;
-        _dataDic[app] = dataItem;
-    }
-
-    if (nil != config) {
-        config(dataItem);
-    }
-}
-
-- (void)configAppItem:(void (^)(OSAppItem *))config forApp:(NSString *)app
-{
-    OSAppItem *appItem = self.appDic[app];
-    if (nil == appItem) {
-        appItem = [[OSAppItem alloc] init];
-        _appDic[app] = appItem;
-    }
-    
-    if (nil != config) {
-        config(appItem);
-    }
-}
-
-- (OSDataItem *)dataItem
-{
-    OSDataItem *dataItem = self.dataDic[_appScheme];
-    if (nil == dataItem) {
-        dataItem = _dataDic[kDefaultData];
-    }
-    return dataItem;
-}
-
-- (OSAppItem *)appItem
-{
-    return self.appDic[_appScheme];
-}
-
-@end

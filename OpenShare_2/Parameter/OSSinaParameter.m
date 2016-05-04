@@ -54,7 +54,7 @@
     if (0 != _transferObject.statusCode) {
         NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: @"分享失败",
                                    NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%zd", _transferObject.statusCode]};
-        error = [NSError errorWithDomain:@"weibo_share_response" code:_transferObject.statusCode userInfo:userInfo];
+        error = [NSError errorWithDomain:@"response_from_sinaweibo" code:_transferObject.statusCode userInfo:userInfo];
     }
     return error;
 }

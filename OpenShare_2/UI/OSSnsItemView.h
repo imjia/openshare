@@ -18,15 +18,12 @@ typedef NS_ENUM(NSInteger, OSApp) {
     kOSAppEmail,
 };
 
-@class TCPopupContainer;
 @class OSSnsItemViewConfig;
 @class OSSnsItem;
-
 @protocol OSSnsItemViewDelegate;
 @interface OSSnsItemView : UIViewController
 @property (nonatomic, strong) OSSnsItemViewConfig *config;
 @property (nonatomic, weak) id<OSSnsItemViewDelegate> delegate;
-@property (nonatomic, weak) TCPopupContainer *parentCtrler;
 
 - (instancetype)initWithSnsItems:(NSArray<OSSnsItem *> *)items;
 - (instancetype)initWithDefaultSnsItems:(NSArray<NSNumber *> *)items;

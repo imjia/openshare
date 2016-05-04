@@ -7,18 +7,28 @@
 //
 
 #import "OpenShare+Sms.h"
-
+#import "OpenShare+Helper.h"
 
 @implementation OpenShare (Sms)
 
-+ (void)shareToSms:(OSMessage *)msg inController:(UIViewController<MFMessageComposeViewControllerDelegate> *)ctrler completion:(OSShareCompletionHandle)completionHandle
++ (void)shareToSms:(OSMessage *)msg inController:(UIViewController *)ctrler delegate:(id<MFMessageComposeViewControllerDelegate>)delegate
 {
     if (MFMessageComposeViewController.canSendText) {
-        MFMessageComposeViewController * controller = [[MFMessageComposeViewController alloc] init];
-//        controller.recipients = phones;
-        controller.navigationBar.tintColor = [UIColor redColor];
+        MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
+        controller.recipients = msg.dataItem.recipients;
         controller.body = msg.dataItem.msgBody;
-        controller.messageComposeDelegate = ctrler;
+        controller.messageComposeDelegate = delegate;
+        if (nil != msg.dataItem.imageData) {
+            NSString *imageType = [OpenShare contentTypeForImageData:msg.dataItem.imageData];
+            NSRange range = [imageType rangeOfString:@"image/"];
+            if (range.location != NSNotFound) {
+                NSString *fileName = [NSString stringWithFormat:@"image.%@", [imageType substringFromIndex:range.location + range.length]];
+                [controller addAttachmentData:msg.dataItem.imageData
+                               typeIdentifier:@"OSSMSImage"
+                                     filename:fileName];
+            }
+        }
+
         [ctrler presentViewController:controller animated:YES completion:nil];
     }
 }

@@ -138,7 +138,7 @@ static OSWXParameter *s_wxParam = nil;
         case OSMultimediaTypeApp: {
             //app
             wxParam.command = @"1010";
-            wxParam.extInfo = data.extInfo;
+            wxParam.extInfo = data.wxExtInfo;
             wxParam.fileExt = data.wxFileExt;
             wxParam.fileData = data.imageData;
             wxParam.thumbData = data.thumbnailData;
