@@ -17,6 +17,7 @@
     UICollectionView *_collectionView;
     NSArray *_sns;
     NSDictionary *_snsConfig;
+    UIView *_grayTouchView;
 }
 
 - (NSDictionary *)snsConfig
@@ -58,6 +59,14 @@
 {
     [super viewDidLoad];
     
+    _grayTouchView = [[UIView alloc] initWithFrame:self.view.frame];
+    _grayTouchView.backgroundColor = [UIColor grayColor];
+    _grayTouchView.alpha = 0;
+    
+    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapDismiss)];
+    [_grayTouchView addGestureRecognizer:tapGes];
+    [self.view addSubview:_grayTouchView];
+    
     // 一行4个
     static const NSInteger kItemsOfRow = 4;
 
@@ -77,10 +86,9 @@
     
     CGRect rect = self.view.bounds;
     rect.size.height = fitHeight;
-    self.view.frame = rect;
-    self.view.backgroundColor = [UIColor redColor];
+    rect.origin.y = self.view.bounds.size.height;
     
-    _collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
+    _collectionView = [[UICollectionView alloc] initWithFrame:rect collectionViewLayout:layout];
     _collectionView.dataSource = self;
     _collectionView.delegate = self;
     [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"UICollectionViewCell"];
@@ -93,6 +101,11 @@
                                                               @"font": [UIFont systemFontOfSize:12.0f]}];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self show];
+}
 
 #pragma mark - UICollectionViewDataSource
 
@@ -124,15 +137,53 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (nil != _delegate && [_delegate respondsToSelector:@selector(OSSnsItemView:didSelectSnsItem:)]) {
-        OSSnsItem *sns = _sns[indexPath.item];
-        [_delegate OSSnsItemView:self didSelectSnsItem:sns];
-    }
+    [self dismiss:^{
+        if (nil != _delegate && [_delegate respondsToSelector:@selector(OSSnsItemView:didSelectSnsItem:)]) {
+            OSSnsItem *sns = _sns[indexPath.item];
+            [_delegate OSSnsItemView:self didSelectSnsItem:sns];
+        }
+    }];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
+}
+
+- (void)tapDismiss
+{
+    [self dismiss:^{
+        if (nil != _delegate && [_delegate respondsToSelector:@selector(OSSnsItemViewWillDismiss:)]) {
+            [_delegate OSSnsItemViewWillDismiss:self];
+        }
+    }];
+}
+
+- (void)show
+{
+    CGPoint center = _collectionView.center;
+    center.y = self.view.bounds.size.height - _collectionView.frame.size.height / 2;
+    
+    [UIView animateWithDuration:0.35 animations:^{
+        _collectionView.center = center;
+        _grayTouchView.alpha = 1;
+    } completion:^(BOOL finished) {
+    }];
+}
+
+- (void)dismiss:(void(^)())completion
+{
+    CGPoint center = _collectionView.center;
+    center.y = self.view.bounds.size.height + _collectionView.frame.size.height;
+    
+    [UIView animateWithDuration:0.35f animations:^{
+        _collectionView.center = center;
+        _grayTouchView.alpha = 0;
+    } completion:^(BOOL finished) {
+        if (nil != completion) {
+            completion();
+        }
+    }];
 }
 
 @end

@@ -108,22 +108,20 @@
     dataItem.title = @"testTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitle";
     dataItem.desc = @"testDes";
     dataItem.link = @"http://www.baidu.com";
-    
+    dataItem.imageUrl = @"http://i.k1982.com/design_img/201109/201109011617318631.jpg";
 //    dataItem.imageData = UIImageJPEGRepresentation([UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_pet000@2x" ofType:@"jpg"]], 0.6);
   
     dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"logo.gif"]);
     dataItem.thumbnailData = UIImagePNGRepresentation([UIImage imageNamed:@"2.png"]);
+    [dataItem configValue:@"wx" forProperty:PropertySTR(title) forApp:kWXScheme];
     
     _message = [[OSMessage alloc] init];
     _message.dataItem = dataItem;
-    [_message configDataItem:^(OSDataItem *item) {
-        item.title = @"wx";
-    } forApp:kWXScheme];
 
-    [_message configAppItem:^(OSAppItem *item) {
-        item.appId = @"1104480569";
-        item.callBackName = [NSString stringWithFormat: @"QQ%02llx", @(1104480569).longLongValue];
-    } forApp:kQQScheme];
+//    [_message configAppItem:^(OSAppItem *item) {
+//        item.appId = @"1104480569";
+//        item.callBackName = [NSString stringWithFormat: @"QQ%02llx", @(1104480569).longLongValue];
+//    } forApp:kQQScheme];
 }
 
 - (UIButton *)button:(NSString *)title WithCenter:(CGPoint)center
@@ -332,7 +330,7 @@
 
 - (void)weixinViewHandler:(UIButton *)btn
 {
-    _message.multimediaType = OSMultimediaTypeText;
+    _message.multimediaType = OSMultimediaTypeImage;
     [[OpenShareManager defaultManager] shareMsg:_message inController:self defaultIconValid:NO sns:@[@(kOSAppQQ), @(kOSAppQQZone), @(kOSAppWXSession), @(kOSAppWXTimeLine), @(kOSAppSms), @(kOSAppEmail)] completion:^(NSError *error) {
         DLog(@"ERROR: %@", error);
     }];

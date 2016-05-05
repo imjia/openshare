@@ -25,7 +25,7 @@
 
 @optional
 - (void)OSSnsItemView:(OSSnsItemView *)itemView didSelectSnsItem:(OSSnsItem *)sns;
-
+- (void)OSSnsItemViewWillDismiss:(OSSnsItemView *)itemView;
 @end
 
 @interface OSSnsItemViewConfig : NSObject

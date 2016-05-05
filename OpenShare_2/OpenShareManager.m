@@ -10,11 +10,11 @@
 #import "OpenShareHeader.h"
 #import "OSSnsItemView.h"
 #import "UIWindow+TCHelper.h"
+#import "TCHTTPRequestCenter.h"
 
 @interface OpenShareManager () <OSSnsItemViewDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 {
     @private
-    OSMessage *_msg;
     OSSnsItemView *_snsCtrler;
     UIViewController *_ctrler;
     OSShareCompletionHandle _shareCompletionHandle;
@@ -36,13 +36,17 @@
 
 - (void)shareMsg:(OSMessage *)msg inController:(UIViewController *)ctrler defaultIconValid:(BOOL)defaultIconValid sns:(NSArray<NSNumber *> *)sns completion:(OSShareCompletionHandle)completion
 {
-    _msg = msg;
+    _message = msg;
     _ctrler = ctrler;
     _shareCompletionHandle = completion;
-    
     _snsCtrler = [[OSSnsItemView alloc] initWithDefaultSnsItems:sns];
     _snsCtrler.delegate = self;
-    [self showSnsController];
+    
+    if (nil != _message.dataItem.imageUrl) {
+        [self downloadImage];
+    } else {
+        [self showSnsController];
+    }
 }
 
 
@@ -51,8 +55,6 @@
 - (void)OSSnsItemView:(OSSnsItemView *)itemView didSelectSnsItem:(OSSnsItem *)sns
 {
     [self dismissSnsController];
-
-    [self downloadImageIfNeed];
     
     void (^block)(NSError *error) = ^(NSError *error){
         if (nil != _shareCompletionHandle) {
@@ -63,41 +65,41 @@
     
     switch (sns.index) {
         case kOSAppQQ: {
-            [OpenShare shareToQQ:_msg completion:^(NSError *error) {
+            [OpenShare shareToQQ:_message completion:^(NSError *error) {
                 block(error);
             }];
             break;
         }
         case kOSAppQQZone: {
-            [OpenShare shareToQQZone:_msg completion:^(NSError *error) {
+            [OpenShare shareToQQZone:_message completion:^(NSError *error) {
                 block(error);
             }];
             break;
         }
         case kOSAppWXSession: {
-            [OpenShare shareToWeixinSession:_msg completion:^(NSError *error) {
+            [OpenShare shareToWeixinSession:_message completion:^(NSError *error) {
                 block(error);
             }];
             break;
         }
         case kOSAppWXTimeLine: {
-            [OpenShare shareToWeixinTimeLine:_msg completion:^(NSError *error) {
+            [OpenShare shareToWeixinTimeLine:_message completion:^(NSError *error) {
                 block(error);
             }];
             break;
         }
         case kOSAppSina: {
-            [OpenShare shareToSinaWeibo:_msg completion:^(NSError *error) {
+            [OpenShare shareToSinaWeibo:_message completion:^(NSError *error) {
                 block(error);
             }];
             break;
         }
         case kOSAppEmail: {
-            [OpenShare shareToMail:_msg inController:_ctrler delegate:self];
+            [OpenShare shareToMail:_message inController:_ctrler delegate:self];
             break;
         }
         case kOSAppSms: {
-            [OpenShare shareToSms:_msg inController:_ctrler delegate:self];
+            [OpenShare shareToSms:_message inController:_ctrler delegate:self];
             break;
         }
         default:
@@ -105,6 +107,10 @@
     }
 }
 
+- (void)OSSnsItemViewWillDismiss:(OSSnsItemView *)itemView
+{
+    [self dismissSnsController];
+}
 
 - (void)showSnsController
 {
@@ -116,47 +122,62 @@
     [viewController.view addSubview:_snsCtrler.view];
     [_snsCtrler didMoveToParentViewController:viewController];
     [_snsCtrler endAppearanceTransition];
-    
-    
-    CGPoint point = CGPointMake(_snsCtrler.view.center.x, viewController.view.frame.size.height + _snsCtrler.view.frame.size.height/2);
-    _snsCtrler.view.center = point;
-    
-    CGPoint center = _snsCtrler.view.center;
-    center.y -= _snsCtrler.view.frame.size.height;
-    [UIView animateWithDuration:0.35f animations:^{
-        _snsCtrler.view.center = center;
-    } completion:^(BOOL finished) {
-        
-    }];
 }
 
 - (void)dismissSnsController
 {
-    CGPoint center = _snsCtrler.view.center;
-    center.y += _snsCtrler.view.frame.size.height;
-    [UIView animateWithDuration:0.35f animations:^{
-        _snsCtrler.view.center = center;
-    } completion:^(BOOL finished) {
-        UIViewController *parentCtrler = _snsCtrler.parentViewController;
-        [_snsCtrler beginAppearanceTransition:NO animated:YES];
-        [_snsCtrler.view removeFromSuperview];
-        [_snsCtrler endAppearanceTransition];
-        [_snsCtrler willMoveToParentViewController:nil];
-        [_snsCtrler removeFromParentViewController];
-        
-        [parentCtrler beginAppearanceTransition:YES animated:YES];
-        [parentCtrler endAppearanceTransition];
-        _snsCtrler = nil;
-    }];
+    UIViewController *parentCtrler = _snsCtrler.parentViewController;
+    [_snsCtrler beginAppearanceTransition:NO animated:YES];
+    [_snsCtrler.view removeFromSuperview];
+    [_snsCtrler endAppearanceTransition];
+    [_snsCtrler willMoveToParentViewController:nil];
+    [_snsCtrler removeFromParentViewController];
+    
+    [parentCtrler beginAppearanceTransition:YES animated:YES];
+    [parentCtrler endAppearanceTransition];
+    _snsCtrler = nil;
 }
 
-// FIXME: 下载图片
-- (void)downloadImageIfNeed
+- (void)downloadImage
 {
-    if (nil != _msg.dataItem.imageUrl) {
+    if (nil != _message.dataItem.imageUrl) {
         
+        NSString *path = [[self.class defaultCacheDirectoryInDomain:@"SDYImageCache"] stringByAppendingPathComponent:_message.dataItem.imageUrl.MD5_16];
+        TCHTTPCachePolicy *policy = [[TCHTTPCachePolicy alloc] init];
+        policy.cacheTimeoutInterval = kTCHTTPRequestCacheNeverExpired;
+        policy.shouldExpiredCacheValid = NO;
+        
+        TCHTTPStreamPolicy *streamPolicy = [[TCHTTPStreamPolicy alloc] init];
+        streamPolicy.shouldResumeDownload = YES;
+        streamPolicy.downloadDestinationPath = path;
+        id<TCHTTPRequest> request = [[TCHTTPRequestCenter defaultCenter] requestForDownload:_message.dataItem.imageUrl
+                                                                               streamPolicy:streamPolicy
+                                                                                cachePolicy:policy];
+        if (nil != request) {
+            request.timeoutInterval = 20.0f;
+            request.observer = self;
+            
+            __weak typeof(self) wSelf = self;
+            request.resultBlock = ^(id<TCHTTPRequest> request, BOOL success) {
+                
+                if (nil == wSelf) {
+                    return;
+                }
+                
+                NSData *data = nil;
+                if (success) {
+                    data = [NSData dataWithContentsOfFile:(NSString *)request.responseObject];
+                }
+
+                wSelf.message.dataItem.imageData = data;
+                [wSelf showSnsController];
+            };
+            
+            if ([request start:NULL]) {
+//                [SVProgressHUD show];
+            }
+        }
     }
-    
 }
 
 

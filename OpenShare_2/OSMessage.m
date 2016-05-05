@@ -7,13 +7,11 @@
 //
 
 #import "OSMessage.h"
+#import <objc/runtime.h>
 
 #pragma mark - OSMessage
 
-static NSString *const kDefaultData = @"defaultData";
-
 @interface OSMessage () {
-    NSMutableDictionary<NSString */*app scheme*/, OSDataItem *> *_dataDic; // 分享内容
     NSMutableDictionary<NSString */*app scheme*/, OSAppItem *> *_appDic; // app配置
 }
 
@@ -21,41 +19,12 @@ static NSString *const kDefaultData = @"defaultData";
 
 @implementation OSMessage
 
-- (NSMutableDictionary *)dataDic
-{
-    if (nil == _dataDic) {
-        _dataDic = [[NSMutableDictionary alloc] init];
-    }
-    return _dataDic;
-}
-
 - (NSMutableDictionary *)appDic
 {
     if (nil == _appDic) {
         _appDic = [[NSMutableDictionary alloc] init];
     }
     return _appDic;
-}
-
-- (void)setDataItem:(OSDataItem *)dataItem
-{
-    if (nil != dataItem) {
-        self.dataDic[kDefaultData] = dataItem;
-    }
-}
-
-- (void)configDataItem:(void (^)(OSDataItem *))config forApp:(NSString *)app
-{
-    OSDataItem *dataItem = self.dataDic[app];
-    if (nil == dataItem) {
-        OSDataItem *defaultData = _dataDic[kDefaultData];
-        dataItem = defaultData.copy;
-        _dataDic[app] = dataItem;
-    }
-    
-    if (nil != config) {
-        config(dataItem);
-    }
 }
 
 - (void)configAppItem:(void (^)(OSAppItem *))config forApp:(NSString *)app
@@ -71,24 +40,36 @@ static NSString *const kDefaultData = @"defaultData";
     }
 }
 
-- (OSDataItem *)dataItem
-{
-    OSDataItem *dataItem = self.dataDic[_appScheme];
-    if (nil == dataItem) {
-        dataItem = _dataDic[kDefaultData];
-    }
-    return dataItem;
-}
-
 - (OSAppItem *)appItem
 {
     return self.appDic[_appScheme];
+}
+
+- (void)setAppScheme:(NSString *)appScheme
+{
+    _dataItem.scheme = appScheme;
+    _appScheme = appScheme;
 }
 
 @end
 
 
 #pragma mark - OSDataItem
+
+static NSString *const kDefaultData = @"defaultData";
+
+@interface OSDataItem () {
+    @private
+    NSMutableDictionary<NSString *, NSString *> *_titleDic;
+    NSMutableDictionary<NSString *, NSString *> *_descDic;
+    NSMutableDictionary<NSString *, NSString *> *_linkDic;
+    NSMutableDictionary<NSString *, NSData *> *_imageDataDic;
+    NSMutableDictionary<NSString *, NSData *> *_thumbnailDataDic;
+    NSMutableDictionary<NSString *, NSString *> *_imageUrlDic;
+    NSMutableDictionary<NSString *, NSString *> *_thumbnailUrlDic;
+}
+
+@end
 
 @implementation OSDataItem
 
@@ -100,10 +81,169 @@ static NSString *const kDefaultData = @"defaultData";
     return self.tc_copy;
 }
 
+- (void)configValue:(id)value forProperty:(NSString *)property forApp:(NSString *)app
+{
+    if ([property isEqualToString:PropertySTR(title)]) {
+        _titleDic[app] = value;
+    } else if ([property isEqualToString:PropertySTR(desc)]) {
+        _descDic[app] = value;
+    } else if ([property isEqualToString:PropertySTR(link)]) {
+        _linkDic[app] = value;
+    } else if ([property isEqualToString:PropertySTR(imageData)]) {
+        _imageDataDic[app] = value;
+    } else if ([property isEqualToString:PropertySTR(thumbnailData)]) {
+        _thumbnailDataDic[app] = value;
+    } else if ([property isEqualToString:PropertySTR(imageUrl)]) {
+        _imageUrlDic[app] = value;
+    } else if ([property isEqualToString:PropertySTR(thumbnailUrl)]) {
+        _thumbnailUrlDic[app] = value;
+    }
+}
+
+- (NSMutableDictionary *)titleDic
+{
+    if (nil == _titleDic) {
+        _titleDic = [NSMutableDictionary dictionary];
+    }
+    return _titleDic;
+}
+
+- (NSMutableDictionary *)descDic
+{
+    if (nil == _descDic) {
+        _descDic = [NSMutableDictionary dictionary];
+    }
+    return _descDic;
+}
+
+- (NSMutableDictionary *)linkDic
+{
+    if (nil == _linkDic) {
+        _linkDic = [NSMutableDictionary dictionary];
+    }
+    return _linkDic;
+}
+
+- (NSMutableDictionary *)imageDataDic
+{
+    if (nil == _imageDataDic) {
+        _imageDataDic = [NSMutableDictionary dictionary];
+    }
+    return _imageDataDic;
+}
+
+- (NSMutableDictionary *)thumbnailDataDic
+{
+    if (nil == _thumbnailDataDic) {
+        _thumbnailDataDic = [NSMutableDictionary dictionary];
+    }
+    return _thumbnailDataDic;
+}
+
+- (NSMutableDictionary *)imageUrlDic
+{
+    if (nil == _imageUrlDic) {
+        _imageUrlDic = [NSMutableDictionary dictionary];
+    }
+    return _imageUrlDic;
+}
+
+- (NSMutableDictionary *)thumbnailUrlDic
+{
+    if (nil == _thumbnailUrlDic) {
+        _thumbnailUrlDic = [NSMutableDictionary dictionary];
+    }
+    return _thumbnailUrlDic;
+}
+
+- (void)setTitle:(NSString *)title
+{
+    if (nil != title) {
+        self.titleDic[kDefaultData] = title;
+    }
+}
+
+- (void)setDesc:(NSString *)desc
+{
+    if (nil != desc) {
+        self.descDic[kDefaultData] = desc;
+    }
+}
+
+- (void)setLink:(NSString *)link
+{
+    if (nil != link) {
+        self.linkDic[kDefaultData] = link;
+    }
+}
+
+- (void)setImageData:(NSData *)imageData
+{
+    if (nil != imageData) {
+        self.imageDataDic[kDefaultData] = imageData;
+    }
+}
+
+- (void)setThumbnailData:(NSData *)thumbnailData
+{
+    if (nil != thumbnailData) {
+        self.thumbnailDataDic[kDefaultData] = thumbnailData;
+    }
+}
+
+- (void)setImageUrl:(NSString *)imageUrl
+{
+    if (nil != imageUrl) {
+        self.imageUrlDic[kDefaultData] = imageUrl;
+    }
+}
+
+- (void)setThumbnailUrl:(NSString *)thumbnailUrl
+{
+    if (nil != thumbnailUrl) {
+        self.thumbnailUrlDic[kDefaultData] = thumbnailUrl;
+    }
+}
+
+- (NSString *)title
+{
+    return self.titleDic[_scheme] ?: self.titleDic[kDefaultData];
+}
+
+- (NSString *)desc
+{
+    return self.descDic[_scheme] ?: self.descDic[kDefaultData];
+}
+
+- (NSString *)link
+{
+    return self.linkDic[_scheme] ?: self.linkDic[kDefaultData];
+}
+
+- (NSData *)imageData
+{
+    return self.imageDataDic[_scheme] ?: self.imageDataDic[kDefaultData];
+}
+
+- (NSData *)thumbnailData
+{
+    return self.thumbnailDataDic[_scheme] ?: self.thumbnailDataDic[kDefaultData];
+}
+
+- (NSString *)imageUrl
+{
+    return self.imageUrlDic[_scheme] ?: self.imageUrlDic[kDefaultData];
+}
+
+- (NSString *)thumbnailUrl
+{
+    return self.thumbnailUrlDic[_scheme] ?: self.thumbnailUrlDic[kDefaultData];
+}
+
 - (NSString *)msgBody
 {
     if (nil == _msgBody) {
-        return _title;
+        return self.title;
     }
     return _msgBody;
 }
@@ -111,7 +251,7 @@ static NSString *const kDefaultData = @"defaultData";
 - (NSString *)emailBody
 {
     if (nil == _emailBody) {
-        return _title;
+        return self.title;
     }
     return _emailBody;
 }

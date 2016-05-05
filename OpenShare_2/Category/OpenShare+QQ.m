@@ -75,7 +75,7 @@ static OSQQParameter *s_qqParam = nil;
 {
     msg.appScheme = kQQScheme;
     OSDataItem *data = msg.dataItem;
-
+    
     OSQQParameter *qqParam = self.qqParameter.copy;
     if (nil != msg.appItem.callBackName) {
         qqParam.callback_name = msg.appItem.callBackName;

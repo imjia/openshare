@@ -13,6 +13,7 @@
 @interface OpenShareManager : NSObject
 
 @property (nonatomic, assign) BOOL ignoreNotInstalledApp;
+@property (nonatomic, strong) OSMessage *message;
 
 + (instancetype)defaultManager;
 - (void)shareMsg:(OSMessage *)msg inController:(UIViewController *)ctrler defaultIconValid:(BOOL)defaultIconValid sns:(NSArray<NSNumber *> *)sns completion:(OSShareCompletionHandle)completion;

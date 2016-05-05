@@ -12,9 +12,7 @@
 
 NSString *const kWXScheme = @"Weixin";
 static NSString *const kWXPasterBoardKey = @"content";
-
 static NSString *const kWXShareApi = @"mqqapi://share/to_fri";
-
 static NSString *const kWXSDKVersion = @"1.5";
 
 enum {
