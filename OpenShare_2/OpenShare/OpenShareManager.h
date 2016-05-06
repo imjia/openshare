@@ -25,6 +25,6 @@
 @protocol OSSnsUIDelegate <NSObject>
 
 @optional
-- (void)didSelectSns:(OSApp)app;
+- (void)didSelectSnsPlatform:(OSPlatform)platform;
 
 @end

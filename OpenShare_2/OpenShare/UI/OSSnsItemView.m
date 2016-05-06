@@ -26,20 +26,20 @@ static NSInteger const kContentBtnTag = 1024;
 - (NSDictionary *)snsConfig
 {
     if (nil == _snsConfig) {
-        _snsConfig = @{@(kOSAppQQ): @{@"name": @"QQ",
-                                       @"image": [UIImage imageNamed:@"os_qq_icon.png"]},
-                       @(kOSAppQQZone): @{@"name": @"QQ空间",
-                                           @"image": [UIImage imageNamed:@"os_qzone_icon.png"]},
-                       @(kOSAppWXSession): @{@"name": @"微信好友",
-                                              @"image": [UIImage imageNamed:@"os_wechat_icon.png"]},
-                       @(kOSAppWXTimeLine): @{@"name": @"微信朋友圈",
-                                               @"image": [UIImage imageNamed:@"os_wechat_timeline_icon.png"]},
-                       @(kOSAppSina): @{@"name": @"新浪",
-                                         @"image": [UIImage imageNamed:@"os_sina_icon.png"]},
-                       @(kOSAppEmail): @{@"name": @"邮件",
-                                          @"image": [UIImage imageNamed:@"os_email_icon.png"]},
-                       @(kOSAppSms): @{@"name": @"短信",
-                                        @"image": [UIImage imageNamed:@"os_sms_icon.png"]}};
+        _snsConfig = @{@(kOSPlatformQQ): @{@"name": @"QQ",
+                                           @"image": [UIImage imageNamed:@"os_qq_icon.png"]},
+                       @(kOSPlatformQQZone): @{@"name": @"QQ空间",
+                                               @"image": [UIImage imageNamed:@"os_qzone_icon.png"]},
+                       @(kOSPlatformWXSession): @{@"name": @"微信好友",
+                                                  @"image": [UIImage imageNamed:@"os_wechat_icon.png"]},
+                       @(kOSPlatformWXTimeLine): @{@"name": @"微信朋友圈",
+                                                   @"image": [UIImage imageNamed:@"os_wechat_timeline_icon.png"]},
+                       @(kOSPlatformSina): @{@"name": @"新浪",
+                                             @"image": [UIImage imageNamed:@"os_sina_icon.png"]},
+                       @(kOSPlatformEmail): @{@"name": @"邮件",
+                                              @"image": [UIImage imageNamed:@"os_email_icon.png"]},
+                       @(kOSPlatformSms): @{@"name": @"短信",
+                                            @"image": [UIImage imageNamed:@"os_sms_icon.png"]}};
     }
     return _snsConfig;
 }
@@ -52,7 +52,7 @@ static NSInteger const kContentBtnTag = 1024;
             OSSnsItem *snsItem = [[OSSnsItem alloc] init];
             snsItem.name = self.snsConfig[num][@"name"];
             snsItem.icon = self.snsConfig[num][@"image"];
-            snsItem.index = num.integerValue;
+            snsItem.platform = num.integerValue;
             [snsItems addObject:snsItem];
         }
         _sns = snsItems;

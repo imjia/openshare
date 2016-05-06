@@ -75,7 +75,7 @@ static OSQQParameter *s_qqParam = nil;
 {
     msg.appScheme = kOSQQScheme;
     OSDataItem *data = msg.dataItem;
-    data.app = kQQ == flag ? @(kOSAppQQ) : @(kOSAppQQZone);
+    data.platform = kQQ == flag ? kOSPlatformQQ : kOSPlatformQQZone;
     
     OSQQParameter *qqParam = self.qqParameter.copy;
     if (nil != msg.appItem.callBackName) {
@@ -151,7 +151,7 @@ static OSQQParameter *s_qqParam = nil;
         OSQQResponse *response = [OSQQResponse tc_mappingWithDictionary:[self parametersOfURL:url]];
         OSShareCompletionHandle handle = self.shareCompletionHandle;
         if (nil != handle) {
-            handle(kOSAppQQ, 0 != response.errorCode ? kOSStateFail : kOSStateSuccess, response.error_description);
+            handle(kOSPlatformQQZone, 0 != response.errorCode ? kOSStateFail : kOSStateSuccess, response.error_description);
             handle = nil;
         }
     }

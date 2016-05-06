@@ -40,6 +40,6 @@
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, strong) UIImage *icon;
-@property (nonatomic, assign) NSInteger index;
+@property (nonatomic, assign) OSPlatform platform;
 
 @end

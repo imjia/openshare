@@ -77,7 +77,7 @@ static OSWXParameter *s_wxParam = nil;
 {
     msg.appScheme = kWXScheme;
     OSDataItem *data = msg.dataItem;
-    data.app = kWXSession == flag ? @(kOSAppWXSession) : @(kOSAppWXTimeLine);
+    data.platform = kWXSession == flag ? kOSPlatformWXSession : kOSPlatformWXTimeLine;
     
     OSWXParameter *wxParam = self.wxParameter;
     // 朋友圈/朋友
@@ -201,7 +201,7 @@ static OSWXParameter *s_wxParam = nil;
         
         OSShareCompletionHandle handle = self.shareCompletionHandle;
         if (nil != handle) {
-            handle(kOSAppWXTimeLine, response.result ? kOSStateFail : kOSStateSuccess, nil);
+            handle(kWXTimeLine, response.result ? kOSStateFail : kOSStateSuccess, nil);
             handle = nil;
         }
     }

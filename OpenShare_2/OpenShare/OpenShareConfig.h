@@ -10,14 +10,15 @@
 #define OpenShareConfig_h
 
 // 分享支持的平台
-typedef NS_ENUM(NSInteger, OSApp) {
-    kOSAppQQ,
-    kOSAppQQZone,
-    kOSAppWXTimeLine,
-    kOSAppWXSession,
-    kOSAppSina,
-    kOSAppSms,
-    kOSAppEmail,
+typedef NS_ENUM(NSInteger, OSPlatform) {
+    kOSPlatformDefault,
+    kOSPlatformQQ,
+    kOSPlatformQQZone,
+    kOSPlatformWXTimeLine,
+    kOSPlatformWXSession,
+    kOSPlatformSina,
+    kOSPlatformSms,
+    kOSPlatformEmail,
 };
 
 typedef NS_ENUM(NSInteger, OSShareState) {

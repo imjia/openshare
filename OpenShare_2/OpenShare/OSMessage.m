@@ -59,12 +59,19 @@ static NSString *const kDefaultData = @"defaultData";
 
 @interface OSDataItem () {
     @private
-    NSMutableDictionary<NSString *, NSMutableDictionary *> *_dataDic;
+    NSMutableDictionary<NSString */*property*/, NSMutableDictionary */*{platform: customValue}*/> *_dataDic;
 }
 
 @end
 
 @implementation OSDataItem
+@dynamic title;
+@dynamic desc;
+@dynamic link;
+@dynamic imageData;
+@dynamic thumbnailData;
+@dynamic imageUrl;
+@dynamic thumbnailUrl;
 
 - (instancetype)init
 {
@@ -74,119 +81,134 @@ static NSString *const kDefaultData = @"defaultData";
     return self;
 }
 
-- (void)configValue:(id)value forProperty:(NSString *)property forApp:(NSNumber *)app
+- (NSMutableDictionary *)valueDicForKey:(NSString *)key;
 {
-    NSMutableDictionary *propertyDic = [self propertyDicWithProperty:property];
-    propertyDic[app] = value;
-    _dataDic[property] = propertyDic;
+    NSMutableDictionary *valueDic = _dataDic[key];
+    if (nil == valueDic) {
+        valueDic = [NSMutableDictionary dictionary];
+        _dataDic[key] = valueDic;
+    }
+    return valueDic;
 }
 
-- (NSMutableDictionary *)propertyDicWithProperty:(NSString *)property
+- (NSString *)getterStringFromSetter:(SEL)setter
 {
-    NSMutableDictionary *propertyDic = _dataDic[property];
-    if (nil == propertyDic) {
-        propertyDic = [NSMutableDictionary dictionary];
-        _dataDic[property] = propertyDic;
+    NSString *setterStr = NSStringFromSelector(setter);
+    NSRange rangeOfStrSet = [setterStr rangeOfString:@"set"];
+    NSString *getterStr = nil;
+    if (rangeOfStrSet.location != NSNotFound) {
+        CGFloat location = rangeOfStrSet.location + rangeOfStrSet.length;
+        NSRange range = NSMakeRange(location, setterStr.length - location - 1);
+        getterStr = [[setterStr substringWithRange:range] lowercaseString];
     }
-    return propertyDic;
+    
+    return getterStr;
+}
+
+- (void)setValue:(id)value forPlatform:(OSPlatform)platform withKey:(NSString *)key
+{
+    [self valueDicForKey:key][@(platform)] = value;
+}
+
+- (void)setValues:(NSArray *)values forKeys:(NSArray *)keys forPlatform:(OSPlatform)platform
+{
+    for (NSInteger i = 0; i < keys.count; i++) {
+        [self valueDicForKey:keys[i]][@(platform)] = values[i];
+    }
+}
+
+- (id)platformValueForKey:(NSString *)key
+{
+    NSMutableDictionary *valueDic = [self valueDicForKey:key];
+    id value = valueDic[@(_platform)];
+    if (nil == value) {
+        value = valueDic[@(kOSPlatformDefault)];
+    }
+    return value;
 }
 
 - (void)setTitle:(NSString *)title
 {
     if (nil != title) {
-        NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"title"];
-        propertyDic[kDefaultData] = title;
+        [self setValue:title forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
     }
 }
 
 - (void)setDesc:(NSString *)desc
 {
     if (nil != desc) {
-        NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"desc"];
-        propertyDic[kDefaultData] = desc;
+        [self setValue:desc forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
     }
 }
 
 - (void)setLink:(NSString *)link
 {
     if (nil != link) {
-        NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"link"];
-        propertyDic[kDefaultData] = link;
+        [self setValue:link forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
     }
 }
 
 - (void)setImageData:(NSData *)imageData
 {
     if (nil != imageData) {
-        NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"imageData"];
-        propertyDic[kDefaultData] = imageData;
+        [self setValue:imageData forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
     }
 }
 
 - (void)setThumbnailData:(NSData *)thumbnailData
 {
     if (nil != thumbnailData) {
-        NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"thumbnailData"];
-        propertyDic[kDefaultData] = thumbnailData;
+        [self setValue:thumbnailData forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
     }
 }
 
 - (void)setImageUrl:(NSString *)imageUrl
 {
     if (nil != imageUrl) {
-        NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"imageUrl"];
-        propertyDic[kDefaultData] = imageUrl;
+        [self setValue:imageUrl forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
     }
 }
 
 - (void)setThumbnailUrl:(NSString *)thumbnailUrl
 {
     if (nil != thumbnailUrl) {
-        NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"thumbnailUrl"];
-        propertyDic[kDefaultData] = thumbnailUrl;
+        [self setValue:thumbnailUrl forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
     }
 }
 
 - (NSString *)title
 {
-    NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"title"];
-    return propertyDic[_app] ?: propertyDic[kDefaultData];
+   return [self platformValueForKey:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)desc
 {
-    NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"desc"];
-    return propertyDic[_app] ?: propertyDic[kDefaultData];
+    return [self platformValueForKey:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)link
 {
-    NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"link"];
-    return propertyDic[_app] ?: propertyDic[kDefaultData];
+   return [self platformValueForKey:NSStringFromSelector(_cmd)];
 }
 
 - (NSData *)imageData
 {
-    NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"imageData"];
-    return propertyDic[_app] ?: propertyDic[kDefaultData];
+   return [self platformValueForKey:NSStringFromSelector(_cmd)];
 }
 
 - (NSData *)thumbnailData
 {
-    NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"thumbnailData"];
-    return propertyDic[_app] ?: propertyDic[kDefaultData];
+   return [self platformValueForKey:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)imageUrl
 {
-    NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"imageUrl"];
-    return propertyDic[_app] ?: propertyDic[kDefaultData];
+   return [self platformValueForKey:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)thumbnailUrl
 {
-    NSMutableDictionary *propertyDic = [self propertyDicWithProperty:@"thumbnailUrl"];
-    return propertyDic[_app] ?: propertyDic[kDefaultData];
+   return [self platformValueForKey:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)msgBody

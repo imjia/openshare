@@ -34,7 +34,7 @@
 //    dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"logo.gif"]);
     dataItem.thumbnailData = UIImagePNGRepresentation([UIImage imageNamed:@"2.png"]);
     
-    [dataItem configValue:@"wx" forProperty:PropertySTR(title) forApp:@(kOSAppWXTimeLine)];
+    [dataItem setValue:@"wx" forKey:PropertySTR(title) forPlatform:kOSPlatformWXSession];
     
     _message = [[OSMessage alloc] init];
     _message.dataItem = dataItem;
@@ -53,7 +53,7 @@
     invokeBtn.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.5];
     [invokeBtn setTitle:@"分享" forState:UIControlStateNormal];
     [invokeBtn addEventHandler:^(id sender) {
-        [[OpenShareManager defaultManager] shareMsg:_message inController:self defaultIconValid:NO sns:@[@(kOSAppQQ), @(kOSAppWXTimeLine), @(kOSAppWXSession), @(kOSAppSina), @(kOSAppSms), @(kOSAppEmail)] completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
+        [[OpenShareManager defaultManager] shareMsg:_message inController:self defaultIconValid:NO sns:@[@(kOSPlatformQQ), @(kOSPlatformWXTimeLine), @(kOSPlatformWXSession), @(kOSPlatformSina), @(kOSPlatformSms), @(kOSPlatformEmail)] completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
             NSString *stateStr = nil;
             if (kOSStateNotInstalled == state) {
                 stateStr = @"未安装";
@@ -63,7 +63,7 @@
                 stateStr = @"失败";
             }
             
-            DLog(@"APP:%@ 分享状态: %@  失败信息:%@",appName[app] ,stateStr, errorDescription);
+            DLog(@"APP:%@ 分享状态: %@  失败信息:%@",appName[platform] ,stateStr, errorDescription);
         }];
         
     } forControlEvents:UIControlEventTouchUpInside];

@@ -56,53 +56,53 @@
 {
     [self dismissSnsController];
     
-    if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectSns:)]) {
-        [_uiDelegate didSelectSns:sns.index];
+    if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectSnsPlatform:)]) {
+        [_uiDelegate didSelectSnsPlatform:sns.platform];
     }
     
-    void (^block)(OSApp app, OSShareState state, NSString *errorDescription) = ^(OSApp app,OSShareState state, NSString *errorDescription){
+    void (^block)(OSPlatform platform, OSShareState state, NSString *errorDescription) = ^(OSPlatform platform,OSShareState state, NSString *errorDescription){
         if (nil != _shareCompletionHandle) {
-            _shareCompletionHandle(app, state, errorDescription);
+            _shareCompletionHandle(platform, state, errorDescription);
             _shareCompletionHandle = nil;
         }
     };
     
-    switch (sns.index) {
-        case kOSAppQQ: {
-            [OpenShare shareToQQ:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
-                block(kOSAppQQ, state, errorDescription);
+    switch (sns.platform) {
+        case kOSPlatformQQ: {
+            [OpenShare shareToQQ:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
+                block(kOSPlatformQQ, state, errorDescription);
             }];
             break;
         }
-        case kOSAppQQZone: {
-            [OpenShare shareToQQZone:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
-                block(kOSAppQQZone, state, errorDescription);
+        case kOSPlatformQQZone: {
+            [OpenShare shareToQQZone:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
+                block(kOSPlatformQQZone, state, errorDescription);
             }];
             break;
         }
-        case kOSAppWXSession: {
-            [OpenShare shareToWeixinSession:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
-                block(kOSAppWXSession, state, errorDescription);
+        case kOSPlatformWXSession: {
+            [OpenShare shareToWeixinSession:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
+                block(kOSPlatformWXSession, state, errorDescription);
             }];
             break;
         }
-        case kOSAppWXTimeLine: {
-            [OpenShare shareToWeixinTimeLine:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
-                block(kOSAppWXTimeLine, state, errorDescription);
+        case kOSPlatformWXTimeLine: {
+            [OpenShare shareToWeixinTimeLine:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
+                block(kOSPlatformWXTimeLine, state, errorDescription);
             }];
             break;
         }
-        case kOSAppSina: {
-            [OpenShare shareToSinaWeibo:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
-                block(kOSAppSina, state, errorDescription);
+        case kOSPlatformSina: {
+            [OpenShare shareToSinaWeibo:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
+                block(kOSPlatformSina, state, errorDescription);
             }];
             break;
         }
-        case kOSAppEmail: {
+        case kOSPlatformEmail: {
             [OpenShare shareToMail:_message inController:_ctrler delegate:self];
             break;
         }
-        case kOSAppSms: {
+        case kOSPlatformSms: {
             [OpenShare shareToSms:_message inController:_ctrler delegate:self];
             break;
         }
@@ -205,7 +205,7 @@
     }
 
     if (nil != _shareCompletionHandle) {
-        _shareCompletionHandle(kOSAppSms, nil == error ? kOSStateSuccess : kOSStateFail, nil);
+        _shareCompletionHandle(kOSPlatformSms, nil == error ? kOSStateSuccess : kOSStateFail, nil);
         _shareCompletionHandle = nil;
     }
 }
@@ -218,7 +218,7 @@
     [controller dismissViewControllerAnimated:YES completion:nil];
     
     if (nil != _shareCompletionHandle) {
-        _shareCompletionHandle(kOSAppEmail, nil == error ? kOSStateSuccess : kOSStateFail, error.localizedDescription);
+        _shareCompletionHandle(kOSPlatformEmail, nil == error ? kOSStateSuccess : kOSStateFail, error.localizedDescription);
         _shareCompletionHandle = nil;
     }
 }

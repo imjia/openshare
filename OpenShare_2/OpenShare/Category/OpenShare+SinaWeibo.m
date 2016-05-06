@@ -36,7 +36,7 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
 {
     OSSinaParameter *sinaParam = [[OSSinaParameter alloc] init];
     OSDataItem *data = msg.dataItem;
-    data.app = @(kOSAppSina);
+    data.platform = kOSPlatformSina;
     
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
@@ -115,7 +115,7 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
             //分享回调
             OSShareCompletionHandle handle = self.shareCompletionHandle;
             if (nil != handle) {
-                handle(kOSAppSina, 0 != response.transferObject.statusCode ? kOSStateFail : kOSStateSuccess, nil);
+                handle(0, 0 != response.transferObject.statusCode ? kOSStateFail : kOSStateSuccess, nil);
                 handle = nil;
             }
         }
