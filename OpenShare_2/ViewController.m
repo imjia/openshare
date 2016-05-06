@@ -118,10 +118,10 @@
     _message = [[OSMessage alloc] init];
     _message.dataItem = dataItem;
 
-//    [_message configAppItem:^(OSAppItem *item) {
-//        item.appId = @"1104480569";
-//        item.callBackName = [NSString stringWithFormat: @"QQ%02llx", @(1104480569).longLongValue];
-//    } forApp:kQQScheme];
+    [_message configAppItem:^(OSAppItem *item) {
+        item.appId = @"1104480569";
+        item.callBackName = [NSString stringWithFormat: @"QQ%02llx", @(1104480569).longLongValue];
+    } forApp:kQQScheme];
 }
 
 - (UIButton *)button:(NSString *)title WithCenter:(CGPoint)center

@@ -16,8 +16,7 @@
 @property (nonatomic, strong) OSSnsItemViewConfig *config;
 @property (nonatomic, weak) id<OSSnsItemViewDelegate> delegate;
 
-- (instancetype)initWithSnsItems:(NSArray<OSSnsItem *> *)items;
-- (instancetype)initWithDefaultSnsItems:(NSArray<NSNumber *> *)items;
+- (instancetype)initWithSns:(NSArray<NSNumber *> *)sns;
 
 @end
 

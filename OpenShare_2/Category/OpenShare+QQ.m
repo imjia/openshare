@@ -96,17 +96,11 @@ static OSQQParameter *s_qqParam = nil;
             qqParam.title = [OpenShare base64AndURLEncodedString:data.title];
             qqParam.desc = [OpenShare base64AndURLEncodedString:data.desc];
             
+            //不需要设置缩略图，qq自己会处理，设了也不管用
             NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
             if (nil != data.imageData) {
                 pbData[@"file_data"] = data.imageData;
             }
-            
-            /* 
-            //不需要设置缩略图，qq自己会处理，设了也不管用
-            if (nil != data.thumbnailData) {
-                pbData[@"previewimagedata"] = data.thumbnailData;
-            }
-            */
             
             [self setGeneralPasteboardData:pbData
                                     forKey:kQQPasteboardKey

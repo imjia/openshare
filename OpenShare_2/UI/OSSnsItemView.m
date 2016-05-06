@@ -8,6 +8,9 @@
 
 #import "OSSnsItemView.h"
 
+static NSString *const kCellIdentifier = @"UICollectionViewCell";
+static NSInteger const kContentBtnTag = 1024;
+
 @interface OSSnsItemView () <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @end
@@ -23,35 +26,38 @@
 - (NSDictionary *)snsConfig
 {
     if (nil == _snsConfig) {
-        _snsConfig = @{@(kOSAppQQ) : @{@"name": @"QQ"},
-                       @(kOSAppQQZone) : @{@"name": @"QQ空间"},
-                       @(kOSAppWXSession) : @{@"name": @"微信好友"},
-                       @(kOSAppWXTimeLine) : @{@"name": @"微信朋友圈"},
-                       @(kOSAppSina) : @{@"name": @"新浪"},
-                       @(kOSAppEmail) : @{@"name": @"邮件"},
-                       @(kOSAppSms) : @{@"name": @"短信"}};
+        _snsConfig = @{@(kOSAppQQ): @{@"name": @"QQ",
+                                       @"image": [UIImage imageNamed:@"os_qq_icon.png"]},
+                       @(kOSAppQQZone): @{@"name": @"QQ空间",
+                                           @"image": [UIImage imageNamed:@"os_qzone_icon.png"]},
+                       @(kOSAppWXSession): @{@"name": @"微信好友",
+                                              @"image": [UIImage imageNamed:@"os_wechat_icon.png"]},
+                       @(kOSAppWXTimeLine): @{@"name": @"微信朋友圈",
+                                               @"image": [UIImage imageNamed:@"os_wechat_timeline_icon.png"]},
+                       @(kOSAppSina): @{@"name": @"新浪",
+                                         @"image": [UIImage imageNamed:@"os_sina_icon.png"]},
+                       @(kOSAppEmail): @{@"name": @"邮件",
+                                          @"image": [UIImage imageNamed:@"os_email_icon.png"]},
+                       @(kOSAppSms): @{@"name": @"短信",
+                                        @"image": [UIImage imageNamed:@"os_sms_icon.png"]}};
     }
     return _snsConfig;
 }
 
-- (instancetype)initWithDefaultSnsItems:(NSArray<NSNumber *> *)items
-{
-    NSMutableArray *snsItems = [NSMutableArray array];
-    for (NSNumber *num in items) {
-        OSSnsItem *snsItem = [[OSSnsItem alloc] init];
-        snsItem.name = self.snsConfig[num][@"name"];
-        snsItem.index = num.integerValue;
-        [snsItems addObject:snsItem];
-    }
-
-    return [self initWithSnsItems:snsItems];
-}
-
-- (instancetype)initWithSnsItems:(NSArray<OSSnsItem *> *)items
+- (instancetype)initWithSns:(NSArray<NSNumber *> *)sns
 {
     if (self = [super init]) {
-        _sns = items;
+        NSMutableArray *snsItems = [NSMutableArray array];
+        for (NSNumber *num in sns) {
+            OSSnsItem *snsItem = [[OSSnsItem alloc] init];
+            snsItem.name = self.snsConfig[num][@"name"];
+            snsItem.icon = self.snsConfig[num][@"image"];
+            snsItem.index = num.integerValue;
+            [snsItems addObject:snsItem];
+        }
+        _sns = snsItems;
     }
+
     return self;
 }
 
@@ -91,10 +97,9 @@
     _collectionView = [[UICollectionView alloc] initWithFrame:rect collectionViewLayout:layout];
     _collectionView.dataSource = self;
     _collectionView.delegate = self;
-    [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"UICollectionViewCell"];
+    [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:kCellIdentifier];
     _collectionView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:_collectionView];
-    _collectionView.backgroundColor = [UIColor greenColor];
     
     // 默认值
     _config = [OSSnsItemViewConfig tc_mappingWithDictionary:@{@"titleColor": [UIColor whiteColor],
@@ -116,19 +121,23 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * CellIdentifier = @"UICollectionViewCell";
-    UICollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    UICollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
     
-    cell.backgroundColor = [UIColor colorWithRed:((10 * indexPath.row) / 255.0) green:((20 * indexPath.row)/255.0) blue:((30 * indexPath.row)/255.0) alpha:1.0f];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, cell.bounds.size.height)];
-    label.textColor = [UIColor redColor];
-    label.text = [_sns[indexPath.item] name];
-    label.numberOfLines = 2;
-    
-    for (id subView in cell.contentView.subviews) {
-        [subView removeFromSuperview];
+    UIButton *contentBtn = [cell.contentView viewWithTag:kContentBtnTag];
+    if (nil == contentBtn) {
+        contentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        contentBtn.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height);
+        contentBtn.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        contentBtn.tag = 1024;
+        contentBtn.userInteractionEnabled = NO;
+        contentBtn.layoutStyle = kTCButtonLayoutStyleImageTopTitleBottom;
+        [cell.contentView addSubview:contentBtn];
     }
-    [cell.contentView addSubview:label];
+    
+    OSSnsItem *sns = _sns[indexPath.item];
+    [contentBtn setTitle:sns.name forState:UIControlStateNormal];
+    [contentBtn setImage:sns.icon forState:UIControlStateNormal];
+
     return cell;
 }
 

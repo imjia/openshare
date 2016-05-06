@@ -7,6 +7,7 @@
 //
 
 #import "OSQQParameter.h"
+#import "OpenShareConfig.h"
 
 @implementation OSQQParameter
 
@@ -55,9 +56,9 @@
                          NSLocalizedDescriptionKey: _error_description};
         }
         
-        error = [NSError errorWithDomain:@"response_from_qq"
-                                             code:_errorCode
-                                         userInfo:userInfo];
+        error = [NSError errorWithDomain:kErrorDomainQQ
+                                    code:_errorCode
+                                userInfo:userInfo];
     }
     return error;
 }

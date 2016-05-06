@@ -20,4 +20,11 @@ typedef NS_ENUM(NSInteger, OSApp) {
     kOSAppEmail,
 };
 
+static NSString *const kErrorDomainSms = @"response_from_sms";
+static NSString *const kErrorDomainQQ = @"response_from_qq";
+static NSString *const kErrorDomainWeixin = @"response_from_weixin";
+static NSString *const kErrorDomainSina = @"response_from_sina";
+static NSString *const kErrorDomainEmail = @"response_from_email";
+
+
 #endif /* OpenShareConfig_h */

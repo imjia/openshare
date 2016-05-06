@@ -21,6 +21,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>OpenShare</string>
 			<key>CFBundleURLSchemes</key>
@@ -33,6 +35,7 @@
 				<string>wb402180334</string>
 				<string>renrenshare228525</string>
 				<string>fb776442542471056</string>
+				<string>QQ41D50939</string>
 			</array>
 		</dict>
 	</array>

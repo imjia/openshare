@@ -7,6 +7,7 @@
 //
 
 #import "OSSinaParameter.h"
+#import "OpenShareConfig.h"
 
 @implementation OSSinaMediaObject
 
@@ -54,7 +55,9 @@
     if (0 != _transferObject.statusCode) {
         NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: @"分享失败",
                                    NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%zd", _transferObject.statusCode]};
-        error = [NSError errorWithDomain:@"response_from_sinaweibo" code:_transferObject.statusCode userInfo:userInfo];
+        error = [NSError errorWithDomain:kErrorDomainSina
+                                    code:_transferObject.statusCode
+                                userInfo:userInfo];
     }
     return error;
 }

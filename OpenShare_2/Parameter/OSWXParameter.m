@@ -7,6 +7,7 @@
 //
 
 #import "OSWXParameter.h"
+#import "OpenShareConfig.h"
 
 @implementation OSWXParameter
 
@@ -32,7 +33,9 @@
     if (0 != _result) {
         NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: @"分享失败",
                                    NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%zd", _result]};
-        error = [NSError errorWithDomain:@"response_from_weixin" code:_result userInfo:userInfo];
+        error = [NSError errorWithDomain:kErrorDomainWeixin
+                                    code:_result
+                                userInfo:userInfo];
     }
     return error;
 }

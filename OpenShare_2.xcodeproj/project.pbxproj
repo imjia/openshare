@@ -15,6 +15,22 @@
 		083A0C7A1CAA2AF8009F2AC8 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 083A0C781CAA2AF8009F2AC8 /* logo.png */; };
 		083A0C7B1CAA2AF8009F2AC8 /* test.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 083A0C791CAA2AF8009F2AC8 /* test.pdf */; };
 		083A0C7D1CAA5CF8009F2AC8 /* logo.gif in Resources */ = {isa = PBXBuildFile; fileRef = 083A0C7C1CAA5CF8009F2AC8 /* logo.gif */; };
+		086903A71CDC43CE005E57AF /* os_alipay_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903971CDC43CE005E57AF /* os_alipay_icon.png */; };
+		086903A81CDC43CE005E57AF /* os_alipay_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903981CDC43CE005E57AF /* os_alipay_icon@2x.png */; };
+		086903A91CDC43CE005E57AF /* os_email_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903991CDC43CE005E57AF /* os_email_icon.png */; };
+		086903AA1CDC43CE005E57AF /* os_email_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0869039A1CDC43CE005E57AF /* os_email_icon@2x.png */; };
+		086903AB1CDC43CE005E57AF /* os_qq_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0869039B1CDC43CE005E57AF /* os_qq_icon.png */; };
+		086903AC1CDC43CE005E57AF /* os_qq_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0869039C1CDC43CE005E57AF /* os_qq_icon@2x.png */; };
+		086903AD1CDC43CE005E57AF /* os_qzone_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0869039D1CDC43CE005E57AF /* os_qzone_icon.png */; };
+		086903AE1CDC43CE005E57AF /* os_qzone_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0869039E1CDC43CE005E57AF /* os_qzone_icon@2x.png */; };
+		086903AF1CDC43CE005E57AF /* os_sina_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0869039F1CDC43CE005E57AF /* os_sina_icon.png */; };
+		086903B01CDC43CE005E57AF /* os_sina_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903A01CDC43CE005E57AF /* os_sina_icon@2x.png */; };
+		086903B11CDC43CE005E57AF /* os_sms_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903A11CDC43CE005E57AF /* os_sms_icon.png */; };
+		086903B21CDC43CE005E57AF /* os_sms_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903A21CDC43CE005E57AF /* os_sms_icon@2x.png */; };
+		086903B31CDC43CE005E57AF /* os_wechat_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903A31CDC43CE005E57AF /* os_wechat_icon.png */; };
+		086903B41CDC43CE005E57AF /* os_wechat_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903A41CDC43CE005E57AF /* os_wechat_icon@2x.png */; };
+		086903B51CDC43CE005E57AF /* os_wechat_timeline_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903A51CDC43CE005E57AF /* os_wechat_timeline_icon.png */; };
+		086903B61CDC43CE005E57AF /* os_wechat_timeline_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 086903A61CDC43CE005E57AF /* os_wechat_timeline_icon@2x.png */; };
 		08976AFB1CD9D6C1006DDD8B /* OSSnsItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08976AFA1CD9D6C1006DDD8B /* OSSnsItemView.m */; };
 		08C857AF1CD8821600C77706 /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C857971CD8821600C77706 /* MASCompositeConstraint.m */; };
 		08C857B01CD8821600C77706 /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C8579A1CD8821600C77706 /* MASConstraint.m */; };
@@ -126,6 +142,22 @@
 		083A0C781CAA2AF8009F2AC8 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		083A0C791CAA2AF8009F2AC8 /* test.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = test.pdf; sourceTree = "<group>"; };
 		083A0C7C1CAA5CF8009F2AC8 /* logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = logo.gif; sourceTree = "<group>"; };
+		086903971CDC43CE005E57AF /* os_alipay_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = os_alipay_icon.png; sourceTree = "<group>"; };
+		086903981CDC43CE005E57AF /* os_alipay_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_alipay_icon@2x.png"; sourceTree = "<group>"; };
+		086903991CDC43CE005E57AF /* os_email_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = os_email_icon.png; sourceTree = "<group>"; };
+		0869039A1CDC43CE005E57AF /* os_email_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_email_icon@2x.png"; sourceTree = "<group>"; };
+		0869039B1CDC43CE005E57AF /* os_qq_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = os_qq_icon.png; sourceTree = "<group>"; };
+		0869039C1CDC43CE005E57AF /* os_qq_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_qq_icon@2x.png"; sourceTree = "<group>"; };
+		0869039D1CDC43CE005E57AF /* os_qzone_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = os_qzone_icon.png; sourceTree = "<group>"; };
+		0869039E1CDC43CE005E57AF /* os_qzone_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_qzone_icon@2x.png"; sourceTree = "<group>"; };
+		0869039F1CDC43CE005E57AF /* os_sina_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = os_sina_icon.png; sourceTree = "<group>"; };
+		086903A01CDC43CE005E57AF /* os_sina_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_sina_icon@2x.png"; sourceTree = "<group>"; };
+		086903A11CDC43CE005E57AF /* os_sms_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = os_sms_icon.png; sourceTree = "<group>"; };
+		086903A21CDC43CE005E57AF /* os_sms_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_sms_icon@2x.png"; sourceTree = "<group>"; };
+		086903A31CDC43CE005E57AF /* os_wechat_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = os_wechat_icon.png; sourceTree = "<group>"; };
+		086903A41CDC43CE005E57AF /* os_wechat_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_wechat_icon@2x.png"; sourceTree = "<group>"; };
+		086903A51CDC43CE005E57AF /* os_wechat_timeline_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = os_wechat_timeline_icon.png; sourceTree = "<group>"; };
+		086903A61CDC43CE005E57AF /* os_wechat_timeline_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_wechat_timeline_icon@2x.png"; sourceTree = "<group>"; };
 		08976AF91CD9D6C1006DDD8B /* OSSnsItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSnsItemView.h; sourceTree = "<group>"; };
 		08976AFA1CD9D6C1006DDD8B /* OSSnsItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSnsItemView.m; sourceTree = "<group>"; };
 		08C857961CD8821600C77706 /* MASCompositeConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASCompositeConstraint.h; sourceTree = "<group>"; };
@@ -352,6 +384,29 @@
 			);
 			name = Parameter;
 			path = ../Parameter;
+			sourceTree = "<group>";
+		};
+		086902E01CDC406D005E57AF /* SnsIcon */ = {
+			isa = PBXGroup;
+			children = (
+				086903971CDC43CE005E57AF /* os_alipay_icon.png */,
+				086903981CDC43CE005E57AF /* os_alipay_icon@2x.png */,
+				086903991CDC43CE005E57AF /* os_email_icon.png */,
+				0869039A1CDC43CE005E57AF /* os_email_icon@2x.png */,
+				0869039B1CDC43CE005E57AF /* os_qq_icon.png */,
+				0869039C1CDC43CE005E57AF /* os_qq_icon@2x.png */,
+				0869039D1CDC43CE005E57AF /* os_qzone_icon.png */,
+				0869039E1CDC43CE005E57AF /* os_qzone_icon@2x.png */,
+				0869039F1CDC43CE005E57AF /* os_sina_icon.png */,
+				086903A01CDC43CE005E57AF /* os_sina_icon@2x.png */,
+				086903A11CDC43CE005E57AF /* os_sms_icon.png */,
+				086903A21CDC43CE005E57AF /* os_sms_icon@2x.png */,
+				086903A31CDC43CE005E57AF /* os_wechat_icon.png */,
+				086903A41CDC43CE005E57AF /* os_wechat_icon@2x.png */,
+				086903A51CDC43CE005E57AF /* os_wechat_timeline_icon.png */,
+				086903A61CDC43CE005E57AF /* os_wechat_timeline_icon@2x.png */,
+			);
+			path = SnsIcon;
 			sourceTree = "<group>";
 		};
 		08976AF81CD9D6C1006DDD8B /* UI */ = {
@@ -795,6 +850,7 @@
 				083A0C761CAA2AAA009F2AC8 /* iconfont.ttf */,
 				083A0C781CAA2AF8009F2AC8 /* logo.png */,
 				083A0C791CAA2AF8009F2AC8 /* test.pdf */,
+				086902E01CDC406D005E57AF /* SnsIcon */,
 			);
 			name = OpenShare;
 			sourceTree = "<group>";
@@ -803,16 +859,16 @@
 			isa = PBXGroup;
 			children = (
 				0821C2511CD09BA60091C41B /* Parameter */,
-				47205F601CDA3C6500A7120D /* OpenShare+Mail.h */,
-				47205F611CDA3C6500A7120D /* OpenShare+Mail.m */,
 				47205F621CDA3C6500A7120D /* OpenShare+QQ.h */,
 				47205F631CDA3C6500A7120D /* OpenShare+QQ.m */,
+				47205F681CDA3C6500A7120D /* OpenShare+Weixin.h */,
+				47205F691CDA3C6500A7120D /* OpenShare+Weixin.m */,
 				47205F641CDA3C6500A7120D /* OpenShare+SinaWeibo.h */,
 				47205F651CDA3C6500A7120D /* OpenShare+SinaWeibo.m */,
 				47205F661CDA3C6500A7120D /* OpenShare+Sms.h */,
 				47205F671CDA3C6500A7120D /* OpenShare+Sms.m */,
-				47205F681CDA3C6500A7120D /* OpenShare+Weixin.h */,
-				47205F691CDA3C6500A7120D /* OpenShare+Weixin.m */,
+				47205F601CDA3C6500A7120D /* OpenShare+Mail.h */,
+				47205F611CDA3C6500A7120D /* OpenShare+Mail.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -876,16 +932,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				08E104FB1CA29E2B009C5BBD /* icon_pet000@2x.jpg in Resources */,
+				086903AA1CDC43CE005E57AF /* os_email_icon@2x.png in Resources */,
+				086903B31CDC43CE005E57AF /* os_wechat_icon.png in Resources */,
 				083A0C771CAA2AAA009F2AC8 /* iconfont.ttf in Resources */,
+				086903A71CDC43CE005E57AF /* os_alipay_icon.png in Resources */,
+				086903B51CDC43CE005E57AF /* os_wechat_timeline_icon.png in Resources */,
 				08D248BB1C9FCC2F0083115C /* LaunchScreen.storyboard in Resources */,
 				083A0C7A1CAA2AF8009F2AC8 /* logo.png in Resources */,
 				08CF2FFC1CD3568900F6E2C4 /* .gitignore in Resources */,
+				086903AF1CDC43CE005E57AF /* os_sina_icon.png in Resources */,
+				086903B11CDC43CE005E57AF /* os_sms_icon.png in Resources */,
+				086903B41CDC43CE005E57AF /* os_wechat_icon@2x.png in Resources */,
 				08E104F91CA29984009C5BBD /* test.jpg in Resources */,
+				086903A91CDC43CE005E57AF /* os_email_icon.png in Resources */,
 				08D248B81C9FCC2F0083115C /* Assets.xcassets in Resources */,
 				08CF2D1E1CD2FFBE00F6E2C4 /* 2.png in Resources */,
 				083A0C7D1CAA5CF8009F2AC8 /* logo.gif in Resources */,
+				086903AD1CDC43CE005E57AF /* os_qzone_icon.png in Resources */,
+				086903B21CDC43CE005E57AF /* os_sms_icon@2x.png in Resources */,
+				086903AB1CDC43CE005E57AF /* os_qq_icon.png in Resources */,
+				086903AE1CDC43CE005E57AF /* os_qzone_icon@2x.png in Resources */,
+				086903B01CDC43CE005E57AF /* os_sina_icon@2x.png in Resources */,
+				086903AC1CDC43CE005E57AF /* os_qq_icon@2x.png in Resources */,
+				086903B61CDC43CE005E57AF /* os_wechat_timeline_icon@2x.png in Resources */,
 				08D248B61C9FCC2F0083115C /* Main.storyboard in Resources */,
 				083A0C7B1CAA2AF8009F2AC8 /* test.pdf in Resources */,
+				086903A81CDC43CE005E57AF /* os_alipay_icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -39,7 +39,7 @@
     _message = msg;
     _ctrler = ctrler;
     _shareCompletionHandle = completion;
-    _snsCtrler = [[OSSnsItemView alloc] initWithDefaultSnsItems:sns];
+    _snsCtrler = [[OSSnsItemView alloc] initWithSns:sns];
     _snsCtrler.delegate = self;
     
     if (nil != _message.dataItem.imageUrl) {
@@ -190,7 +190,7 @@
     
     NSError *error = nil;
     if (MessageComposeResultSent != result) {
-        error = [NSError errorWithDomain:@"response_from_sms"
+        error = [NSError errorWithDomain:kErrorDomainSms
                                     code:result
                                 userInfo:nil];
     }
