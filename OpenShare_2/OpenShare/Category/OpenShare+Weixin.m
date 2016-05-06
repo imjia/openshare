@@ -9,6 +9,7 @@
 #import "OpenShare+Weixin.h"
 #import "OpenShare+Helper.h"
 #import "OSWXParameter.h"
+#import "NSObject+TCDictionaryMapping.h"
 
 NSString *const kWXScheme = @"Weixin";
 static NSString *const kWXPasterBoardKey = @"content";
@@ -76,6 +77,7 @@ static OSWXParameter *s_wxParam = nil;
 {
     msg.appScheme = kWXScheme;
     OSDataItem *data = msg.dataItem;
+    data.app = kWXSession == flag ? @(kOSAppWXSession) : @(kOSAppWXTimeLine);
     
     OSWXParameter *wxParam = self.wxParameter;
     // 朋友圈/朋友
@@ -199,7 +201,7 @@ static OSWXParameter *s_wxParam = nil;
         
         OSShareCompletionHandle handle = self.shareCompletionHandle;
         if (nil != handle) {
-            handle(response.error);
+            handle(kOSAppWXTimeLine, response.result ? kOSStateFail : kOSStateSuccess, nil);
             handle = nil;
         }
     }

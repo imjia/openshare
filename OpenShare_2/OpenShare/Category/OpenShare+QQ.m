@@ -9,9 +9,9 @@
 #import "OpenShare+QQ.h"
 #import "OpenShare+Helper.h"
 #import "OSQQParameter.h"
+#import "NSObject+TCDictionaryMapping.h"
 
-
-NSString *const kQQScheme = @"QQ";
+NSString *const kOSQQScheme = @"QQ";
 static NSString *const kQQPasteboardKey = @"com.tencent.mqq.api.apiLargeData";
 static NSString *const kQQShareApi = @"mqqapi://share/to_fri";
 
@@ -29,26 +29,26 @@ enum {
 
 + (NSString *)callBackName
 {
-    return [self dataForRegistedScheme:kQQScheme][@"callback_name"];
+    return [self dataForRegistedScheme:kOSQQScheme][@"callback_name"];
 }
 
 + (void)registQQWithAppId:(NSString *)appId
 {
-    [self registAppWithScheme:kQQScheme
+    [self registAppWithScheme:kOSQQScheme
                          data:@{@"appid": appId,
                                 @"callback_name": [NSString stringWithFormat: @"QQ%02llx", appId.longLongValue]}];
 }
 
 + (void)shareToQQ:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
-    if ([self isAppRegisted:kQQScheme]) {
+    if ([self isAppRegisted:kOSQQScheme]) {
         [self openAppWithURL:[self urlWithMessage:msg flag:kQQ] completionHandle:completionHandle];
     }
 }
 
 + (void)shareToQQZone:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
-    if ([self isAppRegisted:kQQScheme]) {
+    if ([self isAppRegisted:kOSQQScheme]) {
         [self openAppWithURL:[self urlWithMessage:msg flag:kQQZone] completionHandle:completionHandle];
     }
 }
@@ -73,8 +73,9 @@ static OSQQParameter *s_qqParam = nil;
 
 + (NSURL *)urlWithMessage:(OSMessage *)msg flag:(NSInteger)flag
 {
-    msg.appScheme = kQQScheme;
+    msg.appScheme = kOSQQScheme;
     OSDataItem *data = msg.dataItem;
+    data.app = kQQ == flag ? @(kOSAppQQ) : @(kOSAppQQZone);
     
     OSQQParameter *qqParam = self.qqParameter.copy;
     if (nil != msg.appItem.callBackName) {
@@ -150,7 +151,7 @@ static OSQQParameter *s_qqParam = nil;
         OSQQResponse *response = [OSQQResponse tc_mappingWithDictionary:[self parametersOfURL:url]];
         OSShareCompletionHandle handle = self.shareCompletionHandle;
         if (nil != handle) {
-            handle(response.error);
+            handle(kOSAppQQ, 0 != response.errorCode ? kOSStateFail : kOSStateSuccess, response.error_description);
             handle = nil;
         }
     }

@@ -8,7 +8,7 @@
 
 #import "OpenShare.h"
 
-extern NSString *const kQQScheme;
+extern NSString *const kOSQQScheme;
 
 @interface OpenShare (QQ)
 

@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "OSMessage.h"
+#import "OpenShareConfig.h"
 
 typedef NS_ENUM(NSInteger, OSPasteboardEncoding){
     kOSPasteboardEncodingKeyedArchiver,
     kOSPasteboardEncodingPropertyListSerialization
 };
 
-typedef void(^OSShareCompletionHandle)(NSError *error);
+typedef void(^OSShareCompletionHandle)(OSApp app, OSShareState state, NSString *errorDescription);
 
 @interface OpenShare : NSObject
 

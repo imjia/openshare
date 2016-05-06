@@ -20,6 +20,12 @@ typedef NS_ENUM(NSInteger, OSApp) {
     kOSAppEmail,
 };
 
+typedef NS_ENUM(NSInteger, OSShareState) {
+    kOSStateNotInstalled,
+    kOSStateSuccess,
+    kOSStateFail,
+};
+
 static NSString *const kErrorDomainSms = @"response_from_sms";
 static NSString *const kErrorDomainQQ = @"response_from_qq";
 static NSString *const kErrorDomainWeixin = @"response_from_weixin";

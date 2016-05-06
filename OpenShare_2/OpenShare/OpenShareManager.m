@@ -56,41 +56,45 @@
 {
     [self dismissSnsController];
     
-    void (^block)(NSError *error) = ^(NSError *error){
+    if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectSns:)]) {
+        [_uiDelegate didSelectSns:sns.index];
+    }
+    
+    void (^block)(OSApp app, OSShareState state, NSString *errorDescription) = ^(OSApp app,OSShareState state, NSString *errorDescription){
         if (nil != _shareCompletionHandle) {
-            _shareCompletionHandle(error);
+            _shareCompletionHandle(app, state, errorDescription);
             _shareCompletionHandle = nil;
         }
     };
     
     switch (sns.index) {
         case kOSAppQQ: {
-            [OpenShare shareToQQ:_message completion:^(NSError *error) {
-                block(error);
+            [OpenShare shareToQQ:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
+                block(kOSAppQQ, state, errorDescription);
             }];
             break;
         }
         case kOSAppQQZone: {
-            [OpenShare shareToQQZone:_message completion:^(NSError *error) {
-                block(error);
+            [OpenShare shareToQQZone:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
+                block(kOSAppQQZone, state, errorDescription);
             }];
             break;
         }
         case kOSAppWXSession: {
-            [OpenShare shareToWeixinSession:_message completion:^(NSError *error) {
-                block(error);
+            [OpenShare shareToWeixinSession:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
+                block(kOSAppWXSession, state, errorDescription);
             }];
             break;
         }
         case kOSAppWXTimeLine: {
-            [OpenShare shareToWeixinTimeLine:_message completion:^(NSError *error) {
-                block(error);
+            [OpenShare shareToWeixinTimeLine:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
+                block(kOSAppWXTimeLine, state, errorDescription);
             }];
             break;
         }
         case kOSAppSina: {
-            [OpenShare shareToSinaWeibo:_message completion:^(NSError *error) {
-                block(error);
+            [OpenShare shareToSinaWeibo:_message completion:^(OSApp app, OSShareState state, NSString *errorDescription) {
+                block(kOSAppSina, state, errorDescription);
             }];
             break;
         }
@@ -115,6 +119,11 @@
 - (void)showSnsController
 {
     UIViewController *viewController = [UIApplication sharedApplication].keyWindow.topMostViewController;
+    UITabBarController *tabCtrler = viewController.tabBarController;
+    if (nil != tabCtrler) {
+        viewController = tabCtrler;
+    }
+    
     [viewController beginAppearanceTransition:NO animated:YES];
     [viewController endAppearanceTransition];
     [viewController addChildViewController:_snsCtrler];
@@ -196,7 +205,7 @@
     }
 
     if (nil != _shareCompletionHandle) {
-        _shareCompletionHandle(error);
+        _shareCompletionHandle(kOSAppSms, nil == error ? kOSStateSuccess : kOSStateFail, nil);
         _shareCompletionHandle = nil;
     }
 }
@@ -209,7 +218,7 @@
     [controller dismissViewControllerAnimated:YES completion:nil];
     
     if (nil != _shareCompletionHandle) {
-        _shareCompletionHandle(error);
+        _shareCompletionHandle(kOSAppEmail, nil == error ? kOSStateSuccess : kOSStateFail, error.localizedDescription);
         _shareCompletionHandle = nil;
     }
 }

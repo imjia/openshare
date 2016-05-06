@@ -8,6 +8,7 @@
 
 #import "OpenShare+SinaWeibo.h"
 #import "OSSinaParameter.h"
+#import "NSObject+TCDictionaryMapping.h"
 
 NSString *const kSinaWbScheme = @"SinaWeibo";
 
@@ -35,6 +36,7 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
 {
     OSSinaParameter *sinaParam = [[OSSinaParameter alloc] init];
     OSDataItem *data = msg.dataItem;
+    data.app = @(kOSAppSina);
     
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
@@ -113,7 +115,7 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
             //分享回调
             OSShareCompletionHandle handle = self.shareCompletionHandle;
             if (nil != handle) {
-                handle(response.error);
+                handle(kOSAppSina, 0 != response.transferObject.statusCode ? kOSStateFail : kOSStateSuccess, nil);
                 handle = nil;
             }
         }
