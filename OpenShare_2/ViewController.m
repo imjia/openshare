@@ -53,7 +53,7 @@
     invokeBtn.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.5];
     [invokeBtn setTitle:@"分享" forState:UIControlStateNormal];
     [invokeBtn addEventHandler:^(id sender) {
-        [[OpenShareManager defaultManager] shareMsg:_message inController:self defaultIconValid:NO sns:@[@(kOSPlatformQQ), @(kOSPlatformWXTimeLine), @(kOSPlatformWXSession), @(kOSPlatformSina), @(kOSPlatformSms), @(kOSPlatformEmail)] completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
+        [[OpenShareManager defaultManager] shareMsg:_message inController:self sns:@[@(kOSPlatformQQ), @(kOSPlatformWXTimeLine), @(kOSPlatformWXSession), @(kOSPlatformSina), @(kOSPlatformSms), @(kOSPlatformEmail)] completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
             NSString *stateStr = nil;
             if (kOSStateNotInstalled == state) {
                 stateStr = @"未安装";

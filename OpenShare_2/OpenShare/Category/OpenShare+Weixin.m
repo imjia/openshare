@@ -16,11 +16,6 @@ static NSString *const kWXPasterBoardKey = @"content";
 static NSString *const kWXShareApi = @"mqqapi://share/to_fri";
 static NSString *const kWXSDKVersion = @"1.5";
 
-enum {
-    kWXSession,
-    kWXTimeLine
-};
-
 typedef NS_ENUM(NSInteger, WXObjectType) {
     kWXObjectTypeImage = 2,
     kWXObjectTypeAudio,
@@ -47,14 +42,14 @@ typedef NS_ENUM(NSInteger, WXObjectType) {
 + (void)shareToWeixinSession:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
     if ([self isAppRegisted:kWXScheme]) {
-        [self openAppWithURL:[self wxurlWithMessage:msg flag:kWXSession] completionHandle:completionHandle];
+        [self openAppWithURL:[self wxurlWithMessage:msg flag:kOSPlatformWXSession] completionHandle:completionHandle];
     }
 }
 
 + (void)shareToWeixinTimeLine:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
     if ([self isAppRegisted:kWXScheme]) {
-        [self openAppWithURL:[self wxurlWithMessage:msg flag:kWXTimeLine] completionHandle:completionHandle];
+        [self openAppWithURL:[self wxurlWithMessage:msg flag:kOSPlatformWXTimeLine] completionHandle:completionHandle];
     }
 }
 
@@ -77,7 +72,7 @@ static OSWXParameter *s_wxParam = nil;
 {
     msg.appScheme = kWXScheme;
     OSDataItem *data = msg.dataItem;
-    data.platform = kWXSession == flag ? kOSPlatformWXSession : kOSPlatformWXTimeLine;
+    data.platform = flag;
     
     OSWXParameter *wxParam = self.wxParameter;
     // 朋友圈/朋友
@@ -201,7 +196,7 @@ static OSWXParameter *s_wxParam = nil;
         
         OSShareCompletionHandle handle = self.shareCompletionHandle;
         if (nil != handle) {
-            handle(kWXTimeLine, response.result ? kOSStateFail : kOSStateSuccess, nil);
+            handle(kOSPlatformUnknown, response.result ? kOSStateFail : kOSStateSuccess, nil);
             handle = nil;
         }
     }

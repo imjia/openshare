@@ -34,7 +34,7 @@
     return mgr;
 }
 
-- (void)shareMsg:(OSMessage *)msg inController:(UIViewController *)ctrler defaultIconValid:(BOOL)defaultIconValid sns:(NSArray<NSNumber *> *)sns completion:(OSShareCompletionHandle)completion
+- (void)shareMsg:(OSMessage *)msg inController:(UIViewController *)ctrler sns:(NSArray<NSNumber *> *)sns completion:(OSShareCompletionHandle)completion
 {
     _message = msg;
     _ctrler = ctrler;
@@ -222,6 +222,5 @@
         _shareCompletionHandle = nil;
     }
 }
-
 
 @end

@@ -122,7 +122,7 @@ static NSString *const kDefaultData = @"defaultData";
     NSMutableDictionary *valueDic = [self valueDicForKey:key];
     id value = valueDic[@(_platform)];
     if (nil == value) {
-        value = valueDic[@(kOSPlatformDefault)];
+        value = valueDic[@(kOSPlatformUnknown)];
     }
     return value;
 }
@@ -130,49 +130,49 @@ static NSString *const kDefaultData = @"defaultData";
 - (void)setTitle:(NSString *)title
 {
     if (nil != title) {
-        [self setValue:title forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
+        [self setValue:title forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
     }
 }
 
 - (void)setDesc:(NSString *)desc
 {
     if (nil != desc) {
-        [self setValue:desc forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
+        [self setValue:desc forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
     }
 }
 
 - (void)setLink:(NSString *)link
 {
     if (nil != link) {
-        [self setValue:link forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
+        [self setValue:link forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
     }
 }
 
 - (void)setImageData:(NSData *)imageData
 {
     if (nil != imageData) {
-        [self setValue:imageData forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
+        [self setValue:imageData forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
     }
 }
 
 - (void)setThumbnailData:(NSData *)thumbnailData
 {
     if (nil != thumbnailData) {
-        [self setValue:thumbnailData forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
+        [self setValue:thumbnailData forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
     }
 }
 
 - (void)setImageUrl:(NSString *)imageUrl
 {
     if (nil != imageUrl) {
-        [self setValue:imageUrl forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
+        [self setValue:imageUrl forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
     }
 }
 
 - (void)setThumbnailUrl:(NSString *)thumbnailUrl
 {
     if (nil != thumbnailUrl) {
-        [self setValue:thumbnailUrl forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformDefault];
+        [self setValue:thumbnailUrl forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
     }
 }
 

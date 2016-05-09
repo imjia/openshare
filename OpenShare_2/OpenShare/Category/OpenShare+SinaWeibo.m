@@ -115,7 +115,7 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
             //分享回调
             OSShareCompletionHandle handle = self.shareCompletionHandle;
             if (nil != handle) {
-                handle(0, 0 != response.transferObject.statusCode ? kOSStateFail : kOSStateSuccess, nil);
+                handle(kOSPlatformSina, 0 != response.transferObject.statusCode ? kOSStateFail : kOSStateSuccess, nil);
                 handle = nil;
             }
         }

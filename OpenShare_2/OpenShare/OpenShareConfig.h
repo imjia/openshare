@@ -11,7 +11,7 @@
 
 // 分享支持的平台
 typedef NS_ENUM(NSInteger, OSPlatform) {
-    kOSPlatformDefault,
+    kOSPlatformUnknown,
     kOSPlatformQQ,
     kOSPlatformQQZone,
     kOSPlatformWXTimeLine,

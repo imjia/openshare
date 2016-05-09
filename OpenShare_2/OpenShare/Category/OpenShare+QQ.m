@@ -15,11 +15,6 @@ NSString *const kOSQQScheme = @"QQ";
 static NSString *const kQQPasteboardKey = @"com.tencent.mqq.api.apiLargeData";
 static NSString *const kQQShareApi = @"mqqapi://share/to_fri";
 
-enum {
-    kQQ,
-    kQQZone,
-};
-
 @implementation OpenShare (QQ)
 
 + (BOOL)isQQInstalled
@@ -42,14 +37,14 @@ enum {
 + (void)shareToQQ:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
     if ([self isAppRegisted:kOSQQScheme]) {
-        [self openAppWithURL:[self urlWithMessage:msg flag:kQQ] completionHandle:completionHandle];
+        [self openAppWithURL:[self urlWithMessage:msg flag:kOSPlatformQQ] completionHandle:completionHandle];
     }
 }
 
 + (void)shareToQQZone:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
 {
     if ([self isAppRegisted:kOSQQScheme]) {
-        [self openAppWithURL:[self urlWithMessage:msg flag:kQQZone] completionHandle:completionHandle];
+        [self openAppWithURL:[self urlWithMessage:msg flag:kOSPlatformQQZone] completionHandle:completionHandle];
     }
 }
 
@@ -75,7 +70,7 @@ static OSQQParameter *s_qqParam = nil;
 {
     msg.appScheme = kOSQQScheme;
     OSDataItem *data = msg.dataItem;
-    data.platform = kQQ == flag ? kOSPlatformQQ : kOSPlatformQQZone;
+    data.platform = flag;
     
     OSQQParameter *qqParam = self.qqParameter.copy;
     if (nil != msg.appItem.callBackName) {
@@ -151,7 +146,7 @@ static OSQQParameter *s_qqParam = nil;
         OSQQResponse *response = [OSQQResponse tc_mappingWithDictionary:[self parametersOfURL:url]];
         OSShareCompletionHandle handle = self.shareCompletionHandle;
         if (nil != handle) {
-            handle(kOSPlatformQQZone, 0 != response.errorCode ? kOSStateFail : kOSStateSuccess, response.error_description);
+            handle(kOSPlatformUnknown, 0 != response.errorCode ? kOSStateFail : kOSStateSuccess, response.error_description);
             handle = nil;
         }
     }
