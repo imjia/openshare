@@ -8,8 +8,6 @@
 
 #import "OpenShare.h"
 
-extern NSString *const kWXScheme;
-
 @interface OpenShare (Weixin)
 
 + (void)registWeixinWithAppId:(NSString *)appId;

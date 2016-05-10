@@ -15,7 +15,7 @@ typedef NS_ENUM(NSInteger, OSPasteboardEncoding){
     kOSPasteboardEncodingPropertyListSerialization
 };
 
-typedef void(^OSShareCompletionHandle)(OSPlatform platform, OSShareState state, NSString *errorDescription);
+typedef void(^OSShareCompletionHandle)(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error);
 
 @interface OpenShare : NSObject
 

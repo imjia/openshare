@@ -11,7 +11,7 @@
 #import "OSQQParameter.h"
 #import "NSObject+TCDictionaryMapping.h"
 
-NSString *const kOSQQScheme = @"QQ";
+static NSString *const kOSQQScheme = @"QQ";
 static NSString *const kQQPasteboardKey = @"com.tencent.mqq.api.apiLargeData";
 static NSString *const kQQShareApi = @"mqqapi://share/to_fri";
 
@@ -19,7 +19,7 @@ static NSString *const kQQShareApi = @"mqqapi://share/to_fri";
 
 + (BOOL)isQQInstalled
 {
-    return [self canOpenURL:[NSURL URLWithString:@"mqqapi://"]];
+    return [self canOpenURL:[NSURL URLWithString:kOSQQURL]];
 }
 
 + (NSString *)callBackName
@@ -68,13 +68,14 @@ static OSQQParameter *s_qqParam = nil;
 
 + (NSURL *)urlWithMessage:(OSMessage *)msg flag:(NSInteger)flag
 {
-    msg.appScheme = kOSQQScheme;
+    msg.app = kOSAppQQ;
+    
     OSDataItem *data = msg.dataItem;
     data.platform = flag;
     
     OSQQParameter *qqParam = self.qqParameter.copy;
-    if (nil != msg.appItem.callBackName) {
-        qqParam.callback_name = msg.appItem.callBackName;
+    if (nil != msg.platformAccount.callBackName) {
+        qqParam.callback_name = msg.platformAccount.callBackName;
     }
     
     qqParam.cflag = flag;
@@ -90,7 +91,7 @@ static OSQQParameter *s_qqParam = nil;
             qqParam.file_type = @"img";
             qqParam.objectlocation = @"pasteboard";
             qqParam.title = [OpenShare base64AndURLEncodedString:data.title];
-            qqParam.desc = [OpenShare base64AndURLEncodedString:data.desc];
+            qqParam.desc = [OpenShare base64AndURLEncodedString:data.content];
             
             //不需要设置缩略图，qq自己会处理，设了也不管用
             NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
@@ -116,7 +117,7 @@ static OSQQParameter *s_qqParam = nil;
  
             qqParam.objectlocation = @"pasteboard";
             qqParam.title = [OpenShare base64AndURLEncodedString:data.title];
-            qqParam.desc = [OpenShare base64AndURLEncodedString:data.desc];
+            qqParam.desc = [OpenShare base64AndURLEncodedString:data.content];
             qqParam.url = [OpenShare base64AndURLEncodedString:data.link];
             
             NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
@@ -146,7 +147,7 @@ static OSQQParameter *s_qqParam = nil;
         OSQQResponse *response = [OSQQResponse tc_mappingWithDictionary:[self parametersOfURL:url]];
         OSShareCompletionHandle handle = self.shareCompletionHandle;
         if (nil != handle) {
-            handle(kOSPlatformUnknown, 0 != response.errorCode ? kOSStateFail : kOSStateSuccess, response.error_description);
+            handle(nil, kOSPlatformCommon, 0 != response.errorCode ? kOSStateFail : kOSStateSuccess, response.error);
             handle = nil;
         }
     }

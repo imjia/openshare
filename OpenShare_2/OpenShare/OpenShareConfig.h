@@ -9,9 +9,15 @@
 #ifndef OpenShareConfig_h
 #define OpenShareConfig_h
 
+typedef NS_ENUM(NSInteger, OSAPP) {
+    kOSAppQQ,
+    kOSAppWeixin,
+    kOSAppSina,
+};
+
 // 分享支持的平台
 typedef NS_ENUM(NSInteger, OSPlatform) {
-    kOSPlatformUnknown,
+    kOSPlatformCommon,
     kOSPlatformQQ,
     kOSPlatformQQZone,
     kOSPlatformWXTimeLine,
@@ -27,11 +33,15 @@ typedef NS_ENUM(NSInteger, OSShareState) {
     kOSStateFail,
 };
 
-static NSString *const kErrorDomainSms = @"response_from_sms";
-static NSString *const kErrorDomainQQ = @"response_from_qq";
-static NSString *const kErrorDomainWeixin = @"response_from_weixin";
-static NSString *const kErrorDomainSina = @"response_from_sina";
-static NSString *const kErrorDomainEmail = @"response_from_email";
+#define kOSErrorDomainSms @"response_from_sms"
+#define kOSErrorDomainQQ @"response_from_qq"
+#define kOSErrorDomainWeixin @"response_from_weixin"
+#define kOSErrorDomainSina @"response_from_sina"
+#define kOSErrorDomainEmail @"response_from_email"
+
+#define kOSQQURL @"mqqapi://"
+#define kOSWeixinURL @"weixin://"
+#define kOSSinaURL @"weibosdk://request"
 
 
 #endif /* OpenShareConfig_h */

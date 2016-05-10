@@ -8,10 +8,11 @@
 
 #import "OpenShare+Sms.h"
 #import "OpenShare+Helper.h"
+#import "UIWindow+TCHelper.h"
 
 @implementation OpenShare (Sms)
 
-+ (void)shareToSms:(OSMessage *)msg inController:(UIViewController *)ctrler delegate:(id<MFMessageComposeViewControllerDelegate>)delegate
++ (void)shareToSms:(OSMessage *)msg delegate:(id<MFMessageComposeViewControllerDelegate>)delegate
 {
     if (MFMessageComposeViewController.canSendText) {
         MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
@@ -29,7 +30,7 @@
             }
         }
 
-        [ctrler presentViewController:controller animated:YES completion:nil];
+        [[UIApplication sharedApplication].delegate.window.topMostViewController presentViewController:controller animated:YES completion:nil];
     }
 }
 

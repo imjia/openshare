@@ -15,17 +15,18 @@
 
 @property (nonatomic, assign) BOOL ignoreNotInstalledApp;
 @property (nonatomic, assign) BOOL remindInstall;
-@property (nonatomic, strong) OSMessage *message;
 @property (nonatomic, weak) id<OSSnsUIDelegate> uiDelegate;
+@property (nonatomic, assign) void(^beforeDownloadImage)(); // 用户决定hud
+@property (nonatomic, assign) void(^afterDownloadImage)(); // 用户决定hud
 
 + (instancetype)defaultManager;
-- (void)shareMsg:(OSMessage *)msg inController:(UIViewController *)ctrler sns:(NSArray<NSNumber *> *)sns completion:(OSShareCompletionHandle)completion;
+- (void)shareMsg:(OSMessage *)msg sns:(NSArray<NSNumber/*OSPlatform*/ *> *)sns completion:(OSShareCompletionHandle)completion;
 
 @end
 
 @protocol OSSnsUIDelegate <NSObject>
 
 @optional
-- (void)didSelectSnsPlatform:(OSPlatform)platform;
+- (void)didSelectSnsPlatform:(OSPlatform)platform message:(OSMessage *)message;
 
 @end

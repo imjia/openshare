@@ -55,7 +55,7 @@
     if (0 != _transferObject.statusCode) {
         NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: @"分享失败",
                                    NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%zd", _transferObject.statusCode]};
-        error = [NSError errorWithDomain:kErrorDomainSina
+        error = [NSError errorWithDomain:kOSErrorDomainSina
                                     code:_transferObject.statusCode
                                 userInfo:userInfo];
     }

@@ -34,17 +34,17 @@
 
 + (NSString *)base64AndURLEncodedString:(NSString *)inputString
 {
-    return [[[inputString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+    return [[[inputString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:kNilOptions] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 }
 
 + (NSString *)base64EncodedString:(NSString *)inputString
 {
-    return [[inputString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
+    return [[inputString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:kNilOptions];
 }
 
 + (NSString *)base64DecodedString:(NSString *)inputString
 {
-    return [[NSString alloc ] initWithData:[[NSData alloc] initWithBase64EncodedString:inputString options:0] encoding:NSUTF8StringEncoding];
+    return [[NSString alloc ] initWithData:[[NSData alloc] initWithBase64EncodedString:inputString options:kNilOptions] encoding:NSUTF8StringEncoding];
 }
 
 + (NSString *)urlEncodedString:(NSString *)inputString

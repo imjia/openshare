@@ -11,7 +11,7 @@
 #import "OSWXParameter.h"
 #import "NSObject+TCDictionaryMapping.h"
 
-NSString *const kWXScheme = @"Weixin";
+static NSString *const kWXScheme = @"Weixin";
 static NSString *const kWXPasterBoardKey = @"content";
 static NSString *const kWXShareApi = @"mqqapi://share/to_fri";
 static NSString *const kWXSDKVersion = @"1.5";
@@ -70,7 +70,7 @@ static OSWXParameter *s_wxParam = nil;
 
 + (NSURL *)wxurlWithMessage:(OSMessage *)msg flag:(NSInteger)flag
 {
-    msg.appScheme = kWXScheme;
+    msg.app = kOSAppWeixin;
     OSDataItem *data = msg.dataItem;
     data.platform = flag;
     
@@ -78,7 +78,7 @@ static OSWXParameter *s_wxParam = nil;
     // 朋友圈/朋友
     wxParam.scene = flag;
     wxParam.title = data.title;
-    wxParam.desc = data.desc;
+    wxParam.desc = data.content;
     
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
@@ -109,7 +109,7 @@ static OSWXParameter *s_wxParam = nil;
             wxParam.command = @"1010";
             wxParam.thumbData = data.thumbnailData;
             wxParam.mediaUrl = data.link;
-            wxParam.mediaDataUrl = data.mediaDataUrl;
+            wxParam.mediaDataUrl = data.mediaDataUrl.absoluteString;
             wxParam.objectType = msg.multimediaType == OSMultimediaTypeAudio ? kWXObjectTypeAudio : kWXObjectTypeVideo;
             
             break;
@@ -146,7 +146,7 @@ static OSWXParameter *s_wxParam = nil;
             break;
     }
 
-    NSString *appId = msg.appItem.appId;
+    NSString *appId = msg.platformAccount.appId;
     if (nil == appId) {
         appId = [self dataForRegistedScheme:kWXScheme][@"appid"];
     }
@@ -196,7 +196,7 @@ static OSWXParameter *s_wxParam = nil;
         
         OSShareCompletionHandle handle = self.shareCompletionHandle;
         if (nil != handle) {
-            handle(kOSPlatformUnknown, response.result ? kOSStateFail : kOSStateSuccess, nil);
+            handle(nil, kOSPlatformCommon, response.result ? kOSStateFail : kOSStateSuccess, nil);
             handle = nil;
         }
     }

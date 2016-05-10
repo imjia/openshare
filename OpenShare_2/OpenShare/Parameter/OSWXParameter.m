@@ -33,7 +33,7 @@
     if (0 != _result) {
         NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: @"分享失败",
                                    NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%zd", _result]};
-        error = [NSError errorWithDomain:kErrorDomainWeixin
+        error = [NSError errorWithDomain:kOSErrorDomainWeixin
                                     code:_result
                                 userInfo:userInfo];
     }

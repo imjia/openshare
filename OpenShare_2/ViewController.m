@@ -28,9 +28,9 @@
     
     OSDataItem *dataItem = [[OSDataItem alloc] init];
     dataItem.title = @"testTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitle";
-    dataItem.desc = @"testDes";
+    dataItem.content = @"testDes";
     dataItem.link = @"http://www.baidu.com";
-    dataItem.imageUrl = @"http://i.k1982.com/design_img/201109/201109011617318631.jpg";
+    dataItem.imageUrl = [NSURL URLWithString:@"http://i.k1982.com/design_img/201109/201109011617318631.jpg"];
 //    dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"logo.gif"]);
     dataItem.thumbnailData = UIImagePNGRepresentation([UIImage imageNamed:@"2.png"]);
     
@@ -53,7 +53,8 @@
     invokeBtn.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.5];
     [invokeBtn setTitle:@"分享" forState:UIControlStateNormal];
     [invokeBtn addEventHandler:^(id sender) {
-        [[OpenShareManager defaultManager] shareMsg:_message inController:self sns:@[@(kOSPlatformQQ), @(kOSPlatformWXTimeLine), @(kOSPlatformWXSession), @(kOSPlatformSina), @(kOSPlatformSms), @(kOSPlatformEmail)] completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
+        [[OpenShareManager defaultManager] shareMsg:_message sns:@[@(kOSPlatformQQ), @(kOSPlatformWXTimeLine), @(kOSPlatformWXSession), @(kOSPlatformSina), @(kOSPlatformSms), @(kOSPlatformEmail)] completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+    
             NSString *stateStr = nil;
             if (kOSStateNotInstalled == state) {
                 stateStr = @"未安装";
@@ -63,7 +64,7 @@
                 stateStr = @"失败";
             }
             
-            DLog(@"APP:%@ 分享状态: %@  失败信息:%@",appName[platform] ,stateStr, errorDescription);
+//            DLog(@"APP:%@ 分享状态: %@  失败信息:%@",appName[platform] ,stateStr, errorDescription);
         }];
         
     } forControlEvents:UIControlEventTouchUpInside];

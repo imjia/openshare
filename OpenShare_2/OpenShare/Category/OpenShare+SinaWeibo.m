@@ -10,7 +10,7 @@
 #import "OSSinaParameter.h"
 #import "NSObject+TCDictionaryMapping.h"
 
-NSString *const kSinaWbScheme = @"SinaWeibo";
+static NSString *const kSinaWbScheme = @"SinaWeibo";
 
 @implementation OpenShare (SinaWeibo)
 
@@ -34,6 +34,8 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
 
 + (NSURL *)sinaUrlWithMessage:(OSMessage *)msg
 {
+    msg.app = kOSAppSina;
+    
     OSSinaParameter *sinaParam = [[OSSinaParameter alloc] init];
     OSDataItem *data = msg.dataItem;
     data.platform = kOSPlatformSina;
@@ -58,7 +60,7 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
             mediaObj.__class = @"WBWebpageObject";
             mediaObj.objectID = @"identifier1";
             mediaObj.title = data.title;
-            mediaObj.desc = data.desc;
+            mediaObj.desc = data.content;
             mediaObj.thumbnailData = data.thumbnailData;
             mediaObj.webpageUrl = data.link;
         
@@ -76,7 +78,7 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
     tfObj.message = sinaParam.tc_dictionary;
     tfObj.requestID = TCAppInfo.uuidForDevice;
     
-    NSString *appId = msg.appItem.appId;
+    NSString *appId = msg.platformAccount.appId;
     if (nil == appId) {
         appId = [self dataForRegistedScheme:kSinaWbScheme][@"appKey"];
     }
@@ -111,11 +113,11 @@ NSString *const kSinaWbScheme = @"SinaWeibo";
         OSSinaResponse *response = [OSSinaResponse tc_mappingWithDictionary:responseDic];
         if (response.isAuth) {
             //auth
-        }else if (response.isShare) {
+        } else if (response.isShare) {
             //分享回调
             OSShareCompletionHandle handle = self.shareCompletionHandle;
             if (nil != handle) {
-                handle(kOSPlatformSina, 0 != response.transferObject.statusCode ? kOSStateFail : kOSStateSuccess, nil);
+                handle(nil ,kOSPlatformSina, 0 != response.transferObject.statusCode ? kOSStateFail : kOSStateSuccess, nil);
                 handle = nil;
             }
         }

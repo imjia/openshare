@@ -12,42 +12,45 @@
 #pragma mark - OSMessage
 
 @interface OSMessage () {
-    NSMutableDictionary<NSString */*app scheme*/, OSAppItem *> *_appDic; // app配置
+    NSMutableDictionary<NSNumber */*platform*/, OSPlatformAccount *> *_accountDic; // app配置
 }
 
 @end
 
 @implementation OSMessage
 
-- (NSMutableDictionary *)appDic
+- (instancetype)initWithOSMultimediaType:(OSMultimediaType)mediaType
 {
-    if (nil == _appDic) {
-        _appDic = [[NSMutableDictionary alloc] init];
+    if (self = [super init]) {
+        _multimediaType = mediaType;
     }
-    return _appDic;
+    return self;
 }
 
-- (void)configAppItem:(void (^)(OSAppItem *))config forApp:(NSString *)app
+- (NSMutableDictionary *)accountDic
 {
-    OSAppItem *appItem = self.appDic[app];
-    if (nil == appItem) {
-        appItem = [[OSAppItem alloc] init];
-        _appDic[app] = appItem;
+    if (nil == _accountDic) {
+        _accountDic = [[NSMutableDictionary alloc] init];
+    }
+    return _accountDic;
+}
+
+- (void)configAccount:(void (^)(OSPlatformAccount *))config forApp:(OSAPP)app
+{
+    OSPlatformAccount *account = self.accountDic[@(app)];
+    if (nil == account) {
+        account = [[OSPlatformAccount alloc] init];
+        _accountDic[@(app)] = account;
     }
     
     if (nil != config) {
-        config(appItem);
+        config(account);
     }
 }
 
-- (OSAppItem *)appItem
+- (OSPlatformAccount *)platformAccount
 {
-    return self.appDic[_appScheme];
-}
-
-- (void)setAppScheme:(NSString *)appScheme
-{
-    _appScheme = appScheme;
+    return self.accountDic[@(_app)];
 }
 
 @end
@@ -66,7 +69,7 @@ static NSString *const kDefaultData = @"defaultData";
 
 @implementation OSDataItem
 @dynamic title;
-@dynamic desc;
+@dynamic content;
 @dynamic link;
 @dynamic imageData;
 @dynamic thumbnailData;
@@ -81,48 +84,36 @@ static NSString *const kDefaultData = @"defaultData";
     return self;
 }
 
-- (NSMutableDictionary *)valueDicForKey:(NSString *)key;
+- (NSMutableDictionary *)valueDicForProperty:(NSString *)property;
 {
-    NSMutableDictionary *valueDic = _dataDic[key];
+    NSMutableDictionary *valueDic = _dataDic[property];
     if (nil == valueDic) {
         valueDic = [NSMutableDictionary dictionary];
-        _dataDic[key] = valueDic;
+        _dataDic[property] = valueDic;
     }
     return valueDic;
 }
 
-- (NSString *)getterStringFromSetter:(SEL)setter
+- (void)setValue:(id)value forKey:(nonnull NSString *)key forPlatform:(OSPlatform)platform
 {
-    NSString *setterStr = NSStringFromSelector(setter);
-    NSRange rangeOfStrSet = [setterStr rangeOfString:@"set"];
-    NSString *getterStr = nil;
-    if (rangeOfStrSet.location != NSNotFound) {
-        CGFloat location = rangeOfStrSet.location + rangeOfStrSet.length;
-        NSRange range = NSMakeRange(location, setterStr.length - location - 1);
-        getterStr = [[setterStr substringWithRange:range] lowercaseString];
-    }
-    
-    return getterStr;
-}
-
-- (void)setValue:(id)value forPlatform:(OSPlatform)platform withKey:(NSString *)key
-{
-    [self valueDicForKey:key][@(platform)] = value;
-}
-
-- (void)setValues:(NSArray *)values forKeys:(NSArray *)keys forPlatform:(OSPlatform)platform
-{
-    for (NSInteger i = 0; i < keys.count; i++) {
-        [self valueDicForKey:keys[i]][@(platform)] = values[i];
+    if (nil != value) {
+        [self valueDicForProperty:key][@(platform)] = value;
     }
 }
 
-- (id)platformValueForKey:(NSString *)key
+- (void)setValueDic:(NSDictionary<NSString *,id> *)valueDic forPlatform:(OSPlatform)platform
 {
-    NSMutableDictionary *valueDic = [self valueDicForKey:key];
+    for (NSString *key in valueDic.allKeys) {
+        [self setValue:valueDic[key] forKey:key forPlatform:platform];
+    }
+}
+
+- (id)platformValueForProperty:(NSString *)property
+{
+    NSMutableDictionary *valueDic = [self valueDicForProperty:property];
     id value = valueDic[@(_platform)];
     if (nil == value) {
-        value = valueDic[@(kOSPlatformUnknown)];
+        value = valueDic[@(kOSPlatformCommon)];
     }
     return value;
 }
@@ -130,91 +121,91 @@ static NSString *const kDefaultData = @"defaultData";
 - (void)setTitle:(NSString *)title
 {
     if (nil != title) {
-        [self setValue:title forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
+        [self setValue:title forKey:PropertySTR(title) forPlatform:kOSPlatformCommon];
     }
 }
 
-- (void)setDesc:(NSString *)desc
+- (void)setContent:(NSString *)content
 {
-    if (nil != desc) {
-        [self setValue:desc forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
+    if (nil != content) {
+        [self setValue:content forKey:PropertySTR(content) forPlatform:kOSPlatformCommon];
     }
 }
 
 - (void)setLink:(NSString *)link
 {
     if (nil != link) {
-        [self setValue:link forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
+        [self setValue:link forKey:PropertySTR(link) forPlatform:kOSPlatformCommon];
     }
 }
 
 - (void)setImageData:(NSData *)imageData
 {
     if (nil != imageData) {
-        [self setValue:imageData forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
+        [self setValue:imageData forKey:PropertySTR(imageData) forPlatform:kOSPlatformCommon];
     }
 }
 
 - (void)setThumbnailData:(NSData *)thumbnailData
 {
     if (nil != thumbnailData) {
-        [self setValue:thumbnailData forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
+        [self setValue:thumbnailData forKey:PropertySTR(thumbnailData) forPlatform:kOSPlatformCommon];
     }
 }
 
 - (void)setImageUrl:(NSString *)imageUrl
 {
     if (nil != imageUrl) {
-        [self setValue:imageUrl forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
+        [self setValue:imageUrl forKey:PropertySTR(imageUrl) forPlatform:kOSPlatformCommon];
     }
 }
 
 - (void)setThumbnailUrl:(NSString *)thumbnailUrl
 {
     if (nil != thumbnailUrl) {
-        [self setValue:thumbnailUrl forKey:[self getterStringFromSetter:_cmd] forPlatform:kOSPlatformUnknown];
+        [self setValue:thumbnailUrl forKey:PropertySTR(thumbnailUrl) forPlatform:kOSPlatformCommon];
     }
 }
 
 - (NSString *)title
 {
-   return [self platformValueForKey:NSStringFromSelector(_cmd)];
+   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
-- (NSString *)desc
+- (NSString *)content
 {
-    return [self platformValueForKey:NSStringFromSelector(_cmd)];
+    return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)link
 {
-   return [self platformValueForKey:NSStringFromSelector(_cmd)];
+   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSData *)imageData
 {
-   return [self platformValueForKey:NSStringFromSelector(_cmd)];
+   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSData *)thumbnailData
 {
-   return [self platformValueForKey:NSStringFromSelector(_cmd)];
+   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)imageUrl
 {
-   return [self platformValueForKey:NSStringFromSelector(_cmd)];
+   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)thumbnailUrl
 {
-   return [self platformValueForKey:NSStringFromSelector(_cmd)];
+   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)msgBody
 {
     if (nil == _msgBody) {
-        return self.title;
+        return self.content;
     }
     return _msgBody;
 }
@@ -222,7 +213,7 @@ static NSString *const kDefaultData = @"defaultData";
 - (NSString *)emailBody
 {
     if (nil == _emailBody) {
-        return self.title;
+        return self.content;
     }
     return _emailBody;
 }
@@ -230,9 +221,9 @@ static NSString *const kDefaultData = @"defaultData";
 @end
 
 
-#pragma mark - OSAppItem
+#pragma mark - OSPlatformAccount
 
-@implementation OSAppItem
+@implementation OSPlatformAccount : NSObject
 
 @end
 

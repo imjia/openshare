@@ -8,17 +8,19 @@
 
 #import "OpenShareManager.h"
 #import "OpenShareHeader.h"
-#import "OSSnsItemView.h"
+#import "OSSnsItemController.h"
 #import "UIWindow+TCHelper.h"
 #import "TCHTTPRequestCenter.h"
 
-@interface OpenShareManager () <OSSnsItemViewDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
+@interface OpenShareManager () <OSSnsItemControllerDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 {
     @private
-    OSSnsItemView *_snsCtrler;
-    UIViewController *_ctrler;
-    OSShareCompletionHandle _shareCompletionHandle;
+    OSSnsItemController *_snsCtrler;
 }
+
+@property (nonatomic, strong) OSMessage *message;
+@property (nonatomic, assign) OSShareCompletionHandle shareCompletionHandle;
+
 @end
 
 @implementation OpenShareManager
@@ -28,18 +30,17 @@
     static OpenShareManager *mgr = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        mgr = [[OpenShareManager alloc] init];
+        mgr = [[self alloc] init];
     });
     
     return mgr;
 }
 
-- (void)shareMsg:(OSMessage *)msg inController:(UIViewController *)ctrler sns:(NSArray<NSNumber *> *)sns completion:(OSShareCompletionHandle)completion
+- (void)shareMsg:(OSMessage *)msg sns:(NSArray<NSNumber *> *)sns completion:(OSShareCompletionHandle)completion
 {
     _message = msg;
-    _ctrler = ctrler;
     _shareCompletionHandle = completion;
-    _snsCtrler = [[OSSnsItemView alloc] initWithSns:sns];
+    _snsCtrler = [[OSSnsItemController alloc] initWithSns:sns];
     _snsCtrler.delegate = self;
     
     if (nil != _message.dataItem.imageUrl) {
@@ -50,60 +51,62 @@
 }
 
 
-#pragma mark - OSSnsItemViewDelegate
+#pragma mark - OSSnsItemControllerDelegate
 
-- (void)OSSnsItemView:(OSSnsItemView *)itemView didSelectSnsItem:(OSSnsItem *)sns
+- (void)OSSnsItemController:(OSSnsItemController *)ctrler didSelectSnsItem:(OSSnsItem *)sns
 {
     [self dismissSnsController];
     
-    if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectSnsPlatform:)]) {
-        [_uiDelegate didSelectSnsPlatform:sns.platform];
+    if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectSnsPlatform:message:)]) {
+        [_uiDelegate didSelectSnsPlatform:sns.platform message:_message];
     }
     
-    void (^block)(OSPlatform platform, OSShareState state, NSString *errorDescription) = ^(OSPlatform platform,OSShareState state, NSString *errorDescription){
-        if (nil != _shareCompletionHandle) {
-            _shareCompletionHandle(platform, state, errorDescription);
-            _shareCompletionHandle = nil;
+    __weak typeof(self) wSelf = self;
+    void (^block)(OSMessage *message,OSPlatform platform, OSShareState state, NSError *error) = ^(OSMessage *message,OSPlatform platform, OSShareState state, NSError *error){
+        if (nil != wSelf.shareCompletionHandle) {
+            wSelf.shareCompletionHandle(_message, platform, state, nil);
+            wSelf.shareCompletionHandle = nil;
         }
     };
     
     switch (sns.platform) {
         case kOSPlatformQQ: {
-            [OpenShare shareToQQ:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
-                block(kOSPlatformQQ, state, errorDescription);
+            [OpenShare shareToQQ:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+                block(_message, kOSPlatformQQ, state, error);
             }];
             break;
         }
         case kOSPlatformQQZone: {
-            [OpenShare shareToQQZone:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
-                block(kOSPlatformQQZone, state, errorDescription);
+            [OpenShare shareToQQZone:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+                block(_message, kOSPlatformQQZone, state, error);
+
             }];
             break;
         }
         case kOSPlatformWXSession: {
-            [OpenShare shareToWeixinSession:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
-                block(kOSPlatformWXSession, state, errorDescription);
+            [OpenShare shareToWeixinSession:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+                block(_message, kOSPlatformWXSession, state, error);
             }];
             break;
         }
         case kOSPlatformWXTimeLine: {
-            [OpenShare shareToWeixinTimeLine:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
-                block(kOSPlatformWXTimeLine, state, errorDescription);
+            [OpenShare shareToWeixinTimeLine:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+                block(_message, kOSPlatformWXTimeLine, state, error);
             }];
             break;
         }
         case kOSPlatformSina: {
-            [OpenShare shareToSinaWeibo:_message completion:^(OSPlatform platform, OSShareState state, NSString *errorDescription) {
-                block(kOSPlatformSina, state, errorDescription);
+            [OpenShare shareToSinaWeibo:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+                block(_message, kOSPlatformSina, state, error);
             }];
             break;
         }
         case kOSPlatformEmail: {
-            [OpenShare shareToMail:_message inController:_ctrler delegate:self];
+            [OpenShare shareToMail:_message delegate:self];
             break;
         }
         case kOSPlatformSms: {
-            [OpenShare shareToSms:_message inController:_ctrler delegate:self];
+            [OpenShare shareToSms:_message delegate:self];
             break;
         }
         default:
@@ -111,14 +114,14 @@
     }
 }
 
-- (void)OSSnsItemViewWillDismiss:(OSSnsItemView *)itemView
+- (void)OSSnsItemControllerWillDismiss:(OSSnsItemController *)ctrler
 {
     [self dismissSnsController];
 }
 
 - (void)showSnsController
 {
-    UIViewController *viewController = [UIApplication sharedApplication].keyWindow.topMostViewController;
+    UIViewController *viewController = [UIApplication sharedApplication].delegate.window.topMostViewController;
     UITabBarController *tabCtrler = viewController.tabBarController;
     if (nil != tabCtrler) {
         viewController = tabCtrler;
@@ -150,8 +153,7 @@
 - (void)downloadImage
 {
     if (nil != _message.dataItem.imageUrl) {
-        
-        NSString *path = [[self.class defaultCacheDirectoryInDomain:@"SDYImageCache"] stringByAppendingPathComponent:_message.dataItem.imageUrl.MD5_16];
+        NSString *path = [[self.class defaultCacheDirectoryInDomain:@"SDYImageCache"] stringByAppendingPathComponent:_message.dataItem.imageUrl.absoluteString.MD5_16];
         TCHTTPCachePolicy *policy = [[TCHTTPCachePolicy alloc] init];
         policy.cacheTimeoutInterval = kTCHTTPRequestCacheNeverExpired;
         policy.shouldExpiredCacheValid = NO;
@@ -159,7 +161,9 @@
         TCHTTPStreamPolicy *streamPolicy = [[TCHTTPStreamPolicy alloc] init];
         streamPolicy.shouldResumeDownload = YES;
         streamPolicy.downloadDestinationPath = path;
-        id<TCHTTPRequest> request = [[TCHTTPRequestCenter defaultCenter] requestForDownload:_message.dataItem.imageUrl
+        
+        __weak typeof(_message) wMessage = _message;
+        id<TCHTTPRequest> request = [[TCHTTPRequestCenter defaultCenter] requestForDownload:_message.dataItem.imageUrl.absoluteString
                                                                                streamPolicy:streamPolicy
                                                                                 cachePolicy:policy];
         if (nil != request) {
@@ -168,22 +172,32 @@
             
             __weak typeof(self) wSelf = self;
             request.resultBlock = ^(id<TCHTTPRequest> request, BOOL success) {
-                
+            
                 if (nil == wSelf) {
                     return;
+                }
+                
+                if (wSelf.beforeDownloadImage) {
+                    wSelf.beforeDownloadImage();
+                    wSelf.beforeDownloadImage = nil;
                 }
                 
                 NSData *data = nil;
                 if (success) {
                     data = [NSData dataWithContentsOfFile:(NSString *)request.responseObject];
                 }
-
-                wSelf.message.dataItem.imageData = data;
-                [wSelf showSnsController];
+                
+                if (nil != wMessage && wMessage == wSelf.message) {
+                    wMessage.dataItem.imageData = data;
+                    [wSelf showSnsController];
+                }
             };
             
             if ([request start:NULL]) {
-//                [SVProgressHUD show];
+                if (wSelf.afterDownloadImage) {
+                    wSelf.afterDownloadImage();
+                    wSelf.afterDownloadImage = nil;
+                }
             }
         }
     }
@@ -194,18 +208,17 @@
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
 {
- 
     [controller dismissViewControllerAnimated:YES completion:nil];
     
     NSError *error = nil;
     if (MessageComposeResultSent != result) {
-        error = [NSError errorWithDomain:kErrorDomainSms
+        error = [NSError errorWithDomain:kOSErrorDomainSms
                                     code:result
                                 userInfo:nil];
     }
 
     if (nil != _shareCompletionHandle) {
-        _shareCompletionHandle(kOSPlatformSms, nil == error ? kOSStateSuccess : kOSStateFail, nil);
+        _shareCompletionHandle(_message, kOSPlatformSms, nil == error ? kOSStateSuccess : kOSStateFail, nil);
         _shareCompletionHandle = nil;
     }
 }
@@ -218,7 +231,7 @@
     [controller dismissViewControllerAnimated:YES completion:nil];
     
     if (nil != _shareCompletionHandle) {
-        _shareCompletionHandle(kOSPlatformEmail, nil == error ? kOSStateSuccess : kOSStateFail, error.localizedDescription);
+        _shareCompletionHandle(_message, kOSPlatformEmail, nil == error ? kOSStateSuccess : kOSStateFail, error);
         _shareCompletionHandle = nil;
     }
 }

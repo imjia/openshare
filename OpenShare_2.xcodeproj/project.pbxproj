@@ -118,7 +118,7 @@
 		08E706051CDC9FFF00296B23 /* os_wechat_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E705E61CDC9FFF00296B23 /* os_wechat_icon@2x.png */; };
 		08E706061CDC9FFF00296B23 /* os_wechat_timeline_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E705E71CDC9FFF00296B23 /* os_wechat_timeline_icon.png */; };
 		08E706071CDC9FFF00296B23 /* os_wechat_timeline_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E705E81CDC9FFF00296B23 /* os_wechat_timeline_icon@2x.png */; };
-		08E706081CDC9FFF00296B23 /* OSSnsItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E705EB1CDC9FFF00296B23 /* OSSnsItemView.m */; };
+		08E706081CDC9FFF00296B23 /* OSSnsItemController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E705EB1CDC9FFF00296B23 /* OSSnsItemController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -343,8 +343,8 @@
 		08E705E61CDC9FFF00296B23 /* os_wechat_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_wechat_icon@2x.png"; sourceTree = "<group>"; };
 		08E705E71CDC9FFF00296B23 /* os_wechat_timeline_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = os_wechat_timeline_icon.png; sourceTree = "<group>"; };
 		08E705E81CDC9FFF00296B23 /* os_wechat_timeline_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "os_wechat_timeline_icon@2x.png"; sourceTree = "<group>"; };
-		08E705EA1CDC9FFF00296B23 /* OSSnsItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSnsItemView.h; sourceTree = "<group>"; };
-		08E705EB1CDC9FFF00296B23 /* OSSnsItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSnsItemView.m; sourceTree = "<group>"; };
+		08E705EA1CDC9FFF00296B23 /* OSSnsItemController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSnsItemController.h; sourceTree = "<group>"; };
+		08E705EB1CDC9FFF00296B23 /* OSSnsItemController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSnsItemController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -845,8 +845,8 @@
 		08E705E91CDC9FFF00296B23 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				08E705EA1CDC9FFF00296B23 /* OSSnsItemView.h */,
-				08E705EB1CDC9FFF00296B23 /* OSSnsItemView.m */,
+				08E705EA1CDC9FFF00296B23 /* OSSnsItemController.h */,
+				08E705EB1CDC9FFF00296B23 /* OSSnsItemController.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1021,7 +1021,7 @@
 				08CF30161CD3568900F6E2C4 /* TCHTTPRequestProcessor.m in Sources */,
 				08E705F41CDC9FFF00296B23 /* OSMessage.m in Sources */,
 				08E705EF1CDC9FFF00296B23 /* OpenShare+Sms.m in Sources */,
-				08E706081CDC9FFF00296B23 /* OSSnsItemView.m in Sources */,
+				08E706081CDC9FFF00296B23 /* OSSnsItemController.m in Sources */,
 				08CF30011CD3568900F6E2C4 /* FCUUID.m in Sources */,
 				08CF30211CD3568900F6E2C4 /* TCHTTPRequestCenter+Private.m in Sources */,
 				08C857B81CD8821600C77706 /* ViewController+MASAdditions.m in Sources */,

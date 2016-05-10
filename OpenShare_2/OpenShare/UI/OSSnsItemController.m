@@ -1,21 +1,21 @@
 //
-//  OSSnsItemView.m
+//  OSSnsItemController.m
 //  OpenShare_2
 //
 //  Created by jia on 16/5/3.
 //  Copyright © 2016年 Jia. All rights reserved.
 //
 
-#import "OSSnsItemView.h"
+#import "OSSnsItemController.h"
 
 static NSString *const kCellIdentifier = @"UICollectionViewCell";
 static NSInteger const kContentBtnTag = 1024;
 
-@interface OSSnsItemView () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface OSSnsItemController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @end
 
-@implementation OSSnsItemView {
+@implementation OSSnsItemController {
     @private
     UICollectionView *_collectionView;
     NSArray *_sns;
@@ -100,10 +100,6 @@ static NSInteger const kContentBtnTag = 1024;
     [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:kCellIdentifier];
     _collectionView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:_collectionView];
-    
-    // 默认值
-    _config = [OSSnsItemViewConfig tc_mappingWithDictionary:@{@"titleColor": [UIColor whiteColor],
-                                                              @"font": [UIFont systemFontOfSize:12.0f]}];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -194,10 +190,6 @@ static NSInteger const kContentBtnTag = 1024;
         }
     }];
 }
-
-@end
-
-@implementation OSSnsItemViewConfig
 
 @end
 

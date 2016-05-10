@@ -8,10 +8,11 @@
 
 #import "OpenShare+Mail.h"
 #import "OpenShare+Helper.h"
+#import "UIWindow+TCHelper.h"
 
 @implementation OpenShare (Mail)
 
-+ (void)shareToMail:(OSMessage *)msg inController:(UIViewController *)ctrler delegate:(id<MFMailComposeViewControllerDelegate>)delegate
++ (void)shareToMail:(OSMessage *)msg delegate:(id<MFMailComposeViewControllerDelegate>)delegate
 {
     if (MFMailComposeViewController.canSendMail) {
         MFMailComposeViewController *mailComposeCtrler = [[MFMailComposeViewController alloc] init];
@@ -28,10 +29,9 @@
             }
         }
         
-        [ctrler presentViewController:mailComposeCtrler animated:YES completion:nil];
-    }
-    else {
-        // 打开email配置页面
+        [[UIApplication sharedApplication].delegate.window.topMostViewController presentViewController:mailComposeCtrler animated:YES completion:nil];
+    } else {
+        // 打开email配置页面 FIXME: 空信息 canopen 
         static NSString *const recipients = @"mailto:first@example.com?cc=second@example.com,third@example.com&subject=Hello from California!";
         NSString *body = @"&body=It is raining in sunny California!";
         NSString *email = [NSString stringWithFormat:@"%@%@", recipients, body];

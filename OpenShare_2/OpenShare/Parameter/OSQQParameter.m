@@ -56,7 +56,7 @@
                          NSLocalizedDescriptionKey: _error_description};
         }
         
-        error = [NSError errorWithDomain:kErrorDomainQQ
+        error = [NSError errorWithDomain:kOSErrorDomainQQ
                                     code:_errorCode
                                 userInfo:userInfo];
     }

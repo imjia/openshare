@@ -8,8 +8,6 @@
 
 #import "OpenShare.h"
 
-extern NSString *const kSinaWbScheme;
-
 @interface OpenShare (SinaWeibo)
 
 + (void)registSinaWeiboWithAppKey:(NSString *)appKey;

@@ -10,13 +10,13 @@
 #import "OpenShareConfig.h"
 
 @class OSDataItem;
-@class OSAppItem;
+@class OSPlatformAccount;
 
 typedef NS_ENUM(NSInteger, OSMultimediaType) {
     OSMultimediaTypeUnknown,
     OSMultimediaTypeText,
     OSMultimediaTypeImage,
-    OSMultimediaTypeNews,
+    OSMultimediaTypeNews, // 图片 + 文字 + 链接
     OSMultimediaTypeAudio,
     OSMultimediaTypeVideo,
     OSMultimediaTypeApp,
@@ -27,13 +27,15 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 #pragma mark - OSMessage
 
 @interface OSMessage : NSObject
-@property (nonatomic, strong) OSAppItem *appItem; // 消息分享到的app {appid, appkey}
+@property (nonatomic, strong) OSPlatformAccount *platformAccount; // 消息分享到的app {appid, appkey}
 @property (nonatomic, strong) OSDataItem *dataItem; // 分享的消息内容
-@property (nonatomic, assign) OSMultimediaType multimediaType; // 分享的类型
-@property (nonatomic, copy) NSString *appScheme;
+@property (nonatomic, assign) OSMultimediaType multimediaType;
+@property (nonatomic, assign) OSAPP app;
 
-// 定制化app
-- (void)configAppItem:(void(^)(OSAppItem *item))config forApp:(NSString *)app;
+- (instancetype)initWithOSMultimediaType:(OSMultimediaType)mediaType;
+
+// 定制化app 账户
+- (void)configAccount:(void(^)(OSPlatformAccount *account))config forApp:(OSAPP)app;
 
 @end
 
@@ -46,18 +48,18 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 
 // 公共
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *desc;
+@property (nonatomic, copy) NSString *content;
 @property (nonatomic, copy) NSString *link;
-@property (nonatomic, strong) NSData *imageData;
-@property (nonatomic, strong) NSData *thumbnailData;
-@property (nonatomic, copy) NSString *imageUrl; // 网络图片地址 imageUrl 优先
-@property (nonatomic, copy) NSString *thumbnailUrl; // 网络缩略图地址
+@property (nonatomic, strong) NSData *imageData; // encoded data
+@property (nonatomic, strong) NSData *thumbnailData; // encoded data
+@property (nonatomic, strong) NSURL *imageUrl; // 网络图片地址 imageUrl 优先
+@property (nonatomic, strong) NSURL *thumbnailUrl; // 网络缩略图地址
 
 // 微信
-@property (nonatomic, copy) NSString *mediaDataUrl;
+@property (nonatomic, copy) NSURL *mediaDataUrl;
 @property (nonatomic, strong) NSData *wxFileData; // 微信分享gif/文件
-@property (nonatomic, copy) NSString *wxExtInfo;
-@property (nonatomic, copy) NSString *wxFileExt;
+@property (nonatomic, copy) NSString *wxExtInfo; // TODO: 待查意义
+@property (nonatomic, copy) NSString *wxFileExt; // TODO: 待查意义
 
 // 短信
 @property (nonatomic, strong) NSArray<NSString *> *recipients; // 短信接收者的电话
@@ -70,14 +72,14 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 // 单个数据
 - (void)setValue:(id)value forKey:(NSString *)key forPlatform:(OSPlatform)platform;
 // 多个数据
-- (void)setValues:(NSArray *)values forKeys:(NSArray *)keys forPlatform:(OSPlatform)platform;
+- (void)setValueDic:(NSDictionary<NSString */*property*/, id/*object*/> *)valueDic forPlatform:(OSPlatform)platform;
 
 @end
 
 
-#pragma mark - OSAppItem
+#pragma mark - OSPlatformAccount
 
-@interface OSAppItem : NSObject
+@interface OSPlatformAccount : NSObject
 
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *callBackName;
