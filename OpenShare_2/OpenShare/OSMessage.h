@@ -56,16 +56,21 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 @property (nonatomic, strong) NSURL *thumbnailUrl; // 网络缩略图地址
 
 // 微信
-@property (nonatomic, copy) NSURL *mediaDataUrl;
+@property (nonatomic, copy) NSString *mediaDataUrl;
 @property (nonatomic, strong) NSData *wxFileData; // 微信分享gif/文件
 @property (nonatomic, copy) NSString *wxExtInfo; // TODO: 待查意义
 @property (nonatomic, copy) NSString *wxFileExt; // TODO: 待查意义
+
+// 新浪微博
+@property (nonatomic, copy) NSString *sinaContent; // 新浪微博分享的内容
 
 // 短信
 @property (nonatomic, strong) NSArray<NSString *> *recipients; // 短信接收者的电话
 @property (nonatomic, copy) NSString *msgBody;
 
 // 邮件
+@property (nonatomic, strong) NSArray<NSString *> *toRecipients; // 收件人
+@property (nonatomic, strong) NSArray<NSString *> *ccRecipients; // 抄送收件人
 @property (nonatomic, copy) NSString *emailSubject;
 @property (nonatomic, copy) NSString *emailBody;
 

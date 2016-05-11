@@ -54,8 +54,10 @@ static NSString *const kSinaWbScheme = @"SinaWeibo";
             }
             break;
         }
-        case OSMultimediaTypeNews: {
-
+        case OSMultimediaTypeNews:
+        case OSMultimediaTypeAudio:
+        case OSMultimediaTypeVideo: {
+        
             OSSinaMediaObject *mediaObj = [[OSSinaMediaObject alloc] init];
             mediaObj.__class = @"WBWebpageObject";
             mediaObj.objectID = @"identifier1";
@@ -63,7 +65,7 @@ static NSString *const kSinaWbScheme = @"SinaWeibo";
             mediaObj.desc = data.content;
             mediaObj.thumbnailData = data.thumbnailData;
             mediaObj.webpageUrl = data.link;
-        
+            
             sinaParam.__class = @"WBMessageObject";
             sinaParam.mediaObject = mediaObj;
             
@@ -92,7 +94,6 @@ static NSString *const kSinaWbScheme = @"SinaWeibo";
     [UIPasteboard generalPasteboard].items = @[@{@"transferObject": transferObjectData},
                                                @{@"userInfo": [NSKeyedArchiver archivedDataWithRootObject:@{}]},
                                                @{@"app": appData}];
-
     return [NSURL URLWithString:[NSString stringWithFormat:@"weibosdk://request?id=%@&sdkversion=003013000", TCAppInfo.uuidForDevice]];
 }
 

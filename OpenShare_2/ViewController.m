@@ -27,18 +27,20 @@
     [super viewDidLoad];
     
     OSDataItem *dataItem = [[OSDataItem alloc] init];
-    dataItem.title = @"testTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitletestTitle";
+    dataItem.title = @"testTitle";
     dataItem.content = @"testDes";
-    dataItem.link = @"http://www.baidu.com";
+    dataItem.link = @"http://sina.cn?a=1";
     dataItem.imageUrl = [NSURL URLWithString:@"http://i.k1982.com/design_img/201109/201109011617318631.jpg"];
 //    dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"logo.gif"]);
     dataItem.thumbnailData = UIImagePNGRepresentation([UIImage imageNamed:@"2.png"]);
+    dataItem.toRecipients = @[@"123@126.com"];
+    dataItem.mediaDataUrl = @"http://7qn9mz.com1.z0.glb.clouddn.com/0002.mp3";
     
     [dataItem setValue:@"wx" forKey:PropertySTR(title) forPlatform:kOSPlatformWXSession];
     
     _message = [[OSMessage alloc] init];
     _message.dataItem = dataItem;
-    _message.multimediaType = OSMultimediaTypeNews;
+    _message.multimediaType = OSMultimediaTypeAudio;
     
 //    [_message configAppItem:^(OSAppItem *item) {
 //        item.appId = @"1104480569";

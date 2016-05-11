@@ -189,7 +189,11 @@ static NSString *const kDefaultData = @"defaultData";
 
 - (NSData *)thumbnailData
 {
-   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
+    NSData *thumbnailData = [self platformValueForProperty:NSStringFromSelector(_cmd)];
+    if (nil == thumbnailData) {
+        thumbnailData = self.imageData;
+    }
+   return thumbnailData;
 }
 
 - (NSString *)imageUrl

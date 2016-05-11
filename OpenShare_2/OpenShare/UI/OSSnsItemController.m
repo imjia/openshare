@@ -143,9 +143,9 @@ static NSInteger const kContentBtnTag = 1024;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [self dismiss:^{
-        if (nil != _delegate && [_delegate respondsToSelector:@selector(OSSnsItemView:didSelectSnsItem:)]) {
+        if (nil != _delegate && [_delegate respondsToSelector:@selector(OSSnsItemController:didSelectSnsItem:)]) {
             OSSnsItem *sns = _sns[indexPath.item];
-            [_delegate OSSnsItemView:self didSelectSnsItem:sns];
+            [_delegate OSSnsItemController:self didSelectSnsItem:sns];
         }
     }];
 }
@@ -158,8 +158,8 @@ static NSInteger const kContentBtnTag = 1024;
 - (void)tapDismiss
 {
     [self dismiss:^{
-        if (nil != _delegate && [_delegate respondsToSelector:@selector(OSSnsItemViewWillDismiss:)]) {
-            [_delegate OSSnsItemViewWillDismiss:self];
+        if (nil != _delegate && [_delegate respondsToSelector:@selector(OSSnsItemControllerWillDismiss:)]) {
+            [_delegate OSSnsItemControllerWillDismiss:self];
         }
     }];
 }

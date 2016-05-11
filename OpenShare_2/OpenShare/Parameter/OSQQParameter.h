@@ -24,7 +24,8 @@
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *desc;
 @property (nonatomic, strong) NSData *previewimagedata;
-@property (nonatomic, copy) NSString *url;
+@property (nonatomic, copy) NSString *url;  // 音频所在的网页地址
+@property (nonatomic, copy) NSString *flashurl; // 聊天窗口播放用的音频地址
 
 @end
 

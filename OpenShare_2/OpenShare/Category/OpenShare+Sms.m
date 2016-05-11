@@ -19,7 +19,7 @@
         controller.recipients = msg.dataItem.recipients;
         controller.body = msg.dataItem.msgBody;
         controller.messageComposeDelegate = delegate;
-        if (nil != msg.dataItem.imageData) {
+        if (OSMultimediaTypeImage == msg.multimediaType && nil != msg.dataItem.imageData) {
             NSString *imageType = [OpenShare contentTypeForImageData:msg.dataItem.imageData];
             NSRange range = [imageType rangeOfString:@"image/"];
             if (range.location != NSNotFound) {

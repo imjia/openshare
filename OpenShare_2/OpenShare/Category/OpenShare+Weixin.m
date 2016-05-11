@@ -76,7 +76,7 @@ static OSWXParameter *s_wxParam = nil;
     
     OSWXParameter *wxParam = self.wxParameter;
     // 朋友圈/朋友
-    wxParam.scene = flag;
+    wxParam.scene = kOSPlatformWXSession == flag ? 0 : 1;
     wxParam.title = data.title;
     wxParam.desc = data.content;
     
@@ -109,7 +109,7 @@ static OSWXParameter *s_wxParam = nil;
             wxParam.command = @"1010";
             wxParam.thumbData = data.thumbnailData;
             wxParam.mediaUrl = data.link;
-            wxParam.mediaDataUrl = data.mediaDataUrl.absoluteString;
+            wxParam.mediaDataUrl = data.mediaDataUrl;
             wxParam.objectType = msg.multimediaType == OSMultimediaTypeAudio ? kWXObjectTypeAudio : kWXObjectTypeVideo;
             
             break;

@@ -78,7 +78,7 @@ static OSQQParameter *s_qqParam = nil;
         qqParam.callback_name = msg.platformAccount.callBackName;
     }
     
-    qqParam.cflag = flag;
+    qqParam.cflag = kOSPlatformQQ == flag ? 0 : 1;
     
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
@@ -119,6 +119,7 @@ static OSQQParameter *s_qqParam = nil;
             qqParam.title = [OpenShare base64AndURLEncodedString:data.title];
             qqParam.desc = [OpenShare base64AndURLEncodedString:data.content];
             qqParam.url = [OpenShare base64AndURLEncodedString:data.link];
+            qqParam.flashurl = [OpenShare base64AndURLEncodedString:data.mediaDataUrl];
             
             NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
             if (nil != data.thumbnailData) {
