@@ -17,9 +17,6 @@
 @property (nonatomic, strong) NSData *thumbnailData;
 @property (nonatomic, copy) NSString *webpageUrl;
 
-@property (nonatomic, copy) NSString *videoUrl;
-@property (nonatomic, copy) NSString *videoStreamUrl;
-
 @end
 
 @interface OSSinaParameter : NSObject

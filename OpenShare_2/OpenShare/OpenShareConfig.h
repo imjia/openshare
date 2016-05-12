@@ -33,6 +33,15 @@ typedef NS_ENUM(NSInteger, OSShareState) {
     kOSStateFail,
 };
 
+//#define kOSPlatformCommon @"common"
+//#define kOSPlatformQQ @"qq"
+//#define kOSPlatformQQZone @"qzone"
+//#define kOSPlatformWXTimeLine @"wxtimeline"
+//#define kOSPlatformWXSession @"wxsession"
+//#define kOSPlatformSina @"sina"
+//#define kOSPlatformSms @"sms"
+//#define kOSPlatformEmail @"email"
+
 #define kOSErrorDomainSms @"response_from_sms"
 #define kOSErrorDomainQQ @"response_from_qq"
 #define kOSErrorDomainWeixin @"response_from_weixin"

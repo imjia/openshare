@@ -23,23 +23,43 @@ static NSInteger const kContentBtnTag = 1024;
     UIView *_grayTouchView;
 }
 
+- (NSBundle *)openShareBundle
+{
+    static dispatch_once_t onceToken;
+    static NSBundle *bundle = nil;
+    dispatch_once(&onceToken, ^{
+        NSURL *url = [[NSBundle mainBundle] URLForResource:@"OpenShare" withExtension:@"bundle"];
+        if (nil != url) {
+            bundle = [NSBundle bundleWithURL:url];
+        }
+    });
+    return bundle;
+}
+
+- (UIImage *)snsImageNamed:(NSString *)name
+{
+    NSString *path = [[NSString alloc] initWithFormat:@"OpenShare.bundle/%@", name];
+    return [UIImage imageNamed:path];
+}
+
 - (NSDictionary *)snsConfig
 {
     if (nil == _snsConfig) {
-        _snsConfig = @{@(kOSPlatformQQ): @{@"name": @"QQ",
-                                           @"image": [UIImage imageNamed:@"os_qq_icon.png"]},
-                       @(kOSPlatformQQZone): @{@"name": @"QQ空间",
-                                               @"image": [UIImage imageNamed:@"os_qzone_icon.png"]},
-                       @(kOSPlatformWXSession): @{@"name": @"微信好友",
-                                                  @"image": [UIImage imageNamed:@"os_wechat_icon.png"]},
-                       @(kOSPlatformWXTimeLine): @{@"name": @"微信朋友圈",
-                                                   @"image": [UIImage imageNamed:@"os_wechat_timeline_icon.png"]},
-                       @(kOSPlatformSina): @{@"name": @"新浪",
-                                             @"image": [UIImage imageNamed:@"os_sina_icon.png"]},
-                       @(kOSPlatformEmail): @{@"name": @"邮件",
-                                              @"image": [UIImage imageNamed:@"os_email_icon.png"]},
-                       @(kOSPlatformSms): @{@"name": @"短信",
-                                            @"image": [UIImage imageNamed:@"os_sms_icon.png"]}};
+        
+        _snsConfig = @{@(kOSPlatformQQ): @{@"name": NSLocalizedStringFromTableInBundle(@"os.platform.qq", nil, self.openShareBundle, nil),
+                                           @"image": [self snsImageNamed:@"os_qq_icon.png"]},
+                       @(kOSPlatformQQZone): @{@"name": NSLocalizedStringFromTableInBundle(@"os.platform.qzone", nil, self.openShareBundle, nil),
+                                               @"image": [self snsImageNamed:@"os_qzone_icon.png"]},
+                       @(kOSPlatformWXSession): @{@"name": NSLocalizedStringFromTableInBundle(@"os.platform.wxsession", nil, self.openShareBundle, nil),
+                                                  @"image": [self snsImageNamed:@"os_wechat_icon.png"]},
+                       @(kOSPlatformWXTimeLine): @{@"name":NSLocalizedStringFromTableInBundle(@"os.platform.wxtimeline", nil, self.openShareBundle, nil),
+                                                   @"image": [self snsImageNamed:@"os_wechat_timeline_icon.png"]},
+                       @(kOSPlatformSina): @{@"name": NSLocalizedStringFromTableInBundle(@"os.platform.sina", nil, self.openShareBundle, nil),
+                                             @"image": [self snsImageNamed:@"os_sina_icon.png"]},
+                       @(kOSPlatformEmail): @{@"name": NSLocalizedStringFromTableInBundle(@"os.platform.email", nil, self.openShareBundle, nil),
+                                              @"image": [self snsImageNamed:@"os_email_icon.png"]},
+                       @(kOSPlatformSms): @{@"name": NSLocalizedStringFromTableInBundle(@"os.platform.sms", nil, self.openShareBundle, nil),
+                                            @"image": [self snsImageNamed:@"os_sms_icon.png"]}};
     }
     return _snsConfig;
 }
@@ -50,9 +70,11 @@ static NSInteger const kContentBtnTag = 1024;
         NSMutableArray *snsItems = [NSMutableArray array];
         for (NSNumber *num in sns) {
             OSSnsItem *snsItem = [[OSSnsItem alloc] init];
-            snsItem.name = self.snsConfig[num][@"name"];
-            snsItem.icon = self.snsConfig[num][@"image"];
-            snsItem.platform = num.integerValue;
+            
+            snsItem.displayName = NSLocalizedStringFromTableInBundle(@"os.platform.wxtimeline", nil, self.openShareBundle, nil);
+            snsItem.displayName = self.snsConfig[num][@"name"];
+            snsItem.displayIcon = self.snsConfig[num][@"image"];
+            
             [snsItems addObject:snsItem];
         }
         _sns = snsItems;
@@ -131,8 +153,8 @@ static NSInteger const kContentBtnTag = 1024;
     }
     
     OSSnsItem *sns = _sns[indexPath.item];
-    [contentBtn setTitle:sns.name forState:UIControlStateNormal];
-    [contentBtn setImage:sns.icon forState:UIControlStateNormal];
+    [contentBtn setTitle:sns.displayName forState:UIControlStateNormal];
+    [contentBtn setImage:sns.displayIcon forState:UIControlStateNormal];
 
     return cell;
 }

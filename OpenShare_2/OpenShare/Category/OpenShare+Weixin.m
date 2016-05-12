@@ -77,17 +77,18 @@ static OSWXParameter *s_wxParam = nil;
     OSWXParameter *wxParam = self.wxParameter;
     // 朋友圈/朋友
     wxParam.scene = kOSPlatformWXSession == flag ? 0 : 1;
-    wxParam.title = data.title;
-    wxParam.desc = data.content;
-    
+
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
             wxParam.command = @"1020";
+            wxParam.title = data.content;
             break;
         }
         case OSMultimediaTypeImage: {
             wxParam.command = @"1010";
-
+            wxParam.title = data.title;
+            wxParam.desc = data.content;
+            
             // gif or not gif
             BOOL isGif = nil != data.wxFileData;
             if (isGif) {
@@ -107,6 +108,8 @@ static OSWXParameter *s_wxParam = nil;
         {
             //music & video
             wxParam.command = @"1010";
+            wxParam.title = data.title;
+            wxParam.desc = data.content;
             wxParam.thumbData = data.thumbnailData;
             wxParam.mediaUrl = data.link;
             wxParam.mediaDataUrl = data.mediaDataUrl;
@@ -116,6 +119,8 @@ static OSWXParameter *s_wxParam = nil;
         }
         case OSMultimediaTypeNews: {
             wxParam.command = @"1010";
+            wxParam.title = data.title;
+            wxParam.desc = data.content;
             wxParam.thumbData = data.thumbnailData;
             wxParam.mediaUrl = data.link;
             wxParam.objectType = kWXObjectTypeNews;
@@ -124,6 +129,8 @@ static OSWXParameter *s_wxParam = nil;
         case OSMultimediaTypeFile: {
             //file
             wxParam.command = @"1010";
+            wxParam.title = data.title;
+            wxParam.desc = data.content;
             wxParam.fileData = data.wxFileData;
             wxParam.fileExt = data.wxFileExt;
             wxParam.thumbData = data.thumbnailData;
@@ -133,6 +140,8 @@ static OSWXParameter *s_wxParam = nil;
         case OSMultimediaTypeApp: {
             //app
             wxParam.command = @"1010";
+            wxParam.title = data.title;
+            wxParam.desc = data.content;
             wxParam.extInfo = data.wxExtInfo;
             wxParam.fileExt = data.wxFileExt;
             wxParam.fileData = data.imageData;

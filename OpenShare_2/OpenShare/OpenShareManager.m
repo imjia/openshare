@@ -8,7 +8,6 @@
 
 #import "OpenShareManager.h"
 #import "OpenShareHeader.h"
-#import "OSSnsItemController.h"
 #import "UIWindow+TCHelper.h"
 #import "TCHTTPRequestCenter.h"
 
@@ -57,12 +56,12 @@
 {
     [self dismissSnsController];
     
-    if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectSnsPlatform:message:)]) {
-        [_uiDelegate didSelectSnsPlatform:sns.platform message:_message];
+    if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectSnsItem:message:)]) {
+        [_uiDelegate didSelectSnsItem:sns message:_message];
     }
     
     __weak typeof(self) wSelf = self;
-    void (^block)(OSMessage *message,OSPlatform platform, OSShareState state, NSError *error) = ^(OSMessage *message,OSPlatform platform, OSShareState state, NSError *error){
+    void (^block)(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) = ^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error){
         if (nil != wSelf.shareCompletionHandle) {
             wSelf.shareCompletionHandle(_message, platform, state, nil);
             wSelf.shareCompletionHandle = nil;

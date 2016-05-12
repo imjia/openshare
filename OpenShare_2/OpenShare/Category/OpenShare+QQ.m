@@ -83,7 +83,7 @@ static OSQQParameter *s_qqParam = nil;
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
             qqParam.file_type = @"text";
-            qqParam.file_data = [OpenShare base64AndURLEncodedString:data.title];
+            qqParam.file_data = [OpenShare base64AndURLEncodedString:data.content];
             break;
         }
         case OSMultimediaTypeImage: {

@@ -61,9 +61,6 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 @property (nonatomic, copy) NSString *wxExtInfo; // TODO: 待查意义
 @property (nonatomic, copy) NSString *wxFileExt; // TODO: 待查意义
 
-// 新浪微博
-@property (nonatomic, copy) NSString *sinaContent; // 新浪微博分享的内容
-
 // 短信
 @property (nonatomic, strong) NSArray<NSString *> *recipients; // 短信接收者的电话
 @property (nonatomic, copy) NSString *msgBody;

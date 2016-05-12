@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OpenShareHeader.h"
+#import "OSSnsItemController.h"
 
 @class OSMessage;
 @protocol OSSnsUIDelegate;
@@ -27,6 +28,6 @@
 @protocol OSSnsUIDelegate <NSObject>
 
 @optional
-- (void)didSelectSnsPlatform:(OSPlatform)platform message:(OSMessage *)message;
+- (void)didSelectSnsItem:(OSSnsItem *)sns message:(OSMessage *)message;
 
 @end

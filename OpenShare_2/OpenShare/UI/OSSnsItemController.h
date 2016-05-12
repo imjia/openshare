@@ -28,8 +28,8 @@
 
 @interface OSSnsItem : NSObject
 
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, strong) UIImage *icon;
+@property (nonatomic, copy) NSString *displayName; // 展示字段（国际化）
+@property (nonatomic, strong) UIImage *displayIcon;
 @property (nonatomic, assign) OSPlatform platform;
 
 @end
