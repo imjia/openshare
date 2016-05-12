@@ -33,25 +33,28 @@
         
         [[UIApplication sharedApplication].delegate.window.topMostViewController presentViewController:mailComposeCtrler animated:YES completion:nil];
     } else {
-        // 打开email配置页面 FIXME: 空信息 canopen 
-//        static NSString *const recipients = @"mailto:first@example.com?cc=second@example.com,third@example.com&subject=Hello from California!";
-        NSString *email = @"mailto:";
+        NSMutableString *email = [[NSMutableString alloc] initWithString:@"mailto:"];
         if (msg.dataItem.toRecipients.count > 0) {
-            [email stringByAppendingFormat:@"%@", [msg.dataItem.toRecipients componentsJoinedByString:@","]];
+            [email appendFormat:@"%@", [msg.dataItem.toRecipients componentsJoinedByString:@","]];
         } else {
-//            [email stringByAppendingString:@"first@example.com"];
+//            [email appendString:@"first@example.com"];
         }
         
         if (msg.dataItem.ccRecipients.count > 0) {
-            [email stringByAppendingFormat:@"?cc=%@", [msg.dataItem.ccRecipients componentsJoinedByString:@","]];
+            [email appendFormat:@"?cc=%@", [msg.dataItem.ccRecipients componentsJoinedByString:@","]];
         } else {
-//            [email stringByAppendingString:@"?cc=second@example.com"];
+//            [email appendString:@"?cc=second@example.com"];
         }
-
-        [email stringByAppendingString:[NSString stringWithFormat:@"&subject=%@", msg.dataItem.emailSubject]];
-        [email stringByAppendingString:[NSString stringWithFormat:@"&body=%@", msg.dataItem.emailBody]];
-        email = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
+        
+        if (nil != msg.dataItem.emailSubject) {
+            [email appendString:[NSString stringWithFormat:@"&subject=%@", msg.dataItem.emailSubject]];
+        }
+        if (nil != msg.dataItem.emailBody) {
+            [email appendString:[NSString stringWithFormat:@"&body=%@", msg.dataItem.emailBody]];
+        }
+        
+        NSString *url = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
     }
 }
 

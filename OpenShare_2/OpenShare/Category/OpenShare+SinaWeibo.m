@@ -40,39 +40,10 @@ static NSString *const kSinaWbScheme = @"SinaWeibo";
     OSDataItem *data = msg.dataItem;
     data.platform = kOSPlatformSina;
     
-    switch (msg.multimediaType) {
-        case OSMultimediaTypeText: {
-            sinaParam.__class = @"WBMessageObject";
-            sinaParam.text = data.title;
-            break;
-        }
-        case OSMultimediaTypeImage: {
-            sinaParam.__class = @"WBMessageObject";
-            sinaParam.text = data.title;
-            if (nil != data.imageData) {
-                sinaParam.imageObject = @{@"imageData": data.imageData};
-            }
-            break;
-        }
-        case OSMultimediaTypeNews:
-        case OSMultimediaTypeAudio:
-        case OSMultimediaTypeVideo: {
-        
-            OSSinaMediaObject *mediaObj = [[OSSinaMediaObject alloc] init];
-            mediaObj.__class = @"WBWebpageObject";
-            mediaObj.objectID = @"identifier1";
-            mediaObj.title = data.title;
-            mediaObj.desc = data.content;
-            mediaObj.thumbnailData = data.thumbnailData;
-            mediaObj.webpageUrl = data.link;
-            
-            sinaParam.__class = @"WBMessageObject";
-            sinaParam.mediaObject = mediaObj;
-            
-            break;
-        }
-        default:
-            break;
+    sinaParam.__class = @"WBMessageObject";
+    sinaParam.text = data.sinaContent;
+    if (nil != data.imageData) {
+        sinaParam.imageObject = @{@"imageData": data.imageData};
     }
     
     OSSinaTransferObject *tfObj = [[OSSinaTransferObject alloc] init];

@@ -206,6 +206,27 @@ static NSString *const kDefaultData = @"defaultData";
    return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
+- (NSString *)sinaContent
+{
+    if (nil == _sinaContent) {
+        NSMutableString *sina = [[NSMutableString alloc] init];
+        NSString *title = self.title;
+        if (nil != title) {
+            [sina appendFormat:@" %@", title];
+        }
+        NSString *content = self.content;
+        if (nil != content) {
+            [sina appendFormat:@" %@", content];
+        }
+        NSString *link = self.link;
+        if (nil != link) {
+            [sina appendFormat:@" %@", link];
+        }
+        return sina;
+    }
+    return _sinaContent;
+}
+
 - (NSString *)msgBody
 {
     if (nil == _msgBody) {

@@ -40,7 +40,7 @@
     
     _message = [[OSMessage alloc] init];
     _message.dataItem = dataItem;
-    _message.multimediaType = OSMultimediaTypeAudio;
+    _message.multimediaType = OSMultimediaTypeNews;
     
 //    [_message configAppItem:^(OSAppItem *item) {
 //        item.appId = @"1104480569";
@@ -71,6 +71,8 @@
         
     } forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:invokeBtn];
+NSString *t = @"a";
+    [t stringByAppendingString:@"b"];
     
     
 }
