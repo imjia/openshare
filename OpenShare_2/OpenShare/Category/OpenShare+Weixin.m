@@ -72,33 +72,35 @@ static OSWXParameter *s_wxParam = nil;
 {
     msg.app = kOSAppWeixin;
     OSDataItem *data = msg.dataItem;
-    data.platform = flag;
+    data.platformCode = flag;
     
     OSWXParameter *wxParam = self.wxParameter;
     // 朋友圈/朋友
     wxParam.scene = kOSPlatformWXSession == flag ? 0 : 1;
-    wxParam.title = data.title;
-    wxParam.desc = data.content;
     
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
             wxParam.command = @"1020";
+            wxParam.title = data.content;
             break;
         }
         case OSMultimediaTypeImage: {
             wxParam.command = @"1010";
-
-            // gif or not gif
-            BOOL isGif = nil != data.wxFileData;
-            if (isGif) {
-                wxParam.fileData = data.wxFileData;
-            }
+            wxParam.title = data.title;
+            wxParam.desc = data.content;
             
-            NSData *imgData = isGif ? data.wxFileData : data.imageData;
-            if (nil != imgData) {
-                wxParam.fileData = imgData;
-                wxParam.thumbData = imgData;
-                wxParam.objectType = isGif ? kWXObjectTypeGif : kWXObjectTypeImage;
+            NSData *imageData = data.imageData;
+            if (nil != imageData) {
+                NSString *type = [OpenShare contentTypeForImageData:imageData];
+                BOOL isGif = [type hasPrefix:@"gif"];
+                if (isGif) {
+                    wxParam.fileData = imageData;
+                    wxParam.objectType = kWXObjectTypeGif;
+                } else {
+                    wxParam.fileData = imageData;
+                    wxParam.thumbData = data.thumbnailData;
+                    wxParam.objectType = kWXObjectTypeImage;
+                }
             }
             break;
         }
@@ -107,45 +109,28 @@ static OSWXParameter *s_wxParam = nil;
         {
             //music & video
             wxParam.command = @"1010";
+            wxParam.title = data.title;
+            wxParam.desc = data.content;
             wxParam.thumbData = data.thumbnailData;
             wxParam.mediaUrl = data.link;
             wxParam.mediaDataUrl = data.mediaDataUrl;
-            wxParam.objectType = msg.multimediaType == OSMultimediaTypeAudio ? kWXObjectTypeAudio : kWXObjectTypeVideo;
+            wxParam.objectType = msg.multimediaType;
             
             break;
         }
         case OSMultimediaTypeNews: {
             wxParam.command = @"1010";
+            wxParam.title = data.title;
+            wxParam.desc = data.content;
             wxParam.thumbData = data.thumbnailData;
             wxParam.mediaUrl = data.link;
             wxParam.objectType = kWXObjectTypeNews;
             break;
         }
-        case OSMultimediaTypeFile: {
-            //file
-            wxParam.command = @"1010";
-            wxParam.fileData = data.wxFileData;
-            wxParam.fileExt = data.wxFileExt;
-            wxParam.thumbData = data.thumbnailData;
-            wxParam.objectType = kWXObjectTypeFile;
-            break;
-        }
-        case OSMultimediaTypeApp: {
-            //app
-            wxParam.command = @"1010";
-            wxParam.extInfo = data.wxExtInfo;
-            wxParam.fileExt = data.wxFileExt;
-            wxParam.fileData = data.imageData;
-            wxParam.thumbData = data.thumbnailData;
-            wxParam.mediaUrl = data.link;
-            wxParam.objectType = kWXObjectTypeApp;
-            break;
-        }
-       
         default:
             break;
     }
-
+    
     NSString *appId = msg.platformAccount.appId;
     if (nil == appId) {
         appId = [self dataForRegistedScheme:kWXScheme][@"appid"];
@@ -157,8 +142,8 @@ static OSWXParameter *s_wxParam = nil;
                                                                  error:nil];
     [[UIPasteboard generalPasteboard] setData:output
                             forPasteboardType:kWXPasterBoardKey];
-
-
+    
+    
     
     NSString *urlStr = [NSString stringWithFormat:@"weixin://app/%@/sendreq/?", appId];
     return [NSURL URLWithString:urlStr];
@@ -178,14 +163,14 @@ static OSWXParameter *s_wxParam = nil;
         NSDictionary *contentDic = [NSPropertyListSerialization propertyListWithData:content
                                                                              options:0
                                                                               format:0 error:nil][appId];
-
-        /* 登录、支付 暂时没写这功能
-        NSString *urlStr = url.absoluteString;
-        if ([urlStr rangeOfString:@"://oauth"].location != NSNotFound) {
         
-        } else if([urlStr rangeOfString:@"://pay/"].location != NSNotFound) {
-    
-        } else {
+        /* 登录、支付 暂时没写这功能
+         NSString *urlStr = url.absoluteString;
+         if ([urlStr rangeOfString:@"://oauth"].location != NSNotFound) {
+         
+         } else if([urlStr rangeOfString:@"://pay/"].location != NSNotFound) {
+         
+         } else {
          */
         
         OSWXResponse *response = [OSWXResponse tc_mappingWithDictionary:contentDic];
@@ -200,7 +185,7 @@ static OSWXParameter *s_wxParam = nil;
             handle = nil;
         }
     }
-
+    
     return canHandle;
 }
 

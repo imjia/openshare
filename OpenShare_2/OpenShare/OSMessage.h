@@ -44,7 +44,7 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 
 @interface OSDataItem : NSObject
 
-@property (nonatomic, assign) OSPlatform platform;
+@property (nonatomic, assign) OSPlatformCode platformCode;
 
 // 公共
 @property (nonatomic, copy) NSString *title;
@@ -61,9 +61,6 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 @property (nonatomic, copy) NSString *wxExtInfo; // TODO: 待查意义
 @property (nonatomic, copy) NSString *wxFileExt; // TODO: 待查意义
 
-// 新浪微博
-@property (nonatomic, copy) NSString *sinaContent; // 新浪微博分享的内容
-
 // 短信
 @property (nonatomic, strong) NSArray<NSString *> *recipients; // 短信接收者的电话
 @property (nonatomic, copy) NSString *msgBody;
@@ -75,9 +72,9 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 @property (nonatomic, copy) NSString *emailBody;
 
 // 单个数据
-- (void)setValue:(id)value forKey:(NSString *)key forPlatform:(OSPlatform)platform;
+- (void)setValue:(id)value forKey:(NSString *)key forPlatform:(OSPlatformCode)platformCode;
 // 多个数据
-- (void)setValueDic:(NSDictionary<NSString */*property*/, id/*object*/> *)valueDic forPlatform:(OSPlatform)platform;
+- (void)setValueDic:(NSDictionary<NSString */*property*/, id/*object*/> *)valueDic forPlatform:(OSPlatformCode)platformCode;
 
 @end
 

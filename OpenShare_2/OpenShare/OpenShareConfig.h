@@ -16,7 +16,7 @@ typedef NS_ENUM(NSInteger, OSAPP) {
 };
 
 // 分享支持的平台
-typedef NS_ENUM(NSInteger, OSPlatform) {
+typedef NS_ENUM(NSInteger, OSPlatformCode) {
     kOSPlatformCommon,
     kOSPlatformQQ,
     kOSPlatformQQZone,

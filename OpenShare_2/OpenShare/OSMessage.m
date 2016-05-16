@@ -61,7 +61,7 @@
 static NSString *const kDefaultData = @"defaultData";
 
 @interface OSDataItem () {
-    @private
+@private
     NSMutableDictionary<NSString */*property*/, NSMutableDictionary */*{platform: customValue}*/> *_dataDic;
 }
 
@@ -94,24 +94,24 @@ static NSString *const kDefaultData = @"defaultData";
     return valueDic;
 }
 
-- (void)setValue:(id)value forKey:(nonnull NSString *)key forPlatform:(OSPlatform)platform
+- (void)setValue:(id)value forKey:(nonnull NSString *)key forPlatform:(OSPlatformCode)platformCode
 {
     if (nil != value) {
-        [self valueDicForProperty:key][@(platform)] = value;
+        [self valueDicForProperty:key][@(platformCode)] = value;
     }
 }
 
-- (void)setValueDic:(NSDictionary<NSString *,id> *)valueDic forPlatform:(OSPlatform)platform
+- (void)setValueDic:(NSDictionary<NSString *,id> *)valueDic forPlatform:(OSPlatformCode)platformCode
 {
     for (NSString *key in valueDic.allKeys) {
-        [self setValue:valueDic[key] forKey:key forPlatform:platform];
+        [self setValue:valueDic[key] forKey:key forPlatform:platformCode];
     }
 }
 
 - (id)platformValueForProperty:(NSString *)property
 {
     NSMutableDictionary *valueDic = [self valueDicForProperty:property];
-    id value = valueDic[@(_platform)];
+    id value = valueDic[@(_platformCode)];
     if (nil == value) {
         value = valueDic[@(kOSPlatformCommon)];
     }
@@ -169,7 +169,7 @@ static NSString *const kDefaultData = @"defaultData";
 
 - (NSString *)title
 {
-   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
+    return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)content
@@ -179,12 +179,12 @@ static NSString *const kDefaultData = @"defaultData";
 
 - (NSString *)link
 {
-   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
+    return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSData *)imageData
 {
-   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
+    return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSData *)thumbnailData
@@ -193,38 +193,17 @@ static NSString *const kDefaultData = @"defaultData";
     if (nil == thumbnailData) {
         thumbnailData = self.imageData;
     }
-   return thumbnailData;
+    return thumbnailData;
 }
 
 - (NSString *)imageUrl
 {
-   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
+    return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)thumbnailUrl
 {
-   return [self platformValueForProperty:NSStringFromSelector(_cmd)];
-}
-
-- (NSString *)sinaContent
-{
-    if (nil == _sinaContent) {
-        NSMutableString *sina = [[NSMutableString alloc] init];
-        NSString *title = self.title;
-        if (nil != title) {
-            [sina appendFormat:@" %@", title];
-        }
-        NSString *content = self.content;
-        if (nil != content) {
-            [sina appendFormat:@" %@", content];
-        }
-        NSString *link = self.link;
-        if (nil != link) {
-            [sina appendFormat:@" %@", link];
-        }
-        return sina;
-    }
-    return _sinaContent;
+    return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
 - (NSString *)msgBody

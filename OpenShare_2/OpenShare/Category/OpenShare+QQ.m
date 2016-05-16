@@ -71,7 +71,7 @@ static OSQQParameter *s_qqParam = nil;
     msg.app = kOSAppQQ;
     
     OSDataItem *data = msg.dataItem;
-    data.platform = flag;
+    data.platformCode = flag;
     
     OSQQParameter *qqParam = self.qqParameter.copy;
     if (nil != msg.platformAccount.callBackName) {
@@ -83,11 +83,11 @@ static OSQQParameter *s_qqParam = nil;
     switch (msg.multimediaType) {
         case OSMultimediaTypeText: {
             qqParam.file_type = @"text";
-            qqParam.file_data = [OpenShare base64AndURLEncodedString:data.title];
+            qqParam.file_data = [OpenShare base64AndURLEncodedString:data.content];
             break;
         }
         case OSMultimediaTypeImage: {
-        
+            
             qqParam.file_type = @"img";
             qqParam.objectlocation = @"pasteboard";
             qqParam.title = [OpenShare base64AndURLEncodedString:data.title];
@@ -114,7 +114,7 @@ static OSQQParameter *s_qqParam = nil;
             } else if (msg.multimediaType == OSMultimediaTypeVideo) {
                 qqParam.file_type = @"video";
             }
- 
+            
             qqParam.objectlocation = @"pasteboard";
             qqParam.title = [OpenShare base64AndURLEncodedString:data.title];
             qqParam.desc = [OpenShare base64AndURLEncodedString:data.content];
@@ -125,7 +125,7 @@ static OSQQParameter *s_qqParam = nil;
             if (nil != data.thumbnailData) {
                 pbData[@"previewimagedata"] = data.thumbnailData;
             }
-
+            
             [self setGeneralPasteboardData:pbData
                                     forKey:kQQPasteboardKey
                                   encoding:kOSPasteboardEncodingKeyedArchiver];

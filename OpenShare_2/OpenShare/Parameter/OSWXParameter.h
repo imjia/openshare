@@ -22,8 +22,6 @@
 @property (nonatomic, assign) NSInteger objectType;
 @property (nonatomic, copy) NSString *mediaUrl;
 @property (nonatomic, copy) NSString *mediaDataUrl;
-@property (nonatomic, copy) NSString *fileExt;
-@property (nonatomic, copy) NSString *extInfo;
 
 @end
 

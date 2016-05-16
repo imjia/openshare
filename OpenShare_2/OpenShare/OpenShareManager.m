@@ -8,14 +8,14 @@
 
 #import "OpenShareManager.h"
 #import "OpenShareHeader.h"
-#import "OSSnsItemController.h"
 #import "UIWindow+TCHelper.h"
 #import "TCHTTPRequestCenter.h"
+#import "OSPlatformController.h"
 
-@interface OpenShareManager () <OSSnsItemControllerDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
+@interface OpenShareManager () <OSPlatformControllerDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 {
-    @private
-    OSSnsItemController *_snsCtrler;
+@private
+    OSPlatformController *_platformCtrler;
 }
 
 @property (nonatomic, strong) OSMessage *message;
@@ -36,67 +36,67 @@
     return mgr;
 }
 
-- (void)shareMsg:(OSMessage *)msg sns:(NSArray<NSNumber *> *)sns completion:(OSShareCompletionHandle)completion
+- (void)shareMsg:(OSMessage *)msg platformCodes:(NSArray<NSNumber *> *)codes completion:(OSShareCompletionHandle)completion
 {
     _message = msg;
     _shareCompletionHandle = completion;
-    _snsCtrler = [[OSSnsItemController alloc] initWithSns:sns];
-    _snsCtrler.delegate = self;
+    _platformCtrler = [[OSPlatformController alloc] initWithPlatformCodes:codes];
+    _platformCtrler.delegate = self;
     
     if (nil != _message.dataItem.imageUrl) {
         [self downloadImage];
     } else {
-        [self showSnsController];
+        [self showPlatformController];
     }
 }
 
 
-#pragma mark - OSSnsItemControllerDelegate
+#pragma mark - OSPlatformControllerDelegate
 
-- (void)OSSnsItemController:(OSSnsItemController *)ctrler didSelectSnsItem:(OSSnsItem *)sns
+- (void)OSPlatformController:(OSPlatformController *)ctrler didSelectPlatformItem:(OSPlatformItem *)platform
 {
-    [self dismissSnsController];
+    [self dismissPlatformController];
     
-    if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectSnsPlatform:message:)]) {
-        [_uiDelegate didSelectSnsPlatform:sns.platform message:_message];
+    if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectPlatformItem:message:)]) {
+        [_uiDelegate didSelectPlatformItem:platform message:_message];
     }
     
     __weak typeof(self) wSelf = self;
-    void (^block)(OSMessage *message,OSPlatform platform, OSShareState state, NSError *error) = ^(OSMessage *message,OSPlatform platform, OSShareState state, NSError *error){
+    void (^block)(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) = ^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error){
         if (nil != wSelf.shareCompletionHandle) {
-            wSelf.shareCompletionHandle(_message, platform, state, nil);
+            wSelf.shareCompletionHandle(_message, platformCode, state, nil);
             wSelf.shareCompletionHandle = nil;
         }
     };
     
-    switch (sns.platform) {
+    switch (platform.code) {
         case kOSPlatformQQ: {
-            [OpenShare shareToQQ:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+            [OpenShare shareToQQ:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
                 block(_message, kOSPlatformQQ, state, error);
             }];
             break;
         }
         case kOSPlatformQQZone: {
-            [OpenShare shareToQQZone:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+            [OpenShare shareToQQZone:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
                 block(_message, kOSPlatformQQZone, state, error);
-
+                
             }];
             break;
         }
         case kOSPlatformWXSession: {
-            [OpenShare shareToWeixinSession:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+            [OpenShare shareToWeixinSession:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
                 block(_message, kOSPlatformWXSession, state, error);
             }];
             break;
         }
         case kOSPlatformWXTimeLine: {
-            [OpenShare shareToWeixinTimeLine:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+            [OpenShare shareToWeixinTimeLine:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
                 block(_message, kOSPlatformWXTimeLine, state, error);
             }];
             break;
         }
         case kOSPlatformSina: {
-            [OpenShare shareToSinaWeibo:_message completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
+            [OpenShare shareToSinaWeibo:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
                 block(_message, kOSPlatformSina, state, error);
             }];
             break;
@@ -114,12 +114,12 @@
     }
 }
 
-- (void)OSSnsItemControllerWillDismiss:(OSSnsItemController *)ctrler
+- (void)OSPlatformControllerWillDismiss:(OSPlatformController *)ctrler
 {
-    [self dismissSnsController];
+    [self dismissPlatformController];
 }
 
-- (void)showSnsController
+- (void)showPlatformController
 {
     UIViewController *viewController = [UIApplication sharedApplication].delegate.window.topMostViewController;
     UITabBarController *tabCtrler = viewController.tabBarController;
@@ -129,25 +129,25 @@
     
     [viewController beginAppearanceTransition:NO animated:YES];
     [viewController endAppearanceTransition];
-    [viewController addChildViewController:_snsCtrler];
-    [_snsCtrler beginAppearanceTransition:YES animated:YES];
-    [viewController.view addSubview:_snsCtrler.view];
-    [_snsCtrler didMoveToParentViewController:viewController];
-    [_snsCtrler endAppearanceTransition];
+    [viewController addChildViewController:_platformCtrler];
+    [_platformCtrler beginAppearanceTransition:YES animated:YES];
+    [viewController.view addSubview:_platformCtrler.view];
+    [_platformCtrler didMoveToParentViewController:viewController];
+    [_platformCtrler endAppearanceTransition];
 }
 
-- (void)dismissSnsController
+- (void)dismissPlatformController
 {
-    UIViewController *parentCtrler = _snsCtrler.parentViewController;
-    [_snsCtrler beginAppearanceTransition:NO animated:YES];
-    [_snsCtrler.view removeFromSuperview];
-    [_snsCtrler endAppearanceTransition];
-    [_snsCtrler willMoveToParentViewController:nil];
-    [_snsCtrler removeFromParentViewController];
+    UIViewController *parentCtrler = _platformCtrler.parentViewController;
+    [_platformCtrler beginAppearanceTransition:NO animated:YES];
+    [_platformCtrler.view removeFromSuperview];
+    [_platformCtrler endAppearanceTransition];
+    [_platformCtrler willMoveToParentViewController:nil];
+    [_platformCtrler removeFromParentViewController];
     
     [parentCtrler beginAppearanceTransition:YES animated:YES];
     [parentCtrler endAppearanceTransition];
-    _snsCtrler = nil;
+    _platformCtrler = nil;
 }
 
 - (void)downloadImage
@@ -172,7 +172,7 @@
             
             __weak typeof(self) wSelf = self;
             request.resultBlock = ^(id<TCHTTPRequest> request, BOOL success) {
-            
+                
                 if (nil == wSelf) {
                     return;
                 }
@@ -189,7 +189,7 @@
                 
                 if (nil != wMessage && wMessage == wSelf.message) {
                     wMessage.dataItem.imageData = data;
-                    [wSelf showSnsController];
+                    [wSelf showPlatformController];
                 }
             };
             
@@ -216,7 +216,7 @@
                                     code:result
                                 userInfo:nil];
     }
-
+    
     if (nil != _shareCompletionHandle) {
         _shareCompletionHandle(_message, kOSPlatformSms, nil == error ? kOSStateSuccess : kOSStateFail, nil);
         _shareCompletionHandle = nil;

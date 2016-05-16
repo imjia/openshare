@@ -38,10 +38,10 @@ static NSString *const kSinaWbScheme = @"SinaWeibo";
     
     OSSinaParameter *sinaParam = [[OSSinaParameter alloc] init];
     OSDataItem *data = msg.dataItem;
-    data.platform = kOSPlatformSina;
+    data.platformCode = kOSPlatformSina;
     
     sinaParam.__class = @"WBMessageObject";
-    sinaParam.text = data.sinaContent;
+    sinaParam.text = data.content;
     if (nil != data.imageData) {
         sinaParam.imageObject = @{@"imageData": data.imageData};
     }

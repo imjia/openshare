@@ -30,17 +30,21 @@
     dataItem.title = @"testTitle";
     dataItem.content = @"testDes";
     dataItem.link = @"http://sina.cn?a=1";
-    dataItem.imageUrl = [NSURL URLWithString:@"http://i.k1982.com/design_img/201109/201109011617318631.jpg"];
-//    dataItem.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"logo.gif"]);
+//    dataItem.imageUrl = [NSURL URLWithString:@"http://i.k1982.com/design_img/201109/201109011617318631.jpg"];
+    
+    NSString *file = [[NSBundle mainBundle] pathForResource:@"logo" ofType:@"gif"];
+    dataItem.imageData = [[NSData alloc] initWithContentsOfFile:file];
     dataItem.thumbnailData = UIImagePNGRepresentation([UIImage imageNamed:@"2.png"]);
-    dataItem.toRecipients = @[@"123@126.com"];
+    dataItem.emailSubject = @"emailSub";
+    dataItem.emailBody = @"emailBody";
+//    dataItem.toRecipients = @[@"123@126.com"];
     dataItem.mediaDataUrl = @"http://7qn9mz.com1.z0.glb.clouddn.com/0002.mp3";
     
     [dataItem setValue:@"wx" forKey:PropertySTR(title) forPlatform:kOSPlatformWXSession];
     
     _message = [[OSMessage alloc] init];
     _message.dataItem = dataItem;
-    _message.multimediaType = OSMultimediaTypeNews;
+    _message.multimediaType = OSMultimediaTypeImage;
     
 //    [_message configAppItem:^(OSAppItem *item) {
 //        item.appId = @"1104480569";
@@ -55,26 +59,11 @@
     invokeBtn.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.5];
     [invokeBtn setTitle:@"分享" forState:UIControlStateNormal];
     [invokeBtn addEventHandler:^(id sender) {
-        [[OpenShareManager defaultManager] shareMsg:_message sns:@[@(kOSPlatformQQ), @(kOSPlatformWXTimeLine), @(kOSPlatformWXSession), @(kOSPlatformSina), @(kOSPlatformSms), @(kOSPlatformEmail)] completion:^(OSMessage *message, OSPlatform platform, OSShareState state, NSError *error) {
-    
-            NSString *stateStr = nil;
-            if (kOSStateNotInstalled == state) {
-                stateStr = @"未安装";
-            } else if (kOSStateSuccess == state) {
-                stateStr = @"成功";
-            } else {
-                stateStr = @"失败";
-            }
-            
-//            DLog(@"APP:%@ 分享状态: %@  失败信息:%@",appName[platform] ,stateStr, errorDescription);
-        }];
-        
+        [[OpenShareManager defaultManager] shareMsg:_message platformCodes:@[@(kOSPlatformQQ), @(kOSPlatformWXTimeLine), @(kOSPlatformWXSession), @(kOSPlatformSina), @(kOSPlatformSms), @(kOSPlatformEmail)] completion:nil];
     } forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:invokeBtn];
 NSString *t = @"a";
     [t stringByAppendingString:@"b"];
-    
-    
 }
 
 @end

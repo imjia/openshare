@@ -8,25 +8,26 @@
 
 #import <Foundation/Foundation.h>
 #import "OpenShareHeader.h"
+#import "OSPlatformController.h"
 
 @class OSMessage;
-@protocol OSSnsUIDelegate;
+@protocol OSUIDelegate;
 @interface OpenShareManager : NSObject
 
 @property (nonatomic, assign) BOOL ignoreNotInstalledApp;
 @property (nonatomic, assign) BOOL remindInstall;
-@property (nonatomic, weak) id<OSSnsUIDelegate> uiDelegate;
+@property (nonatomic, weak) id<OSUIDelegate> uiDelegate;
 @property (nonatomic, assign) void(^beforeDownloadImage)(); // 用户决定hud
 @property (nonatomic, assign) void(^afterDownloadImage)(); // 用户决定hud
 
 + (instancetype)defaultManager;
-- (void)shareMsg:(OSMessage *)msg sns:(NSArray<NSNumber/*OSPlatform*/ *> *)sns completion:(OSShareCompletionHandle)completion;
+- (void)shareMsg:(OSMessage *)msg platformCodes:(NSArray<NSNumber/*OSPlatformCode*/ *> *)codes completion:(OSShareCompletionHandle)completion;
 
 @end
 
-@protocol OSSnsUIDelegate <NSObject>
+@protocol OSUIDelegate <NSObject>
 
 @optional
-- (void)didSelectSnsPlatform:(OSPlatform)platform message:(OSMessage *)message;
+- (void)didSelectPlatformItem:(OSPlatformItem *)platform message:(OSMessage *)message;
 
 @end

@@ -35,15 +35,13 @@
     } else {
         NSMutableString *email = [[NSMutableString alloc] initWithString:@"mailto:"];
         if (msg.dataItem.toRecipients.count > 0) {
-            [email appendFormat:@"%@", [msg.dataItem.toRecipients componentsJoinedByString:@","]];
+            [email appendFormat:@"%@?", [msg.dataItem.toRecipients componentsJoinedByString:@","]];
         } else {
-//            [email appendString:@"first@example.com"];
+            [email appendString:@"?"];
         }
         
         if (msg.dataItem.ccRecipients.count > 0) {
-            [email appendFormat:@"?cc=%@", [msg.dataItem.ccRecipients componentsJoinedByString:@","]];
-        } else {
-//            [email appendString:@"?cc=second@example.com"];
+            [email appendFormat:@"cc=%@", [msg.dataItem.ccRecipients componentsJoinedByString:@","]];
         }
         
         if (nil != msg.dataItem.emailSubject) {
