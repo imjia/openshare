@@ -7,6 +7,7 @@
 //
 
 #import "OSPlatformController.h"
+#import "OpenShare.h"
 
 static NSString *const kCellIdentifier = @"UICollectionViewCell";
 static NSInteger const kContentBtnTag = 1024;
@@ -72,6 +73,7 @@ static CGFloat const kAnimDuration = 0.2f;
         }
         
         for (NSNumber *code in codes) {
+            
             OSPlatformItem *platform = [[OSPlatformItem alloc] init];
             platform.displayName =  NSLocalizedStringFromTableInBundle(self.platformConfig[code][@"name"], nil, self.openShareBundle, nil);
             platform.displayIcon = [self snsImageNamed:self.platformConfig[code][@"image"]];

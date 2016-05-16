@@ -10,6 +10,7 @@
 
 @interface OpenShare (Weixin)
 
++ (BOOL)isWeixinInstalled;
 + (void)registWeixinWithAppId:(NSString *)appId;
 + (void)shareToWeixinSession:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;
 + (void)shareToWeixinTimeLine:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;

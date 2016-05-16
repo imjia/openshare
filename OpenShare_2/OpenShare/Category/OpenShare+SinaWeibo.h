@@ -10,6 +10,7 @@
 
 @interface OpenShare (SinaWeibo)
 
++ (BOOL)isSinaWeiboInstalled;
 + (void)registSinaWeiboWithAppKey:(NSString *)appKey;
 + (void)shareToSinaWeibo:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;
 + (BOOL)SinaWeibo_handleOpenURL:(NSURL *)url;

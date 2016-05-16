@@ -44,7 +44,7 @@
 
 + (NSString *)base64DecodedString:(NSString *)inputString
 {
-    return [[NSString alloc ] initWithData:[[NSData alloc] initWithBase64EncodedString:inputString options:kNilOptions] encoding:NSUTF8StringEncoding];
+    return [[NSString alloc ] initWithData:[[NSData alloc] initWithBase64EncodedString:inputString options:NSDataBase64DecodingIgnoreUnknownCharacters] encoding:NSUTF8StringEncoding];
 }
 
 + (NSString *)urlEncodedString:(NSString *)inputString

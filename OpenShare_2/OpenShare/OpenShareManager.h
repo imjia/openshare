@@ -14,7 +14,6 @@
 @protocol OSUIDelegate;
 @interface OpenShareManager : NSObject
 
-@property (nonatomic, assign) BOOL ignoreNotInstalledApp;
 @property (nonatomic, assign) BOOL remindInstall;
 @property (nonatomic, weak) id<OSUIDelegate> uiDelegate;
 @property (nonatomic, assign) void(^beforeDownloadImage)(); // 用户决定hud

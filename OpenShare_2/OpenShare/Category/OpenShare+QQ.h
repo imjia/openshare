@@ -10,6 +10,7 @@
 
 @interface OpenShare (QQ)
 
++ (BOOL)isQQInstalled;
 + (void)registQQWithAppId:(NSString *)appId;
 + (void)shareToQQ:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;
 + (void)shareToQQZone:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;

@@ -40,7 +40,7 @@
 {
     _message = msg;
     _shareCompletionHandle = completion;
-    _platformCtrler = [[OSPlatformController alloc] initWithPlatformCodes:codes];
+    _platformCtrler = [[OSPlatformController alloc] initWithPlatformCodes:[self installedCodes:codes]];
     _platformCtrler.delegate = self;
     
     if (nil != _message.dataItem.imageUrl) {
@@ -48,6 +48,36 @@
     } else {
         [self showPlatformController];
     }
+}
+
+- (NSArray *)installedCodes:(NSArray<NSNumber *> *)codes
+{
+    NSMutableArray *installedCodes = codes.mutableCopy;
+    if (![OpenShare isQQInstalled]) {
+        if ([installedCodes containsObject:@(kOSPlatformQQ)]) {
+            [installedCodes removeObject:@(kOSPlatformQQ)];
+        }
+        if ([installedCodes containsObject:@(kOSPlatformQQZone)]) {
+            [installedCodes removeObject:@(kOSPlatformQQZone)];
+        }
+    }
+    
+    if (![OpenShare isWeixinInstalled]) {
+        if ([installedCodes containsObject:@(kOSPlatformWXSession)]) {
+            [installedCodes removeObject:@(kOSPlatformWXSession)];
+        }
+        if ([installedCodes containsObject:@(kOSPlatformWXTimeLine)]) {
+            [installedCodes removeObject:@(kOSPlatformWXTimeLine)];
+        }
+    }
+    
+    if (![OpenShare isSinaWeiboInstalled]) {
+        if ([installedCodes containsObject:@(kOSPlatformSina)]) {
+            [installedCodes removeObject:@(kOSPlatformSina)];
+        }
+    }
+    
+    return installedCodes;
 }
 
 
@@ -177,9 +207,9 @@
                     return;
                 }
                 
-                if (wSelf.beforeDownloadImage) {
-                    wSelf.beforeDownloadImage();
-                    wSelf.beforeDownloadImage = nil;
+                if (wSelf.afterDownloadImage) {
+                    wSelf.afterDownloadImage();
+                    wSelf.afterDownloadImage = nil;
                 }
                 
                 NSData *data = nil;
@@ -194,9 +224,9 @@
             };
             
             if ([request start:NULL]) {
-                if (wSelf.afterDownloadImage) {
-                    wSelf.afterDownloadImage();
-                    wSelf.afterDownloadImage = nil;
+                if (wSelf.beforeDownloadImage) {
+                    wSelf.beforeDownloadImage();
+                    wSelf.beforeDownloadImage = nil;
                 }
             }
         }
