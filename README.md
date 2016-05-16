@@ -11,3 +11,10 @@ git submodule update
 
 ```
 然后可以正常使用demo了！
+
+下面是submodule的作者的github，绝对的大神，有很多干货，一定要去follow！
+
+![image](https://avatars3.githubusercontent.com/u/657637?v=3&s=400)
+[Dake](https://github.com/dake)
+
+
