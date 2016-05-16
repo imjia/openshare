@@ -51,8 +51,6 @@
 //        item.callBackName = [NSString stringWithFormat: @"QQ%02llx", @(1104480569).longLongValue];
 //    } forApp:kQQScheme];
 
-    
-    NSArray *appName = @[@"qq", @"qq空间",@"微信朋友圈", @"微信好友",@"新浪微博", @"短信",@"邮件"];
     UIButton *invokeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     invokeBtn.frame = CGRectMake(0, 100, self.view.frame.size.width - 40, 60);
     invokeBtn.center = CGPointMake(self.view.center.x, invokeBtn.center.y);
