@@ -12,8 +12,8 @@
 
 + (BOOL)isWeixinInstalled;
 + (void)registWeixinWithAppId:(NSString *)appId;
-+ (void)shareToWeixinSession:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;
-+ (void)shareToWeixinTimeLine:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;
-+ (BOOL)Weixin_handleOpenURL:(NSURL *)url;
++ (void)shareToWeixinSession:(OSMessage *)msg;
++ (void)shareToWeixinTimeLine:(OSMessage *)msg;
++ (BOOL)wx_handleOpenURL:(NSURL *)url;
 
 @end

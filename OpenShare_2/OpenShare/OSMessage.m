@@ -48,9 +48,9 @@
     }
 }
 
-- (OSPlatformAccount *)platformAccount
+- (OSPlatformAccount *)accountForApp:(OSAPP)app
 {
-    return self.accountDic[@(_app)];
+    return self.accountDic[@(app)];
 }
 
 @end

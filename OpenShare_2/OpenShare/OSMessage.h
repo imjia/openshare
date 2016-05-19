@@ -10,6 +10,7 @@
 #import "OpenShareConfig.h"
 
 @class OSDataItem;
+@class OSPlatformItem;
 @class OSPlatformAccount;
 
 typedef NS_ENUM(NSInteger, OSMultimediaType) {
@@ -27,15 +28,17 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 #pragma mark - OSMessage
 
 @interface OSMessage : NSObject
-@property (nonatomic, strong) OSPlatformAccount *platformAccount; // 消息分享到的app {appid, appkey}
+
 @property (nonatomic, strong) OSDataItem *dataItem; // 分享的消息内容
 @property (nonatomic, assign) OSMultimediaType multimediaType;
-@property (nonatomic, assign) OSAPP app;
+@property (nonatomic, strong) OSPlatformItem *curPlatform; // 当前message 对应的分享平台
+
 
 - (instancetype)initWithOSMultimediaType:(OSMultimediaType)mediaType;
 
 // 定制化app 账户
 - (void)configAccount:(void(^)(OSPlatformAccount *account))config forApp:(OSAPP)app;
+- (OSPlatformAccount *)accountForApp:(OSAPP)app;
 
 @end
 

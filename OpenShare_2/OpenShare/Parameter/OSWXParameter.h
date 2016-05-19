@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OSResponse.h"
 
 @interface OSWXParameter : NSObject
 
@@ -25,7 +26,7 @@
 
 @end
 
-@interface OSWXResponse : NSObject
+@interface OSWXResponse : NSObject <OSResponse>
 
 @property (nonatomic, copy) NSString *state;
 @property (nonatomic, assign) NSInteger result;

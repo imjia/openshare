@@ -11,7 +11,6 @@
 #import "OSWXParameter.h"
 #import "NSObject+TCDictionaryMapping.h"
 
-static NSString *const kWXScheme = @"Weixin";
 static NSString *const kWXPasterBoardKey = @"content";
 static NSString *const kWXShareApi = @"mqqapi://share/to_fri";
 static NSString *const kWXSDKVersion = @"1.5";
@@ -30,26 +29,26 @@ typedef NS_ENUM(NSInteger, WXObjectType) {
 
 + (BOOL)isWeixinInstalled
 {
-    return [self canOpenURL:[NSURL URLWithString:@"weixin://"]];
+    return [self canOpenURL:[NSURL URLWithString:kOSWeixinScheme]];
 }
 
 + (void)registWeixinWithAppId:(NSString *)appId
 {
-    [self registAppWithScheme:kWXScheme
-                         data:@{@"appid": appId}];
+    [self registAppWithName:kOSWeixinIdentifier
+                       data:@{@"appid": appId}];
 }
 
-+ (void)shareToWeixinSession:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
++ (void)shareToWeixinSession:(OSMessage *)msg
 {
-    if ([self isAppRegisted:kWXScheme]) {
-        [self openAppWithURL:[self wxurlWithMessage:msg flag:kOSPlatformWXSession] completionHandle:completionHandle];
+    if ([self isAppRegisted:kOSWeixinIdentifier]) {
+        [self openAppWithURL:[self wxurlWithMessage:msg flag:kOSPlatformWXSession]];
     }
 }
 
-+ (void)shareToWeixinTimeLine:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
++ (void)shareToWeixinTimeLine:(OSMessage *)msg
 {
-    if ([self isAppRegisted:kWXScheme]) {
-        [self openAppWithURL:[self wxurlWithMessage:msg flag:kOSPlatformWXTimeLine] completionHandle:completionHandle];
+    if ([self isAppRegisted:kOSWeixinIdentifier]) {
+        [self openAppWithURL:[self wxurlWithMessage:msg flag:kOSPlatformWXTimeLine]];
     }
 }
 
@@ -70,7 +69,6 @@ static OSWXParameter *s_wxParam = nil;
 
 + (NSURL *)wxurlWithMessage:(OSMessage *)msg flag:(NSInteger)flag
 {
-    msg.app = kOSAppWeixin;
     OSDataItem *data = msg.dataItem;
     data.platformCode = flag;
     
@@ -131,62 +129,74 @@ static OSWXParameter *s_wxParam = nil;
             break;
     }
     
-    NSString *appId = msg.platformAccount.appId;
+    OSPlatformAccount *account = [msg accountForApp:kOSAppWeixin];
+    NSString *appId = account.appId;
     if (nil == appId) {
-        appId = [self dataForRegistedScheme:kWXScheme][@"appid"];
+        appId = [self dataForRegistedApp:kOSWeixinIdentifier][@"appid"];
     }
     
-    NSData *output = [NSPropertyListSerialization dataWithPropertyList:@{appId: wxParam.tc_dictionary}
-                                                                format:NSPropertyListBinaryFormat_v1_0
-                                                               options:0
-                                                                 error:nil];
-    [[UIPasteboard generalPasteboard] setData:output
-                            forPasteboardType:kWXPasterBoardKey];
+    NSData *output = nil;
+    @try {
+        output = [NSPropertyListSerialization dataWithPropertyList:@{appId: wxParam.tc_dictionary}
+                                                            format:NSPropertyListBinaryFormat_v1_0
+                                                           options:kNilOptions
+                                                             error:NULL];
+    } @catch (NSException *exception) {
+        DLog_e(@"%@", exception);
+    } @finally {
+        if (nil != output) {
+            [[UIPasteboard generalPasteboard] setData:output
+                                    forPasteboardType:kWXPasterBoardKey];
+        }
+    }
     
-    
-    
-    NSString *urlStr = [NSString stringWithFormat:@"weixin://app/%@/sendreq/?", appId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@app/%@/sendreq/?",kOSWeixinScheme, appId];
     return [NSURL URLWithString:urlStr];
 }
 
-+ (BOOL)Weixin_handleOpenURL:(NSURL *)url
++ (BOOL)wx_handleOpenURL:(NSURL *)url
 {
-    BOOL canHandle = [url.scheme hasPrefix:@"wx"];
-    if (canHandle) {
-        
-        NSData *content = [[UIPasteboard generalPasteboard] dataForPasteboardType:@"content"];
-        if (nil == content) {
-            return canHandle;
-        }
-        
-        NSString *appId = [self dataForRegistedScheme:kWXScheme][@"appid"];
-        NSDictionary *contentDic = [NSPropertyListSerialization propertyListWithData:content
-                                                                             options:0
-                                                                              format:0 error:nil][appId];
-        
-        /* 登录、支付 暂时没写这功能
-         NSString *urlStr = url.absoluteString;
-         if ([urlStr rangeOfString:@"://oauth"].location != NSNotFound) {
-         
-         } else if([urlStr rangeOfString:@"://pay/"].location != NSNotFound) {
-         
-         } else {
-         */
-        
-        OSWXResponse *response = [OSWXResponse tc_mappingWithDictionary:contentDic];
-        if (nil != response.state && [response.state isEqualToString:@"Weixinauth"] && response.result != 0) {
-            // 登录失败
-            return canHandle;
-        }
-        
-        OSShareCompletionHandle handle = self.shareCompletionHandle;
-        if (nil != handle) {
-            handle(nil, kOSPlatformCommon, response.result ? kOSStateFail : kOSStateSuccess, nil);
-            handle = nil;
-        }
+    BOOL canHandle = [url.scheme hasPrefix:kOSWeixinIdentifier];
+    if (!canHandle) {
+        return NO;
     }
     
-    return canHandle;
+    NSData *content = [[UIPasteboard generalPasteboard] dataForPasteboardType:@"content"];
+    if (nil == content) {
+        return canHandle;
+    }
+    
+    // 清除数据
+    [self clearGeneralPasteboardDataForKey:kWXPasterBoardKey];
+    [self clearGeneralPasteboardDataForKey:@"content"];
+    if ([url.absoluteString rangeOfString:self.identifier].location == NSNotFound) {
+        return canHandle;
+    }
+    self.identifier = nil;
+    
+    NSString *appId = [self dataForRegistedApp:kOSWeixinIdentifier][@"appid"];
+    NSDictionary *contentDic = nil;
+    @try {
+        contentDic = [NSPropertyListSerialization propertyListWithData:content
+                                                               options:kNilOptions
+                                                                format:nil
+                                                                 error:NULL][appId];
+    } @catch (NSException *exception) {
+        DLog_e(@"%@", exception);
+    } @finally {
+        OSWXResponse *response = [OSWXResponse tc_mappingWithDictionary:contentDic];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOSShareFinishedNotification object:response];
+        return canHandle;
+    }
+    
+    /* 登录、支付 暂时没写这功能
+     NSString *urlStr = url.absoluteString;
+     if ([urlStr rangeOfString:@"://oauth"].location != NSNotFound) {
+     
+     } else if([urlStr rangeOfString:@"://pay/"].location != NSNotFound) {
+     
+     } else {
+     */
 }
 
 @end

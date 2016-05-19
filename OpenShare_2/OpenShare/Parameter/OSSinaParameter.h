@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OSResponse.h"
 
 @interface OSSinaMediaObject : NSObject
 
@@ -47,7 +48,7 @@
 
 @end
 
-@interface OSSinaResponse : NSObject
+@interface OSSinaResponse : NSObject <OSResponse>
 
 @property (nonatomic, strong) OSSinaApp *app;
 @property (nonatomic, strong) OSSinaTransferObject *transferObject;

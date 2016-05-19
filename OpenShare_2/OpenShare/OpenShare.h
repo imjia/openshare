@@ -15,19 +15,22 @@ typedef NS_ENUM(NSInteger, OSPasteboardEncoding){
     kOSPasteboardEncodingPropertyListSerialization
 };
 
-typedef void(^OSShareCompletionHandle)(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error);
+extern NSString *const kOSShareFinishedNotification;
+
+typedef void(^OSShareCompletionHandle)(OSMessage *message, OSShareState state, NSError *error);
 
 @interface OpenShare : NSObject
 
-+ (OSShareCompletionHandle)shareCompletionHandle;
++ (NSString *)identifier;
++ (void)setIdentifier:(NSString *)identifier;
 
 + (BOOL)canOpenURL:(NSURL *)url;
-+ (void)openAppWithURL:(NSURL *)url completionHandle:(OSShareCompletionHandle)handle;
++ (BOOL)openAppWithURL:(NSURL *)url;
 + (BOOL)handleOpenURL:(NSURL *)url;
 
-+ (void)registAppWithScheme:(NSString *)appScheme data:(NSDictionary *)data;
-+ (NSDictionary *)dataForRegistedScheme:(NSString *)appScheme;
-+ (BOOL)isAppRegisted:(NSString *)appScheme;
++ (void)registAppWithName:(NSString *)appName data:(NSDictionary *)data;
++ (NSDictionary *)dataForRegistedApp:(NSString *)appName;
++ (BOOL)isAppRegisted:(NSString *)appName;
 
 + (void)setGeneralPasteboardData:(NSDictionary *)value forKey:(NSString *)key encoding:(OSPasteboardEncoding)encoding;
 + (NSDictionary *)generalPasteboardDataForKey:(NSString *)key encoding:(OSPasteboardEncoding)encoding;

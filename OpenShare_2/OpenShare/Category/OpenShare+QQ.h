@@ -12,8 +12,8 @@
 
 + (BOOL)isQQInstalled;
 + (void)registQQWithAppId:(NSString *)appId;
-+ (void)shareToQQ:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;
-+ (void)shareToQQZone:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;
++ (void)shareToQQ:(OSMessage *)msg;
++ (void)shareToQQZone:(OSMessage *)msg;
 + (BOOL)QQ_handleOpenURL:(NSURL *)url;
 
 @end

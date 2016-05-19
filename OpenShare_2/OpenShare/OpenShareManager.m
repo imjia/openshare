@@ -11,10 +11,11 @@
 #import "UIWindow+TCHelper.h"
 #import "TCHTTPRequestCenter.h"
 #import "OSPlatformController.h"
+#import "OSResponse.h"
 
 @interface OpenShareManager () <OSPlatformControllerDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 {
-@private
+    @private
     OSPlatformController *_platformCtrler;
 }
 
@@ -36,12 +37,30 @@
     return mgr;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (id)init
+{
+    if (self = [super init]) {
+        __weak typeof(self) wSelf = self;
+        [[NSNotificationCenter defaultCenter] addObserverForName:kOSShareFinishedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+            NSObject<OSResponse> *response = note.object;
+            [wSelf callShareCompletionHandle:nil == response.error ? kOSStateSuccess : kOSStateFail error:response.error];
+        }];
+    }
+    return self;
+}
+
 - (void)shareMsg:(OSMessage *)msg platformCodes:(NSArray<NSNumber *> *)codes completion:(OSShareCompletionHandle)completion
 {
     _message = msg;
     _shareCompletionHandle = completion;
     _platformCtrler = [[OSPlatformController alloc] initWithPlatformCodes:[self installedCodes:codes]];
     _platformCtrler.delegate = self;
+    _platformCtrler.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     if (nil != _message.dataItem.imageUrl) {
         [self downloadImage];
@@ -77,6 +96,13 @@
         }
     }
     
+    if (installedCodes.count < 1) {
+        if (MFMessageComposeViewController.canSendText) {
+            [installedCodes addObject:@(kOSPlatformSms)];
+        }
+        [installedCodes addObject:@(kOSPlatformEmail)];
+    }
+    
     return installedCodes;
 }
 
@@ -87,48 +113,31 @@
 {
     [self dismissPlatformController];
     
+    _message.curPlatform = platform;
+
     if (nil != _uiDelegate && [_uiDelegate respondsToSelector:@selector(didSelectPlatformItem:message:)]) {
         [_uiDelegate didSelectPlatformItem:platform message:_message];
     }
-    
-    __weak typeof(self) wSelf = self;
-    void (^block)(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) = ^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error){
-        if (nil != wSelf.shareCompletionHandle) {
-            wSelf.shareCompletionHandle(_message, platformCode, state, nil);
-            wSelf.shareCompletionHandle = nil;
-        }
-    };
-    
+
     switch (platform.code) {
         case kOSPlatformQQ: {
-            [OpenShare shareToQQ:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
-                block(_message, kOSPlatformQQ, state, error);
-            }];
+            [OpenShare shareToQQ:_message];
             break;
         }
         case kOSPlatformQQZone: {
-            [OpenShare shareToQQZone:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
-                block(_message, kOSPlatformQQZone, state, error);
-                
-            }];
+            [OpenShare shareToQQZone:_message];
             break;
         }
         case kOSPlatformWXSession: {
-            [OpenShare shareToWeixinSession:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
-                block(_message, kOSPlatformWXSession, state, error);
-            }];
+            [OpenShare shareToWeixinSession:_message];
             break;
         }
         case kOSPlatformWXTimeLine: {
-            [OpenShare shareToWeixinTimeLine:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
-                block(_message, kOSPlatformWXTimeLine, state, error);
-            }];
+            [OpenShare shareToWeixinTimeLine:_message];
             break;
         }
         case kOSPlatformSina: {
-            [OpenShare shareToSinaWeibo:_message completion:^(OSMessage *message, OSPlatformCode platformCode, OSShareState state, NSError *error) {
-                block(_message, kOSPlatformSina, state, error);
-            }];
+            [OpenShare shareToSinaWeibo:_message];
             break;
         }
         case kOSPlatformEmail: {
@@ -152,10 +161,22 @@
 - (void)showPlatformController
 {
     UIViewController *viewController = [UIApplication sharedApplication].delegate.window.topMostViewController;
+    
     UITabBarController *tabCtrler = viewController.tabBarController;
     if (nil != tabCtrler) {
         viewController = tabCtrler;
     }
+    
+    // 修正横屏时，frame还是竖屏的情况
+    CGRect rect = viewController.view.frame;
+    CGAffineTransform transform = viewController.view.transform;
+    if (!CGAffineTransformIsIdentity(transform)) {
+        CGFloat width = rect.size.width;
+        rect.size.width = rect.size.height;
+        rect.size.height = width;
+    }
+    
+    _platformCtrler.view.frame = rect;
     
     [viewController beginAppearanceTransition:NO animated:YES];
     [viewController endAppearanceTransition];
@@ -207,9 +228,8 @@
                     return;
                 }
                 
-                if (wSelf.afterDownloadImage) {
-                    wSelf.afterDownloadImage();
-                    wSelf.afterDownloadImage = nil;
+                if (nil != wSelf.uiDelegate && [wSelf.uiDelegate respondsToSelector:@selector(didDownloadImage)]) {
+                    [wSelf.uiDelegate didDownloadImage];
                 }
                 
                 NSData *data = nil;
@@ -224,9 +244,8 @@
             };
             
             if ([request start:NULL]) {
-                if (wSelf.beforeDownloadImage) {
-                    wSelf.beforeDownloadImage();
-                    wSelf.beforeDownloadImage = nil;
+                if (nil != wSelf.uiDelegate && [wSelf.uiDelegate respondsToSelector:@selector(willDownloadImage)]) {
+                    [wSelf.uiDelegate willDownloadImage];
                 }
             }
         }
@@ -246,11 +265,8 @@
                                     code:result
                                 userInfo:nil];
     }
-    
-    if (nil != _shareCompletionHandle) {
-        _shareCompletionHandle(_message, kOSPlatformSms, nil == error ? kOSStateSuccess : kOSStateFail, nil);
-        _shareCompletionHandle = nil;
-    }
+
+    [self callShareCompletionHandle:nil == error ? kOSStateSuccess : kOSStateFail error:error];
 }
 
 
@@ -259,9 +275,13 @@
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
     [controller dismissViewControllerAnimated:YES completion:nil];
-    
+    [self callShareCompletionHandle:nil == error ? kOSStateSuccess : kOSStateFail error:error];
+}
+
+- (void)callShareCompletionHandle:(OSShareState)state error:(NSError *)error
+{
     if (nil != _shareCompletionHandle) {
-        _shareCompletionHandle(_message, kOSPlatformEmail, nil == error ? kOSStateSuccess : kOSStateFail, error);
+        _shareCompletionHandle(_message, state, error);
         _shareCompletionHandle = nil;
     }
 }

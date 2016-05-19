@@ -11,40 +11,39 @@
 #import "OSQQParameter.h"
 #import "NSObject+TCDictionaryMapping.h"
 
-static NSString *const kOSQQScheme = @"QQ";
-static NSString *const kQQPasteboardKey = @"com.tencent.mqq.api.apiLargeData";
-static NSString *const kQQShareApi = @"mqqapi://share/to_fri";
+static NSString *const kOSQQPasteboardKey = @"com.tencent.mqq.api.apiLargeData";
+static NSString *const kOSQQShareApi = @"share/to_fri";
 
 @implementation OpenShare (QQ)
 
 + (BOOL)isQQInstalled
 {
-    return [self canOpenURL:[NSURL URLWithString:kOSQQURL]];
+    return [self canOpenURL:[NSURL URLWithString:kOSQQScheme]];
 }
 
 + (NSString *)callBackName
 {
-    return [self dataForRegistedScheme:kOSQQScheme][@"callback_name"];
+    return [self dataForRegistedApp:kOSQQIdentifier][@"callback_name"];
 }
 
 + (void)registQQWithAppId:(NSString *)appId
 {
-    [self registAppWithScheme:kOSQQScheme
-                         data:@{@"appid": appId,
-                                @"callback_name": [NSString stringWithFormat: @"QQ%02llx", appId.longLongValue]}];
+    [self registAppWithName:kOSQQIdentifier
+                       data:@{@"appid": appId,
+                              @"callback_name": [NSString stringWithFormat: @"QQ%02llx", appId.longLongValue]}];
 }
 
-+ (void)shareToQQ:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
++ (void)shareToQQ:(OSMessage *)msg
 {
-    if ([self isAppRegisted:kOSQQScheme]) {
-        [self openAppWithURL:[self urlWithMessage:msg flag:kOSPlatformQQ] completionHandle:completionHandle];
+    if ([self isAppRegisted:kOSQQIdentifier]) {
+        [self openAppWithURL:[self urlWithMessage:msg flag:kOSPlatformQQ]];
     }
 }
 
-+ (void)shareToQQZone:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
++ (void)shareToQQZone:(OSMessage *)msg
 {
-    if ([self isAppRegisted:kOSQQScheme]) {
-        [self openAppWithURL:[self urlWithMessage:msg flag:kOSPlatformQQZone] completionHandle:completionHandle];
+    if ([self isAppRegisted:kOSQQIdentifier]) {
+        [self openAppWithURL:[self urlWithMessage:msg flag:kOSPlatformQQZone]];
     }
 }
 
@@ -68,14 +67,13 @@ static OSQQParameter *s_qqParam = nil;
 
 + (NSURL *)urlWithMessage:(OSMessage *)msg flag:(NSInteger)flag
 {
-    msg.app = kOSAppQQ;
-    
     OSDataItem *data = msg.dataItem;
     data.platformCode = flag;
     
     OSQQParameter *qqParam = self.qqParameter.copy;
-    if (nil != msg.platformAccount.callBackName) {
-        qqParam.callback_name = msg.platformAccount.callBackName;
+    OSPlatformAccount *account = [msg accountForApp:kOSAppQQ];
+    if (nil != account.callBackName) {
+        qqParam.callback_name = account.callBackName;
     }
     
     qqParam.cflag = kOSPlatformQQ == flag ? 0 : 1;
@@ -94,13 +92,13 @@ static OSQQParameter *s_qqParam = nil;
             qqParam.desc = [OpenShare base64AndURLEncodedString:data.content];
             
             //不需要设置缩略图，qq自己会处理，设了也不管用
-            NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
+            NSMutableDictionary *pbData = [NSMutableDictionary dictionary];
             if (nil != data.imageData) {
                 pbData[@"file_data"] = data.imageData;
             }
             
             [self setGeneralPasteboardData:pbData
-                                    forKey:kQQPasteboardKey
+                                    forKey:kOSQQPasteboardKey
                                   encoding:kOSPasteboardEncodingKeyedArchiver];
             break;
         }
@@ -121,13 +119,13 @@ static OSQQParameter *s_qqParam = nil;
             qqParam.url = [OpenShare base64AndURLEncodedString:data.link];
             qqParam.flashurl = [OpenShare base64AndURLEncodedString:data.mediaDataUrl];
             
-            NSMutableDictionary *pbData = [[NSMutableDictionary alloc] init];
+            NSMutableDictionary *pbData = [NSMutableDictionary dictionary];
             if (nil != data.thumbnailData) {
                 pbData[@"previewimagedata"] = data.thumbnailData;
             }
             
             [self setGeneralPasteboardData:pbData
-                                    forKey:kQQPasteboardKey
+                                    forKey:kOSQQPasteboardKey
                                   encoding:kOSPasteboardEncodingKeyedArchiver];
             break;
         }
@@ -135,22 +133,23 @@ static OSQQParameter *s_qqParam = nil;
             break;
     }
     
-    NSString *urlStr = [kQQShareApi stringByAppendingFormat:@"?%@", [OpenShare urlStr:qqParam.tc_dictionary]];
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@?%@", kOSQQScheme, kOSQQShareApi, [OpenShare urlStr:qqParam.tc_dictionary]];
     return [NSURL URLWithString:urlStr];
 }
 
 + (BOOL)QQ_handleOpenURL:(NSURL *)url
 {
-    BOOL canHandle = [url.scheme hasPrefix:@"QQ"];
+    BOOL canHandle = [url.scheme hasPrefix:kOSQQIdentifier];
     //分享
     if (canHandle) {
-        [self clearGeneralPasteboardDataForKey:kQQPasteboardKey];
-        OSQQResponse *response = [OSQQResponse tc_mappingWithDictionary:[self parametersOfURL:url]];
-        OSShareCompletionHandle handle = self.shareCompletionHandle;
-        if (nil != handle) {
-            handle(nil, kOSPlatformCommon, 0 != response.errorCode ? kOSStateFail : kOSStateSuccess, response.error);
-            handle = nil;
+        [self clearGeneralPasteboardDataForKey:kOSQQPasteboardKey];
+        if ([url.absoluteString rangeOfString:self.identifier].location == NSNotFound) {
+            return canHandle;
         }
+        
+        self.identifier = nil;
+        OSQQResponse *response = [OSQQResponse tc_mappingWithDictionary:[self parametersOfURL:url]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOSShareFinishedNotification object:response];
     }
     return canHandle;
 }

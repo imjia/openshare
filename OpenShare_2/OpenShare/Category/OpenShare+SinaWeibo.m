@@ -10,32 +10,28 @@
 #import "OSSinaParameter.h"
 #import "NSObject+TCDictionaryMapping.h"
 
-static NSString *const kSinaWbScheme = @"SinaWeibo";
-
 @implementation OpenShare (SinaWeibo)
 
 + (BOOL)isSinaWeiboInstalled
 {
-    return [self canOpenURL:[NSURL URLWithString:@"weibosdk://request"]];
+    return [self canOpenURL:[NSURL URLWithString:kOSSinaScheme]];
 }
 
 + (void)registSinaWeiboWithAppKey:(NSString *)appKey
 {
-    [self registAppWithScheme:kSinaWbScheme
-                         data:@{@"appKey": appKey}];
+    [self registAppWithName:kOSSinaIdentifier
+                       data:@{@"appKey": appKey}];
 }
 
-+ (void)shareToSinaWeibo:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle
++ (void)shareToSinaWeibo:(OSMessage *)msg
 {
-    if ([self isAppRegisted:kSinaWbScheme]) {
-        [self openAppWithURL:[self sinaUrlWithMessage:msg] completionHandle:completionHandle];
+    if ([self isAppRegisted:kOSSinaIdentifier]) {
+        [self openAppWithURL:[self sinaUrlWithMessage:msg]];
     }
 }
 
 + (NSURL *)sinaUrlWithMessage:(OSMessage *)msg
 {
-    msg.app = kOSAppSina;
-    
     OSSinaParameter *sinaParam = [[OSSinaParameter alloc] init];
     OSDataItem *data = msg.dataItem;
     data.platformCode = kOSPlatformSina;
@@ -51,9 +47,10 @@ static NSString *const kSinaWbScheme = @"SinaWeibo";
     tfObj.message = sinaParam.tc_dictionary;
     tfObj.requestID = TCAppInfo.uuidForDevice;
     
-    NSString *appId = msg.platformAccount.appId;
+    OSPlatformAccount *account = [msg accountForApp:kOSAppSina];
+    NSString *appId = account.appId;
     if (nil == appId) {
-        appId = [self dataForRegistedScheme:kSinaWbScheme][@"appKey"];
+        appId = [self dataForRegistedApp:kOSSinaIdentifier][@"appKey"];
     }
     
     OSSinaApp *app = [[OSSinaApp alloc] init];
@@ -62,40 +59,63 @@ static NSString *const kSinaWbScheme = @"SinaWeibo";
     
     NSData *transferObjectData = [NSKeyedArchiver archivedDataWithRootObject:tfObj.tc_dictionary];
     NSData *appData = [NSKeyedArchiver archivedDataWithRootObject:app.tc_dictionary];
-    [UIPasteboard generalPasteboard].items = @[@{@"transferObject": transferObjectData},
-                                               @{@"userInfo": [NSKeyedArchiver archivedDataWithRootObject:@{}]},
-                                               @{@"app": appData}];
-    return [NSURL URLWithString:[NSString stringWithFormat:@"weibosdk://request?id=%@&sdkversion=003013000", TCAppInfo.uuidForDevice]];
+
+    NSMutableArray *pbItems = [NSMutableArray array];
+    if (nil != transferObjectData) {
+        [pbItems addObject:@{PropertySTR(transferObject): transferObjectData}];
+    }
+    if (nil != appData) {
+        [pbItems addObject:@{PropertySTR(app): appData}];
+    }
+    [pbItems addObject:@{PropertySTR(userInfo): [NSKeyedArchiver archivedDataWithRootObject:@{}]}];
+    
+    [UIPasteboard generalPasteboard].items = pbItems;
+    
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@request?id=%@&sdkversion=003013000", kOSSinaScheme, TCAppInfo.uuidForDevice]];
 }
 
-+ (BOOL)SinaWeibo_handleOpenURL:(NSURL *)url
++ (BOOL)wb_handleOpenURL:(NSURL *)url
 {
-    BOOL canHandle = [url.scheme hasPrefix:@"wb"];
-    if (canHandle) {
+    BOOL canHandle = [url.scheme hasPrefix:kOSSinaIdentifier];
+    if (!canHandle) {
+        return NO;
+    }
+    
+    NSMutableDictionary *responseDic = nil;
+    @try {
         NSArray *items = [UIPasteboard generalPasteboard].items;
         NSMutableDictionary *responseDic = [NSMutableDictionary dictionaryWithCapacity:items.count];
+        
         for (NSDictionary *item in items) {
             for (NSString *key in item) {
                 responseDic[key] = [key isEqualToString:@"sdkVersion"] ? [[NSString alloc] initWithData:item[key] encoding:NSUTF8StringEncoding] : [NSKeyedUnarchiver unarchiveObjectWithData:item[key]];
             }
         }
+        
+    } @catch (NSException *exception) {
+        DLog_e(@"%@", exception);
+        responseDic = nil;
+        
+    } @finally {
         // 清空微博存的数据
         [UIPasteboard generalPasteboard].items = @[];
+        if ([url.absoluteString rangeOfString:self.identifier].location == NSNotFound) {
+            return canHandle;
+        }
+        self.identifier = nil;
         
-        OSSinaResponse *response = [OSSinaResponse tc_mappingWithDictionary:responseDic];
-        if (response.isAuth) {
-            //auth
-        } else if (response.isShare) {
-            //分享回调
-            OSShareCompletionHandle handle = self.shareCompletionHandle;
-            if (nil != handle) {
-                handle(nil ,kOSPlatformSina, 0 != response.transferObject.statusCode ? kOSStateFail : kOSStateSuccess, nil);
-                handle = nil;
+        if (responseDic.count > 0) {
+            OSSinaResponse *response = [OSSinaResponse tc_mappingWithDictionary:responseDic];
+            if (response.isAuth) {
+                // auth
+            } else if (response.isShare) {
+                // 分享回调
+                [[NSNotificationCenter defaultCenter] postNotificationName:kOSShareFinishedNotification object:response];
             }
         }
+        
+        return canHandle;
     }
-    
-    return canHandle;
 }
 
 @end

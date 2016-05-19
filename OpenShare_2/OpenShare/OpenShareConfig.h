@@ -1,13 +1,12 @@
 //
 //  OpenShareConfig.h
-//  OpenShare_2
+//  SudiyiClient
 //
-//  Created by chenhuanhuan on 16/5/4.
-//  Copyright © 2016年 Jia. All rights reserved.
+//  Created by jia on 16/5/18.
+//  Copyright © 2016年 Sudiyi. All rights reserved.
 //
 
-#ifndef OpenShareConfig_h
-#define OpenShareConfig_h
+#import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, OSAPP) {
     kOSAppQQ,
@@ -33,15 +32,20 @@ typedef NS_ENUM(NSInteger, OSShareState) {
     kOSStateFail,
 };
 
-#define kOSErrorDomainSms @"response_from_sms"
-#define kOSErrorDomainQQ @"response_from_qq"
-#define kOSErrorDomainWeixin @"response_from_weixin"
-#define kOSErrorDomainSina @"response_from_sina"
-#define kOSErrorDomainEmail @"response_from_email"
+extern NSString *const kOSQQIdentifier;
+extern NSString *const kOSWeixinIdentifier;
+extern NSString *const kOSSinaIdentifier;
 
-#define kOSQQURL @"mqqapi://"
-#define kOSWeixinURL @"weixin://"
-#define kOSSinaURL @"weibosdk://request"
+extern NSString *const kOSErrorDomainSms;
+extern NSString *const kOSErrorDomainQQ;
+extern NSString *const kOSErrorDomainWeixin;
+extern NSString *const kOSErrorDomainSina;
+extern NSString *const kOSErrorDomainEmail;
 
+#define kOSQQScheme @"mqqapi://"
+#define kOSWeixinScheme @"weixin://"
+#define kOSSinaScheme @"weibosdk://"
 
-#endif /* OpenShareConfig_h */
+@interface OpenShareConfig : NSObject
+
+@end

@@ -12,7 +12,7 @@
 
 + (BOOL)isSinaWeiboInstalled;
 + (void)registSinaWeiboWithAppKey:(NSString *)appKey;
-+ (void)shareToSinaWeibo:(OSMessage *)msg completion:(OSShareCompletionHandle)completionHandle;
-+ (BOOL)SinaWeibo_handleOpenURL:(NSURL *)url;
++ (void)shareToSinaWeibo:(OSMessage *)msg;
++ (BOOL)wb_handleOpenURL:(NSURL *)url;
 
 @end

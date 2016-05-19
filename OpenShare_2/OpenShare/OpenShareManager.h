@@ -10,14 +10,13 @@
 #import "OpenShareHeader.h"
 #import "OSPlatformController.h"
 
+
 @class OSMessage;
 @protocol OSUIDelegate;
 @interface OpenShareManager : NSObject
 
 @property (nonatomic, assign) BOOL remindInstall;
 @property (nonatomic, weak) id<OSUIDelegate> uiDelegate;
-@property (nonatomic, assign) void(^beforeDownloadImage)(); // 用户决定hud
-@property (nonatomic, assign) void(^afterDownloadImage)(); // 用户决定hud
 
 + (instancetype)defaultManager;
 - (void)shareMsg:(OSMessage *)msg platformCodes:(NSArray<NSNumber/*OSPlatformCode*/ *> *)codes completion:(OSShareCompletionHandle)completion;
@@ -28,5 +27,7 @@
 
 @optional
 - (void)didSelectPlatformItem:(OSPlatformItem *)platform message:(OSMessage *)message;
+- (void)willDownloadImage; // 有可能下载图片时间会略长，所以用户决定是否显示hud
+- (void)didDownloadImage; // 图片下载完成，用户负责取消掉hud
 
 @end

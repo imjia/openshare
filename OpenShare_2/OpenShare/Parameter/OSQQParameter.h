@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OSResponse.h"
 
 @interface OSQQParameter : NSObject <NSCopying>
 
@@ -29,7 +30,7 @@
 
 @end
 
-@interface OSQQResponse : NSObject
+@interface OSQQResponse : NSObject <OSResponse>
 
 @property (nonatomic, copy) NSString *source_scheme;
 @property (nonatomic, copy) NSString *source;

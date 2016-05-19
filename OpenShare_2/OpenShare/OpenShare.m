@@ -8,51 +8,57 @@
 
 #import "OpenShare.h"
 
+NSString *const kOSShareFinishedNotification = @"kOSShareFinishedNotification";
+
 @interface OpenShare ()
 
 @end
 
 @implementation OpenShare
+static NSString *s_identifier = nil;
 
-static NSMutableDictionary *s_registedSchemes = nil;
-static OSShareCompletionHandle s_shareCompletionHandle = nil;
-
-+ (OSShareCompletionHandle)shareCompletionHandle
++ (NSString *)identifier
 {
-    return s_shareCompletionHandle;
+    return s_identifier;
 }
 
-+ (NSMutableDictionary *)registedSchemes
++ (void)setIdentifier:(NSString *)identifier
 {
-    if (nil == s_registedSchemes) {
-        s_registedSchemes = [[NSMutableDictionary alloc] init];
+    s_identifier = identifier;
+}
+
+static NSMutableDictionary *s_registedApps = nil;
++ (NSMutableDictionary *)registedApps
+{
+    if (nil == s_registedApps) {
+        s_registedApps = [NSMutableDictionary dictionary];
     }
-    return s_registedSchemes;
+    return s_registedApps;
 }
 
-+ (void)registAppWithScheme:(NSString *)appScheme data:(NSDictionary *)data
++ (void)registAppWithName:(NSString *)appName data:(NSDictionary *)data
 {
-    if (nil == self.registedSchemes[appScheme]) {
-        self.registedSchemes[appScheme] = data;
+    if (nil == self.registedApps[appName]) {
+        self.registedApps[appName] = data;
     }
 }
 
-+ (NSDictionary *)dataForRegistedScheme:(NSString *)appScheme
++ (NSDictionary *)dataForRegistedApp:(NSString *)appName
 {
-    return self.registedSchemes[appScheme];
+    return self.registedApps[appName];
 }
 
-+ (BOOL)shouldOpenApp:(NSString *)appScheme
++ (BOOL)shouldOpenApp:(NSString *)appName
 {
-    if ([self isAppRegisted:appScheme]) {
+    if ([self isAppRegisted:appName]) {
         return YES;
     }
     return NO;
 }
 
-+ (BOOL)isAppRegisted:(NSString *)appScheme
++ (BOOL)isAppRegisted:(NSString *)appName
 {
-    return nil != self.registedSchemes[appScheme];
+    return nil != self.registedApps[appName];
 }
 
 + (BOOL)canOpenURL:(NSURL *)url
@@ -60,37 +66,65 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
     return [[UIApplication sharedApplication] canOpenURL:url];
 }
 
-+ (void)openAppWithURL:(NSURL *)url completionHandle:(OSShareCompletionHandle)handle
++ (BOOL)openAppWithURL:(NSURL *)url
 {
-    s_shareCompletionHandle = handle;
-    [[UIApplication sharedApplication] openURL:url];
+    NSParameterAssert(url);
+    if (nil == url) {
+        return NO;
+    }
+    
+    [self updateIdentifierWithUrl:url.absoluteString];
+    
+    return [[UIApplication sharedApplication] openURL:url];
+}
+
++ (void)updateIdentifierWithUrl:(NSString *)urlStr
+{
+    NSString *identifier = nil;
+    if ([urlStr hasPrefix:kOSQQScheme]) {
+        identifier = @"QQ";
+    } else if ([urlStr hasPrefix:kOSWeixinScheme]) {
+        identifier = @"wx";
+    } else if ([urlStr hasPrefix:kOSSinaScheme]) {
+        identifier = @"wb";
+    }
+    
+    self.identifier = identifier;
 }
 
 + (void)setGeneralPasteboardData:(NSDictionary *)value forKey:(NSString *)key encoding:(OSPasteboardEncoding)encoding
 {
     if (nil != value && nil != key) {
         NSData *data = nil;
-        NSError *err = nil;
-        switch (encoding) {
-            case kOSPasteboardEncodingKeyedArchiver: {
-                data = [NSKeyedArchiver archivedDataWithRootObject:value];
-                break;
+        @try {
+            NSError *err = nil;
+            switch (encoding) {
+                case kOSPasteboardEncodingKeyedArchiver: {
+                    data = [NSKeyedArchiver archivedDataWithRootObject:value];
+                    break;
+                }
+                case kOSPasteboardEncodingPropertyListSerialization: {
+                    data = [NSPropertyListSerialization dataWithPropertyList:value
+                                                                      format:NSPropertyListBinaryFormat_v1_0
+                                                                     options:kNilOptions
+                                                                       error:&err];
+                    break;
+                }
+                default:
+                    DLog(@"encoding not implemented");
+                    break;
             }
-            case kOSPasteboardEncodingPropertyListSerialization: {
-                data = [NSPropertyListSerialization dataWithPropertyList:value
-                                                                  format:NSPropertyListBinaryFormat_v1_0 options:0
-                                                                   error:&err];
-                break;
+            
+            if (nil != err) {
+                DLog(@"error when NSPropertyListSerialization: %@",err);
             }
-            default:
-                DLog(@"encoding not implemented");
-                break;
-        }
-        
-        if (nil != err) {
-            DLog(@"error when NSPropertyListSerialization: %@",err);
-        } else if (nil != data){
-            [[UIPasteboard generalPasteboard] setData:data forPasteboardType:key];
+        } @catch (NSException *exception) {
+            DLog_e(@"%@", exception);
+            data = nil;
+        } @finally {
+            if (nil != data) {
+                [[UIPasteboard generalPasteboard] setData:data forPasteboardType:key];
+            }
         }
     }
 }
@@ -98,8 +132,12 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
 + (NSDictionary *)generalPasteboardDataForKey:(NSString *)key encoding:(OSPasteboardEncoding)encoding
 {
     NSData *data = [[UIPasteboard generalPasteboard] dataForPasteboardType:key];
+    if (nil == data) {
+        return nil;
+    }
     NSDictionary *dic = nil;
-    if (nil != data) {
+    
+    @try {
         NSError *err = nil;
         switch (encoding) {
             case kOSPasteboardEncodingKeyedArchiver: {
@@ -108,8 +146,8 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
             }
             case kOSPasteboardEncodingPropertyListSerialization: {
                 dic = [NSPropertyListSerialization propertyListWithData:data
-                                                                options:0
-                                                                 format:0
+                                                                options:kNilOptions
+                                                                 format:NULL
                                                                   error:&err];
                 break;
             }
@@ -119,9 +157,13 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
         if (nil != err) {
             DLog(@"error when NSPropertyListSerialization: %@",err);
         }
+    } @catch (NSException *exception) {
+        DLog_e(@"%@", exception);
+        dic = nil;
+        
+    } @finally {
+        return dic;
     }
-    
-    return dic;
 }
 
 + (void)clearGeneralPasteboardDataForKey:(NSString *)key
@@ -133,8 +175,12 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
 
 + (BOOL)handleOpenURL:(NSURL *)url
 {
-    for (NSString *scheme in s_registedSchemes) {
-        SEL sel = NSSelectorFromString([scheme stringByAppendingString:@"_handleOpenURL:"]);
+    if (nil == self.identifier) {
+        return YES;
+    }
+    
+    for (NSString *appName in s_registedApps) {
+        SEL sel = NSSelectorFromString([appName stringByAppendingString:@"_handleOpenURL:"]);
         if ([self respondsToSelector:sel]) {
             
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:
@@ -146,11 +192,11 @@ static OSShareCompletionHandle s_shareCompletionHandle = nil;
             
             BOOL returnValue = NO;
             [invocation getReturnValue:&returnValue];
-            if (returnValue) { //如果这个url能处理，就返回YES，否则，交给下一个处理。
+            if (returnValue) { // 如果这个url能处理，就返回YES，否则，交给下一个处理。
                 return YES;
             }
         } else{
-            DLog(@"fatal error: %@ is should have a method: %@", scheme, [scheme stringByAppendingString:@"_handleOpenURL"]);
+            DLog(@"fatal error: %@ is should have a method: %@", appName, [appName stringByAppendingString:@"_handleOpenURL"]);
         }
     }
     return NO;

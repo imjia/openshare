@@ -89,9 +89,10 @@ static CGFloat const kAnimDuration = 0.2f;
 {
     [super viewDidLoad];
     
-    _grayTouchView = [[UIView alloc] initWithFrame:self.view.bounds];
+    _grayTouchView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     _grayTouchView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
     _grayTouchView.hidden = YES;
+    _grayTouchView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapDismiss)];
     [_grayTouchView addGestureRecognizer:tapGes];
@@ -111,7 +112,7 @@ static CGFloat const kAnimDuration = 0.2f;
     NSInteger row = ceil(_platforms.count / maxNumberOfItemsInRow);
     CGFloat fitHeight = row * kItemWidth + (row + 1) * kSpacing;
     
-    CGRect rect = self.view.bounds;
+    CGRect rect = self.view.frame;
     rect.size.height = fitHeight;
     rect.origin.y = self.view.bounds.size.height - fitHeight;
     
@@ -120,7 +121,7 @@ static CGFloat const kAnimDuration = 0.2f;
     _collectionView.delegate = self;
     _collectionView.backgroundColor = [UIColor whiteColor];
     [_collectionView registerClass:UICollectionViewCell.class forCellWithReuseIdentifier:kCellIdentifier];
-    _collectionView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    _collectionView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_collectionView];
 }
 
@@ -128,6 +129,11 @@ static CGFloat const kAnimDuration = 0.2f;
 {
     [super viewDidAppear:animated];
     [self show];
+}
+
+-(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    
 }
 
 #pragma mark - UICollectionViewDataSource

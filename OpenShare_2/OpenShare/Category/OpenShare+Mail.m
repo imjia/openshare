@@ -32,6 +32,7 @@
         }
         
         [[UIApplication sharedApplication].delegate.window.topMostViewController presentViewController:mailComposeCtrler animated:YES completion:nil];
+        
     } else {
         NSMutableString *email = [[NSMutableString alloc] initWithString:@"mailto:"];
         if (msg.dataItem.toRecipients.count > 0) {
