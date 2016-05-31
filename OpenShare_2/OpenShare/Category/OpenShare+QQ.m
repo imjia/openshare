@@ -71,7 +71,7 @@ static OSQQParameter *s_qqParam = nil;
     data.platformCode = flag;
     
     OSQQParameter *qqParam = self.qqParameter.copy;
-    OSPlatformAccount *account = [msg accountForApp:kOSAppQQ];
+    OSPlatformAccount *account = [msg accountForApp:kOSQQIdentifier];
     if (nil != account.callBackName) {
         qqParam.callback_name = account.callBackName;
     }
@@ -135,6 +135,14 @@ static OSQQParameter *s_qqParam = nil;
     
     NSString *urlStr = [NSString stringWithFormat:@"%@%@?%@", kOSQQScheme, kOSQQShareApi, [OpenShare urlStr:qqParam.tc_dictionary]];
     return [NSURL URLWithString:urlStr];
+}
+
++ (void)chatWithQQ:(NSString *)qq
+{
+    if ([self isAppRegisted:kOSQQIdentifier]) {
+        NSString *urlStr = [NSString stringWithFormat:@"mqqwpa://im/chat?uin=%@&chat_type=wpa&callback_name=%@&thirdAppDisplayName=%@&src_type=app&version=1&callback_type=scheme&sdkv=2.9.3", qq, self.callBackName, [OpenShare base64EncodedString:TCAppInfo.displayName]];
+        [self openAppWithURL:[NSURL URLWithString:urlStr]];
+    }
 }
 
 + (BOOL)QQ_handleOpenURL:(NSURL *)url

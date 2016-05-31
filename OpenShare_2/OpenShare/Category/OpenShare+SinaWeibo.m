@@ -37,7 +37,7 @@
     data.platformCode = kOSPlatformSina;
     
     sinaParam.__class = @"WBMessageObject";
-    sinaParam.text = data.content;
+    sinaParam.text = data.sinaContent;
     if (nil != data.imageData) {
         sinaParam.imageObject = @{@"imageData": data.imageData};
     }
@@ -47,7 +47,7 @@
     tfObj.message = sinaParam.tc_dictionary;
     tfObj.requestID = TCAppInfo.uuidForDevice;
     
-    OSPlatformAccount *account = [msg accountForApp:kOSAppSina];
+    OSPlatformAccount *account = [msg accountForApp:kOSSinaIdentifier];
     NSString *appId = account.appId;
     if (nil == appId) {
         appId = [self dataForRegistedApp:kOSSinaIdentifier][@"appKey"];

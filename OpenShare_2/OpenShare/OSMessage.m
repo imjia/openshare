@@ -30,17 +30,17 @@
 - (NSMutableDictionary *)accountDic
 {
     if (nil == _accountDic) {
-        _accountDic = [[NSMutableDictionary alloc] init];
+        _accountDic = [NSMutableDictionary dictionary];
     }
     return _accountDic;
 }
 
-- (void)configAccount:(void (^)(OSPlatformAccount *))config forApp:(OSAPP)app
+- (void)configAccount:(void (^)(OSPlatformAccount *))config forApp:(NSString *)app
 {
-    OSPlatformAccount *account = self.accountDic[@(app)];
+    OSPlatformAccount *account = self.accountDic[app];
     if (nil == account) {
         account = [[OSPlatformAccount alloc] init];
-        _accountDic[@(app)] = account;
+        _accountDic[app] = account;
     }
     
     if (nil != config) {
@@ -48,9 +48,9 @@
     }
 }
 
-- (OSPlatformAccount *)accountForApp:(OSAPP)app
+- (OSPlatformAccount *)accountForApp:(NSString *)app
 {
-    return self.accountDic[@(app)];
+    return self.accountDic[app];
 }
 
 @end
@@ -206,20 +206,40 @@ static NSString *const kDefaultData = @"defaultData";
     return [self platformValueForProperty:NSStringFromSelector(_cmd)];
 }
 
-- (NSString *)msgBody
+- (NSString *)sinaContent
 {
-    if (nil == _msgBody) {
-        return self.content;
+    if (nil == _sinaContent) {
+        _sinaContent = self.customedContent;
     }
-    return _msgBody;
+    return _sinaContent;
 }
 
 - (NSString *)emailBody
 {
     if (nil == _emailBody) {
-        return self.content;
+        _emailBody = self.customedContent;
     }
     return _emailBody;
+}
+
+- (NSString *)msgBody
+{
+    if (nil == _msgBody) {
+        _msgBody = self.customedContent;
+    }
+    return _msgBody;
+}
+
+- (NSString *)customedContent
+{
+    NSString *customedContent = nil;
+    NSString *content = self.content;
+    customedContent = nil != content ? content : @"";
+    NSString *link = self.link;
+    if (nil != link) {
+        customedContent = [customedContent stringByAppendingFormat:@"\x20%@", link];
+    }
+    return customedContent;
 }
 
 @end

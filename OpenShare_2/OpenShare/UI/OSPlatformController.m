@@ -30,7 +30,7 @@ static CGFloat const kAnimDuration = 0.2f;
     static dispatch_once_t onceToken;
     static NSBundle *bundle = nil;
     dispatch_once(&onceToken, ^{
-        NSURL *url = [[NSBundle bundleForClass:self.class] URLForResource:@"OpenShare" withExtension:@"bundle"];
+        NSURL *url = [[NSBundle bundleForClass:self.class] URLForResource:@"OpenShareResources" withExtension:@"bundle"];
         if (nil != url) {
             bundle = [NSBundle bundleWithURL:url];
         }
@@ -40,7 +40,7 @@ static CGFloat const kAnimDuration = 0.2f;
 
 - (UIImage *)snsImageNamed:(NSString *)name
 {
-    NSString *path = [NSString stringWithFormat:@"OpenShare.bundle/%@", name];
+    NSString *path = [NSString stringWithFormat:@"OpenShareResources.bundle/%@", name];
     return [UIImage imageNamed:path];
 }
 
@@ -75,6 +75,7 @@ static CGFloat const kAnimDuration = 0.2f;
         for (NSNumber *code in codes) {
             
             OSPlatformItem *platform = [[OSPlatformItem alloc] init];
+            
             platform.displayName =  NSLocalizedStringFromTableInBundle(self.platformConfig[code][@"name"], nil, self.openShareBundle, nil);
             platform.displayIcon = [self snsImageNamed:self.platformConfig[code][@"image"]];
             platform.code = code.integerValue;
@@ -131,10 +132,6 @@ static CGFloat const kAnimDuration = 0.2f;
     [self show];
 }
 
--(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    
-}
 
 #pragma mark - UICollectionViewDataSource
 
@@ -155,6 +152,7 @@ static CGFloat const kAnimDuration = 0.2f;
         contentBtn.tag = 1024;
         contentBtn.userInteractionEnabled = NO;
         contentBtn.layoutStyle = kTCButtonLayoutStyleImageTopTitleBottom;
+        contentBtn.paddingBetweenTitleAndImage = 5.0f;
         contentBtn.titleLabel.font = [UIFont systemFontOfSize:14.0f];
         [contentBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [cell.contentView addSubview:contentBtn];

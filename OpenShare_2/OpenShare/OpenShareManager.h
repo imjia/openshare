@@ -9,13 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "OpenShareHeader.h"
 #import "OSPlatformController.h"
-
-
 @class OSMessage;
 @protocol OSUIDelegate;
 @interface OpenShareManager : NSObject
 
-@property (nonatomic, assign) BOOL remindInstall;
 @property (nonatomic, weak) id<OSUIDelegate> uiDelegate;
 
 + (instancetype)defaultManager;

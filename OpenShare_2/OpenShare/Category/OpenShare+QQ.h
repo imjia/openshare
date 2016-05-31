@@ -16,4 +16,7 @@
 + (void)shareToQQZone:(OSMessage *)msg;
 + (BOOL)QQ_handleOpenURL:(NSURL *)url;
 
+// qq聊天
++ (void)chatWithQQ:(NSString *)qq;
+
 @end

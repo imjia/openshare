@@ -176,7 +176,7 @@ static NSMutableDictionary *s_registedApps = nil;
 + (BOOL)handleOpenURL:(NSURL *)url
 {
     if (nil == self.identifier) {
-        return YES;
+        return NO;
     }
     
     for (NSString *appName in s_registedApps) {

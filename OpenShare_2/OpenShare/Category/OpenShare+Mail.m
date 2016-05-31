@@ -15,6 +15,8 @@
 + (void)shareToMail:(OSMessage *)msg delegate:(id<MFMailComposeViewControllerDelegate>)delegate
 {
     if (MFMailComposeViewController.canSendMail) {
+        msg.dataItem.platformCode = kOSPlatformEmail;
+        
         MFMailComposeViewController *mailComposeCtrler = [[MFMailComposeViewController alloc] init];
         mailComposeCtrler.mailComposeDelegate = delegate;
         [mailComposeCtrler setToRecipients:msg.dataItem.toRecipients];
@@ -34,6 +36,8 @@
         [[UIApplication sharedApplication].delegate.window.topMostViewController presentViewController:mailComposeCtrler animated:YES completion:nil];
         
     } else {
+        msg.dataItem.platformCode = kOSPlatformEmail;
+        
         NSMutableString *email = [[NSMutableString alloc] initWithString:@"mailto:"];
         if (msg.dataItem.toRecipients.count > 0) {
             [email appendFormat:@"%@?", [msg.dataItem.toRecipients componentsJoinedByString:@","]];

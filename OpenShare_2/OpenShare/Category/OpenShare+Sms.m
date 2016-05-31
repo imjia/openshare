@@ -15,6 +15,8 @@
 + (void)shareToSms:(OSMessage *)msg delegate:(id<MFMessageComposeViewControllerDelegate>)delegate
 {
     if (MFMessageComposeViewController.canSendText) {
+        msg.dataItem.platformCode = kOSPlatformSms;
+        
         MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
         controller.recipients = msg.dataItem.recipients;
         controller.body = msg.dataItem.msgBody;

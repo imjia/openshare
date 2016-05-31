@@ -18,6 +18,10 @@ NSString *const kOSErrorDomainWeixin = @"response_from_weixin";
 NSString *const kOSErrorDomainSina = @"response_from_sina";
 NSString *const kOSErrorDomainEmail = @"response_from_email";
 
+NSString *const kOSQQScheme = @"mqqapi://";
+NSString *const kOSWeixinScheme = @"weixin://";
+NSString *const kOSSinaScheme = @"weibosdk://";
+
 @implementation OpenShareConfig
 
 @end

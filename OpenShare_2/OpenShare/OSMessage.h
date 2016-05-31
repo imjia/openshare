@@ -37,8 +37,8 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 - (instancetype)initWithOSMultimediaType:(OSMultimediaType)mediaType;
 
 // 定制化app 账户
-- (void)configAccount:(void(^)(OSPlatformAccount *account))config forApp:(OSAPP)app;
-- (OSPlatformAccount *)accountForApp:(OSAPP)app;
+- (void)configAccount:(void(^)(OSPlatformAccount *account))config forApp:(NSString *)app;
+- (OSPlatformAccount *)accountForApp:(NSString *)app;
 
 @end
 
@@ -57,6 +57,9 @@ typedef NS_ENUM(NSInteger, OSMultimediaType) {
 @property (nonatomic, strong) NSData *thumbnailData; // encoded data
 @property (nonatomic, strong) NSURL *imageUrl; // 网络图片地址 imageUrl 优先
 @property (nonatomic, strong) NSURL *thumbnailUrl; // 网络缩略图地址
+
+// 新浪
+@property (nonatomic, copy) NSString *sinaContent;
 
 // 微信
 @property (nonatomic, copy) NSString *mediaDataUrl;

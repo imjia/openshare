@@ -8,12 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, OSAPP) {
-    kOSAppQQ,
-    kOSAppWeixin,
-    kOSAppSina,
-};
-
 // 分享支持的平台
 typedef NS_ENUM(NSInteger, OSPlatformCode) {
     kOSPlatformCommon,
@@ -42,9 +36,10 @@ extern NSString *const kOSErrorDomainWeixin;
 extern NSString *const kOSErrorDomainSina;
 extern NSString *const kOSErrorDomainEmail;
 
-#define kOSQQScheme @"mqqapi://"
-#define kOSWeixinScheme @"weixin://"
-#define kOSSinaScheme @"weibosdk://"
+extern NSString *const kOSQQScheme;
+extern NSString *const kOSWeixinScheme;
+extern NSString *const kOSSinaScheme;
+
 
 @interface OpenShareConfig : NSObject
 

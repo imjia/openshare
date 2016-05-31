@@ -118,8 +118,13 @@ static OSWXParameter *s_wxParam = nil;
         }
         case OSMultimediaTypeNews: {
             wxParam.command = @"1010";
-            wxParam.title = data.title;
-            wxParam.desc = data.content;
+            if (kOSPlatformWXSession == flag) {
+                wxParam.title = data.title;
+                wxParam.desc = data.content;
+            } else {
+                wxParam.title = data.content;
+            }
+            
             wxParam.thumbData = data.thumbnailData;
             wxParam.mediaUrl = data.link;
             wxParam.objectType = kWXObjectTypeNews;
@@ -129,7 +134,7 @@ static OSWXParameter *s_wxParam = nil;
             break;
     }
     
-    OSPlatformAccount *account = [msg accountForApp:kOSAppWeixin];
+    OSPlatformAccount *account = [msg accountForApp:kOSWeixinIdentifier];
     NSString *appId = account.appId;
     if (nil == appId) {
         appId = [self dataForRegistedApp:kOSWeixinIdentifier][@"appid"];
@@ -156,7 +161,8 @@ static OSWXParameter *s_wxParam = nil;
 
 + (BOOL)wx_handleOpenURL:(NSURL *)url
 {
-    BOOL canHandle = [url.scheme hasPrefix:kOSWeixinIdentifier];
+    BOOL canHandle = [url.scheme hasPrefix:kOSWeixinIdentifier] && [url.host rangeOfString:@"pay"].location == NSNotFound && [url.host rangeOfString:@"oauth"].location == NSNotFound;
+    
     if (!canHandle) {
         return NO;
     }

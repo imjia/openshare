@@ -12,7 +12,7 @@
 
 + (NSMutableDictionary *)parametersOfURL:(NSURL *)url
 {
-    NSMutableDictionary *queryStringDictionary = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *queryStringDictionary = [NSMutableDictionary dictionary];
     NSArray *urlComponents = [url.query componentsSeparatedByString:@"&"];
     for (NSString *keyValuePair in urlComponents) {
         NSRange range = [keyValuePair rangeOfString:@"="];
@@ -24,7 +24,7 @@
 
 + (NSString *)urlStr:(NSDictionary *)parameters
 {
-    NSMutableString *urlStr = [[NSMutableString alloc] init];
+    NSMutableString *urlStr = [NSMutableString string];
     for (NSString *key in parameters.allKeys) {
         [urlStr appendFormat:@"%@=%@&", key, parameters[key]];
     }
@@ -54,7 +54,7 @@
 
 + (NSString *)contentTypeForImageData:(NSData *)data
 {
-    uint8_t c;
+    uint8_t c = 0;
     [data getBytes:&c length:1];
     switch (c) {
         case 0xFF:
@@ -68,7 +68,7 @@
             return @"image/tiff";
         case 0x52:
             // R as RIFF for WEBP
-            if ([data length] < 12) {
+            if (data.length < 12) {
                 return nil;
             }
             
